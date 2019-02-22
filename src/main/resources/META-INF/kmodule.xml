@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kmodule xmlns="http://www.drools.org/xsd/kmodule">
+	
+	<!-- family -->
+	<kbase name="familyidtquery" packages="kie.family.identity.query">
+		<ksession name="ks-family-idt-query" />
+	</kbase>
+	<kbase name="familypreipm" packages="kie.family.preipm.*">
+		<ksession name="ks-family-preipm" />
+	</kbase>
+	<kbase name="familyipm" packages="kie.family.ipm.*">
+		<ksession name="ks-family-ipm" />
+	</kbase>
+	<kbase name="familypostimp" packages="kie.family.postimp">
+		<ksession name="ks-family-postimp" />
+	</kbase>
+	
+	<!-- people -->
+	<kbase name="peopleidtquery" packages="kie.people.identity.query">
+		<ksession name="ks-people-idt-query" />
+	</kbase>
+	<kbase name="peopleipmtimer" packages="kie.people.ipm.ipmTimer">
+		<ksession name="ks-people-ipm-ipmTimer" />
+	</kbase>
+	<kbase name="peoplepreipm" packages="kie.people.preipm.*">
+		<ksession name="ks-people-preipm" />
+	</kbase>
+	<kbase name="peopleipm" packages="kie.people.ipm.*">
+		<ksession name="ks-people-ipm" />
+	</kbase>
+	<kbase name="peoplePostIMP" packages="kie.people.postimp">
+		<ksession name="ks-people-postimp" />
+	</kbase>
+	
+	<!-- worktask -->
+	<kbase name="worktaskidtquery" packages="kie.worktask.identity.query">
+		<ksession name="ks-worktask-idt-query" />
+	</kbase>
+	<kbase name="worktaskipm" packages="kie.worktask.ipm.*">
+		<ksession name="ks-worktask-ipm" />
+	</kbase>
+	<kbase name="worktaskpreipm" packages="kie.worktask.preipm.*">
+		<ksession name="ks-worktask-preipm" />
+	</kbase>
+	<kbase name="worktaskipmtimer" packages="kie.worktask.ipm.ipmTimer">
+		<ksession name="ks-worktask-ipm-ipmTimer" />
+	</kbase>
+	
+	<kbase name="worktaskpostipm" packages="kie.worktask.postipm.*">
+		<ksession name="ks-worktask-postipm" />
+	</kbase>
+	<!-- 四类人员 -->
+	<kbase name="FourTypePeopleipm" packages="kie.FourTypePeople.ipm.*">
+		<ksession name="ks-FourTypePeople-ipm" />
+	</kbase>
+	
+	<!-- 用户 -->
+	<kbase name="userquery" packages="kie.user.identity.query">
+		<ksession name="ks-user-idt-query" />
+	</kbase>
+	<kbase name="useripm" packages="kie.user.ipm.*">
+		<ksession name="ks-user-ipm" />
+	</kbase>
+	<kbase name="usertwoipm" packages="kie.user.twoipm.*">
+		<ksession name="ks-user-twoipm" />
+	</kbase>
+	
+</kmodule>

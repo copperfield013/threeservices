@@ -1,0 +1,55 @@
+package com.abc.rule.worktask.preipm
+
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.relation.RecordRelation;
+import  com.zhsq.biz.constant.people.PeopleItem;
+import  com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.rrc.record.Attribute;
+import com.abc.rrc.factory.AttributeFactory;
+import com.zhsq.biz.family.algorithm.DataIntrospection;
+import com.zhsq.biz.constant.EnumKeyValue;
+import com.zhsq.biz.constant.RelationType;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.zhsq.biz.common.CommonCalculation;
+import com.zhsq.biz.people.algorithm.IDIntrospection;
+import com.zhsq.biz.constant.DateUtils;
+import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.zhsq.biz.common.OutputDisplay;
+import com.zhsq.biz.common.AuthAlgorithm;
+import com.zhsq.biz.constant.worktask.WorkTaskItem;
+import com.abc.sysdate.SystemDateTimeManager;
+import com.zhsq.biz.common.AuthUtil;
+import java.util.Collection;
+import com.zhsq.biz.worktask.algorithm.TaskIntrospection;
+import com.abc.fuse.improve.attribute.OpsAttribute;
+
+global java.lang.String hostCode; 
+global java.lang.String hostType;
+
+global java.lang.String userCode;
+global java.lang.String recordCode;
+global java.lang.String recordName;
+
+global java.util.List attributeList;
+global java.util.List addedLabelList;
+global java.util.List removedLabelList;
+global java.util.List addedLabelList;
+global java.util.List putFuseLeafAttributeList;
+global java.util.List addedLeafAttrList;
+global java.util.Map removedLeafAttrMap;
+global com.abc.rrc.record.RootRecord rootRecord;
+global  com.abc.ops.builder.RecordRelationOpsBuilder recordRelationOpsBuilder;
+global com.abc.complexus.RecordComplexus recordComplexus;
+
+rule "派发任务"
+	salience 18
+when
+    $attr:OpsAttribute( name==WorkTaskItem.保存派发, sqlValue==EnumKeyValue.ENUM_保存派发_派发);
+	$statu: OpsAttribute( name==WorkTaskItem.任务状态, sqlValue==EnumKeyValue.ENUM_任务状态_新建);
+then
+	Attribute statu=AttributeFactory.newInstance(WorkTaskItem.任务状态,EnumKeyValue.ENUM_任务状态_处理中);
+	 Attribute attribute=AttributeFactory.newInstance(WorkTaskItem.派发时间,SystemDateTimeManager.getCunrrentTime());
+	attributeList.add(statu);
+	attributeList.add(attribute);
+end
+

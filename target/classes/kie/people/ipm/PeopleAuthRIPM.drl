@@ -1,0 +1,68 @@
+package com.abc.rule.people.ipm
+
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.relation.RecordRelation;
+import  com.zhsq.biz.constant.people.PeopleItem;
+import  com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.rrc.record.Attribute;
+import com.abc.rrc.factory.AttributeFactory;
+import com.zhsq.biz.family.algorithm.DataIntrospection;
+import com.zhsq.biz.constant.EnumKeyValue;
+import com.zhsq.biz.constant.RelationType;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.zhsq.biz.common.CommonCalculation;
+import com.zhsq.biz.constant.DateUtils;
+import com.zhsq.biz.common.AuthAlgorithm;
+import com.abc.auth.AuthHelper;
+import com.zhsq.biz.common.OutputDisplay;
+
+global java.lang.String hostCode; 
+global java.lang.String hostType;
+
+global java.lang.String userCode;
+global java.lang.String recordCode;
+global java.lang.String recordName;
+
+global java.util.List attributeList;
+global java.util.List addedLabelList;
+global java.util.List removedLabelList;
+global java.util.List addedLabelList;
+global java.util.List putFuseLeafAttributeList;
+global java.util.List addedLeafAttrList;
+global java.util.Map removedLeafAttrMap;
+global com.abc.rrc.record.RootRecord rootRecord;
+global  com.abc.ops.builder.RecordRelationOpsBuilder recordRelationOpsBuilder;
+global com.abc.complexus.RecordComplexus recordComplexus;
+
+rule "无正確社区信息权限"
+	salience 10 
+when
+  	FuseAttribute(name==PeopleItem.所属社区, attribute.sqlValue == null) or (not FuseAttribute(name==PeopleItem.所属社区))
+then
+	recordRelationOpsBuilder.putRelation(RelationType.RR_人口信息_可被访问_权限,AuthAlgorithm.getNoAreaAuthCode());
+end
+
+
+rule "移除原社区数据访问"
+	salience 10 
+when
+ $areaFA:FuseAttribute(name==PeopleItem.所属社区,$areaValue:attribute.sqlValue);
+ RecordRelation(type==RelationType.RR_人口信息_可被访问_权限,$oldauth:right,AuthHelper.isMatchedAuthAndLabel($oldauth,EnumKeyValue.ENUM_权限标签_社区数据访问),$oldauth!=AuthAlgorithm.getAreaAuthCode((Integer)$areaValue));
+then 
+	recordRelationOpsBuilder.removeRelation(RelationType.RR_人口信息_可被访问_权限,$oldauth);
+end
+
+rule "添加社区数据访问"
+	salience 9
+when
+ $areaFA:FuseAttribute(name==PeopleItem.所属社区,$areaValue:attribute.sqlValue);
+not RecordRelation(type==RelationType.RR_人口信息_可被访问_权限,$oldauth:right,AuthHelper.isMatchedAuthAndLabel($oldauth,EnumKeyValue.ENUM_权限标签_社区数据访问),$oldauth==AuthAlgorithm.getAreaAuthCode((Integer)$areaValue));
+then
+	OutputDisplay.showText("权限:  " + AuthAlgorithm.getAreaAuthCode((Integer)$areaValue));
+
+	recordRelationOpsBuilder.putRelation(RelationType.RR_人口信息_可被访问_权限,AuthAlgorithm.getAreaAuthCode((Integer)$areaValue));
+end
+
+
+
+ 

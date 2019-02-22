@@ -1,0 +1,52 @@
+package com.abc.rule.worktask.ipm.tipmTimer
+
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.relation.RecordRelation;
+import  com.zhsq.biz.constant.people.PeopleItem;
+import  com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.rrc.record.Attribute;
+import com.abc.rrc.factory.AttributeFactory;
+import com.zhsq.biz.family.algorithm.DataIntrospection;
+import com.zhsq.biz.constant.EnumKeyValue;
+import com.zhsq.biz.constant.RelationType;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.zhsq.biz.common.CommonCalculation;
+import com.zhsq.biz.people.algorithm.IDIntrospection;
+import com.zhsq.biz.constant.DateUtils;
+import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.zhsq.biz.common.OutputDisplay;
+import com.zhsq.biz.common.AuthAlgorithm;
+import com.zhsq.biz.worktask.algorithm.TaskIntrospection;
+import com.zhsq.biz.constant.worktask.WorkTaskItem;
+
+
+global java.lang.String hostCode; 
+global java.lang.String hostType;
+
+global java.lang.String userCode;
+global java.lang.String recordCode;
+global java.lang.String recordName;
+
+global java.util.List attributeList;
+global java.util.List addedLabelList;
+global java.util.List removedLabelList;
+global java.util.List addedLabelList;
+global java.util.List putFuseLeafAttributeList;
+global java.util.List addedLeafAttrList;
+global java.util.Map removedLeafAttrMap;
+global com.abc.rrc.record.RootRecord rootRecord;
+global  com.abc.ops.builder.RecordRelationOpsBuilder recordRelationOpsBuilder;
+global com.abc.complexus.RecordComplexus recordComplexus;
+
+rule "超时任务标记"//处理中的任务进行超时标记
+	salience 8
+when
+	$taskD:FuseAttribute( name==WorkTaskItem.任务状态, sqlValue==EnumKeyValue.ENUM_任务状态_处理中);
+	$taskE:FuseAttribute( name==WorkTaskItem.任务结束时间,CommonCalculation.isBasicLawful(value));
+	$taskF:FuseAttribute( name==WorkTaskItem.任务是否超时,sqlValue!=EnumKeyValue.ENUM_是否_是) or (not FuseAttribute(name==WorkTaskItem.任务是否超时))
+	eval(TaskIntrospection.inspectTimeOut($taskE.getValueForShow()))
+then  
+	Attribute taskF = AttributeFactory.newInstance(WorkTaskItem.任务是否超时, EnumKeyValue.ENUM_是否_是);
+	attributeList.add(taskF);
+end
+
