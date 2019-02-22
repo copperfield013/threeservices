@@ -37,7 +37,7 @@ public class SessionFactory {
 		return kSession;
 	}
 	
-	public static KieSession  findScannerSession(String sessionName){
+	public static KieSession  findSessionKeepContainer(String sessionName){
 		KieServices ks = KieServices.Factory.get();
 		KieContainer kContainer = ks.getKieClasspathContainer();
 		KieSession kSession = kContainer
@@ -89,17 +89,17 @@ public class SessionFactory {
 		return kSession;
 	}
 	
-	/*public static KieSession  findScannerSession(String sessionName){
+	public static KieSession  findScannerSession(String sessionName){
 		KieServices kieServices = KieServices.Factory.get();
 		
-		groupId=com.drools.web.test
+		/*groupId=com.drools.web.test
 				artifactId=drools_web_class
 				version=1.6.10
-				1.6.9-SNAPSHOT
+				1.6.9-SNAPSHOT*/
 				
 		//ReleaseId releaseId = kieServices.newReleaseId("com.drools.web.test", "drools_web_class", "1.6.9-SNAPSHOT");
 				
-		ReleaseId releaseId = kieServices.newReleaseId("com.zhsq.biz", "threeservices", "0.0.31");
+		ReleaseId releaseId = kieServices.newReleaseId("com.zhsq.biz", "threeservices", "0.0.33");
 				
 		KieContainer kieContainer = kieServices.newKieContainer(releaseId);
 		KieScanner kieScanner = kieServices.newKieScanner(kieContainer);
@@ -118,7 +118,7 @@ public class SessionFactory {
 		
 		return kSession;
 	}
-	*/
+	
 	
 	/*public static void main(String[] args) throws InterruptedException {
 		KieSession session = SessionFactory.findScannerSession("");

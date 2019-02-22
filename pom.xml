@@ -4,7 +4,7 @@
 
 	<groupId>com.zhsq.biz</groupId>
 	<artifactId>threeservices</artifactId>
-	<version>0.0.33</version>
+	<version>0.0.35</version>
 	<packaging>jar</packaging>
 	
 	<url>http://maven.apache.org</url>
