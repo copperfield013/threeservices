@@ -74,5 +74,25 @@ public class RelationType {
 
 	public static final String RR_组织_拥有的任务_工作任务="XFJDE1334R1362";
 	public static final String RR_工作任务_发布组织_组织="XFJDE379R1361";
+
+	public static final String RR_人口信息_死亡任务_工作任务="XFJDE001R1370";
+	public static final String RR_工作任务_死亡人口_人口信息="XFJDE379R1369";
+
+	public static final String RR_人口信息_服刑登记报告_服刑人员报告登记="XFJDE001R1379";
+	public static final String RR_人口信息_公益劳动预排_服刑人员公益劳动预排="XFJDE001R1389";
+	public static final String RR_人口信息_咨询法律_法律援助咨询登记="XFJDE001R1406";
+	public static final String RR_人口信息_调解案件_案件调解登记="XFJDE001R1416";
+	public static final String RR_人口信息_帮教信息_帮教信息="XFJDE001R1485";
+	public static final String RR_人口信息_走访记录_走访记录="XFJDE001R1504";
+	public static final String RR_人口信息_待走访记录_走访记录="XFJDE001R1515";
+	public static final String RR_服刑人员报告登记_服刑人员_人口信息="XFJDE1371R1378";
+	public static final String RR_服刑人员公益劳动预排_公益劳动人_人口信息="XFJDE1380R1388";
+	public static final String RR_法律援助咨询登记_咨询人_人口信息="XFJDE1395R1405";
+	public static final String RR_案件调解登记_当事人_人口信息="XFJDE1407R1415";
+	public static final String RR_法制教育统计_帮教信息_帮教信息="XFJDE1417R1488";
+	public static final String RR_帮教信息_被帮教人_人口信息="XFJDE1479R1484";
+	public static final String RR_帮教信息_法制教育_法制教育统计="XFJDE1479R1487";
+	public static final String RR_走访记录_走访人口_人口信息="XFJDE1497R1503";
+	public static final String RR_走访记录_待走访人口_人口信息="XFJDE1497R1514";
 	
 }

@@ -160,5 +160,10 @@ public class PeopleItem {
 	public static final String 残疾人补助信息_补助金额="XFJD744";
 	public static final String 残疾人补助信息_描述="XFJD745";
 	public static final String 残疾人补助信息_补助类型="XFJD746";
+	public static final String 办理60岁老年优待证状态="XFJD1520";
 	
+	public static final String 基本信息2="XFJD1521";
+	public static final String 是否社会化管理="XFJD1522";
+	public static final String 服务需求="XFJD1523";
+	public static final String _80岁老人月走访状态="XFJD1524";
 }

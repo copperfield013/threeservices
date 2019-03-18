@@ -81,7 +81,7 @@ public class FamilyBNB implements BizNoBusy, IdentityQuery, Improvement, IFusiti
 	}
 
 	@Override
-	public ImproveResult secondImprove(BizFusionContext arg0, String arg1, RecordComplexus arg2) {
+	public ImproveResult secondImprove(BizFusionContext context, String recordCode, RecordComplexus recordComplexus) {
 		// TODO Auto-generated method stub
 		return null;
 	}

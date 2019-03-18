@@ -14,6 +14,7 @@ public class BaseConstant {
 	public static final String TYPE_四类人员="XFJDE1015";//人员分类统计
 	public static final String TYPE_用户="ABCBE002";//用户
 	public static final String TYPE_组织="XFJDE1334";//组织
+	public static final String TYPE_走访记录="XFJDE1497";//走访记录
 	
 	public static final String Column_ABP0001 = "ABP0001";
 	

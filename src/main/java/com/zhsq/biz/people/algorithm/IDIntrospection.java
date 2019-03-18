@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.util.SystemOutLogger;
 
 import com.abc.complexus.RecordComplexus;
@@ -16,31 +17,83 @@ import com.abc.relation.RecordRelation;
 import com.abc.relation.RelationCorrelation;
 import com.abc.relation.RelationQueryPanel;
 import com.abc.rrc.record.RootRecord;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.DateUtils;
 import com.zhsq.biz.constant.EnumKeyValue;
 import com.zhsq.biz.constant.RelationType;
+import com.zhsq.biz.constant.interview.InterviewItem;
 import com.zhsq.biz.constant.people.PeopleItem;
 
 public class IDIntrospection {
 	
 	
+	//获取最新一条关系的指定属性的值， 最新判断-》属性应该为日期型
 	/**
-	 * 根据recordCode获取人口姓名
+	 * 
+	 * @param recordComplexus
+	 * @param recordName
+	 * @param recordCode
+	  * @param relationType   指定的关系类型      type==RelationType.RR_人口信息_走访记录_走访记录
+	 * @param isItemValue   判断为最新的依据（必须为日期型）  实例中具体的属性字段        InterviewItem.走访时间
+	 * @param resultItemValue  返回的结果值        InterviewItem.走访时间  任何值
+	 * @return
+	 */
+	public static String getNewestRelationPro(RecordComplexus recordComplexus,String recordName, String recordCode, String relationType, String isItemValue, String resultItemValue) {
+		RecordRelation newestRecordRelation = getNewestRecordRelation(recordComplexus, recordName, recordCode, relationType, isItemValue);
+		String birthStr = null;
+		if (newestRecordRelation !=null) {
+			birthStr = (String)CommonAlgorithm.getDataValue(recordComplexus, newestRecordRelation.getRight(), resultItemValue);
+		}
+		
+		return birthStr;
+	}
+	
+	/**
+	 * 获取指定关系中 最新的一条关系
+	 * 指定字段  必须为日期型
+	 * @param recordComplexus
+	 * @param recordName
+	 * @param recordCode
+	 * @param relationType   指定的关系类型       type==RelationType.RR_人口信息_走访记录_走访记录
+	 * @param isItemValue     实例中具体的属性字段     InterviewItem.走访时间  任何值
+	 * @return
+	 */
+	public static RecordRelation getNewestRecordRelation(RecordComplexus recordComplexus,String recordName, String recordCode, String relationType, String isItemValue) {
+		RecordRelation resultRecordRelation = null;
+		Long beforeTime = 0l;
+		
+		RelationCorrelation	relationCorrelation = CommonAlgorithm.getRelationCorrelation(recordComplexus, recordName, recordCode);
+		if (relationCorrelation != null) {
+			Collection<RecordRelation> recordRelation = relationCorrelation.getRecordRelation();
+			if (!recordRelation.isEmpty()) {
+				for (RecordRelation recordRelation2 : recordRelation) {
+					//根据关系的属性， 获取最新的
+					if (relationType.equals(recordRelation2.getType())) {
+						String dataValue = (String)CommonAlgorithm.getDataValue(recordComplexus, recordRelation2.getRight(), isItemValue);
+						
+						Long longTime = DateUtils.toLongTime(null, dataValue);
+						if (longTime != null && longTime > beforeTime) {
+							beforeTime = longTime;
+							resultRecordRelation = recordRelation2;
+						}
+						
+					}
+				}
+			}
+		}
+		
+		return resultRecordRelation;
+	}
+	
+	
+	/**
+	 * 获取子女的数量， 
+	 * 下次更新》 获取指定关系的数量
 	 * @param recordComplexus
 	 * @param recordName
 	 * @param recordCode
 	 * @return
 	 */
-	public static String getPeopleName(RecordComplexus recordComplexus, String recordCode) {
-		RootRecord rootRecord = recordComplexus.getRootRecord(recordCode);
-		String name = "";
-		if (rootRecord != null) {
-			name = rootRecord.findAttribute(PeopleItem.姓名).getValueStr();
-		}
-		
-		return name;
-	}
-	
-	
 	public static Integer getChildrenCount(RecordComplexus recordComplexus,String recordName, String recordCode) {
 		Integer count = 0;
 		//RootRecord recordCompound=recordComplexus.getHostRootRecord();
@@ -48,17 +101,10 @@ public class IDIntrospection {
 		RelationCorrelation relationCorrelation = 
 		recordComplexus.getRelationCorrelation(recordCode);//此方法是当前页面加载进来的关系
 		*/
-		
 		RelationCorrelation relationCorrelation = null;
-		
-		relationCorrelation = getRelationCorrelation(recordComplexus, recordName, recordCode);
-		
+		relationCorrelation = CommonAlgorithm.getRelationCorrelation(recordComplexus, recordName, recordCode);
 		if (relationCorrelation !=null) {
 			Collection<RecordRelation> recordRelation = relationCorrelation.getRecordRelation();
-			
-			//relationCorrelation.getRelationByName(RelationType.RR_人口信息_子女_人口信息);
-			
-			
 			if (!recordRelation.isEmpty()) {
 				for (RecordRelation recordRelation2 : recordRelation) {
 					if (RelationType.RR_人口信息_子女_人口信息.equals(recordRelation2.getType())) {
@@ -70,18 +116,6 @@ public class IDIntrospection {
 		
 		return count;
 	}
-	
-	public static RelationCorrelation getRelationCorrelation(RecordComplexus recordComplexus,String recordName, String recordCode) {
-		RelationCorrelation relationCorrelation = null;
-		relationCorrelation = recordComplexus.getRelationCorrelation(recordCode);
-		
-		if (relationCorrelation == null) {
-			relationCorrelation = RelationQueryPanel.get(recordName, recordCode);
-		}
-		
-		return relationCorrelation;
-	}
-	
 	
 	/**
 	 * 身份证号校验

@@ -51,10 +51,8 @@ public class PeopleBNB implements BizNoBusy, IdentityQuery, Improvement, IFusiti
 	}
 
 	@Override
-	public ImproveResult secondImprove(BizFusionContext arg0, String arg1, RecordComplexus arg2) {
-		// TODO Auto-generated method stub
-		return null;
+	public ImproveResult secondImprove(BizFusionContext context, String recordCode, RecordComplexus recordComplexus) {
+		return KIEHelper.getImproveResultFromKIE(context, recordCode, recordComplexus,
+				SessionFactory.findScannerSession("ks-people-secondipm"));
 	}
-	
-
 }

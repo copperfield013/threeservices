@@ -1,25 +1,29 @@
-package com.zhsq.biz.people;
+package com.zhsq.biz.casemedreg;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
 
 import com.abc.application.BizFusionContext;
+import com.abc.application.BizNoBusy;
+import com.abc.callback.IFusitionCallBack;
 import com.abc.complexus.RecordComplexus;
+import com.abc.fuse.identity.query.IdentityQuery;
 import com.abc.fuse.improve.ImproveResult;
+import com.abc.fuse.improve.Improvement;
 import com.abc.ops.complexus.OpsComplexus;
+import com.abc.rrc.query.queryrecord.criteria.Criteria;
 import com.zhsq.biz.common.KIEHelper;
 import com.zhsq.biz.common.SessionFactory;
 
-public class PeopleBNBTimer extends PeopleBNB {
-	
-	/**
-	 * true: 只要为true， 任何情况都融合
-	 * false: 任何情况都不融合
-	 */
+@Repository(value = "XFJDE1407")
+public class CaseMedRegBNB implements BizNoBusy, IdentityQuery, Improvement, IFusitionCallBack {
+
 	@Override
-	public boolean improveEveryTime() {
-		// TODO Auto-generated method stub
-		return true;
+	public List<Criteria> getCriteriaList(String recordCode, RecordComplexus complexus) {
+		return null;
 	}
-	
-	
+
 	@Override
 	public ImproveResult preImprove(BizFusionContext context, String recordCode, OpsComplexus opsComplexus,
 			RecordComplexus recordComplexus) {
@@ -29,9 +33,9 @@ public class PeopleBNBTimer extends PeopleBNB {
 	@Override
 	public ImproveResult improve(BizFusionContext context, String recordCode, RecordComplexus recordComplexus) {
 		return KIEHelper.getImproveResultFromKIE(context, recordCode, recordComplexus,
-				SessionFactory.findScannerSession("ks-people-ipm-ipmTimer"));
+				SessionFactory.findScannerSession("ks-caseMedRegipm-ipm"));
 	} 
-	
+
 	@Override
 	public boolean afterFusition(String recordCode, BizFusionContext context) {
 
@@ -42,10 +46,10 @@ public class PeopleBNBTimer extends PeopleBNB {
 	public ImproveResult postImprove(BizFusionContext context, String recordCode, RecordComplexus recordComplexus) {
 		return null;
 	}
-	
+
 	@Override
-	public ImproveResult secondImprove(BizFusionContext context, String recordCode, RecordComplexus recordComplexus) {
-		return KIEHelper.getImproveResultFromKIE(context, recordCode, recordComplexus,
-				SessionFactory.findScannerSession("ks-people-secondipm-secondipmTimer"));
+	public ImproveResult secondImprove(BizFusionContext arg0, String arg1, RecordComplexus arg2) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

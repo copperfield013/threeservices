@@ -6,6 +6,7 @@ import com.abc.complexus.RecordComplexus;
 import com.abc.relation.RecordRelation;
 import com.abc.relation.RelationCorrelation;
 import com.abc.rrc.record.RootRecord;
+import com.zhsq.biz.constant.CommonAlgorithm;
 import com.zhsq.biz.constant.RelationType;
 import com.zhsq.biz.people.algorithm.IDIntrospection;
 
@@ -46,7 +47,7 @@ public class DataIntrospection {
 	}
 	
 	private static Collection<RecordRelation> getRecordRelation(RecordComplexus recordComplexus, String recordName, String recordCode) {
-		RelationCorrelation relationCorrelation = IDIntrospection.getRelationCorrelation(recordComplexus, recordName, recordCode);
+		RelationCorrelation relationCorrelation = CommonAlgorithm.getRelationCorrelation(recordComplexus, recordName, recordCode);
 		if (relationCorrelation != null) {
 			return relationCorrelation.getRecordRelation();
 		}
