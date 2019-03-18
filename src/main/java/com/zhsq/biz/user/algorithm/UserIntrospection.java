@@ -7,6 +7,7 @@ import com.abc.relation.RecordRelation;
 import com.abc.relation.RelationCorrelation;
 import com.abc.rrc.record.Attribute;
 import com.abc.rrc.record.RootRecord;
+import com.zhsq.biz.constant.CommonAlgorithm;
 import com.zhsq.biz.constant.RelationType;
 import com.zhsq.biz.constant.org.OrgItem;
 import com.zhsq.biz.people.algorithm.IDIntrospection;
@@ -20,7 +21,7 @@ public class UserIntrospection {
 		
 		RelationCorrelation relationCorrelation = null;
 		
-		relationCorrelation = IDIntrospection.getRelationCorrelation(recordComplexus, recordName, recordCode);
+		relationCorrelation = CommonAlgorithm.getRelationCorrelation(recordComplexus, recordName, recordCode);
 		
 		if (relationCorrelation !=null) {
 			Collection<RecordRelation> recordRelation = relationCorrelation.getRecordRelation();

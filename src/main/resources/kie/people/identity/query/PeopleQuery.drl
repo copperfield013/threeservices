@@ -13,19 +13,6 @@ import com.abc.rrc.query.criteria.CommonSymbol;
 global java.lang.String recordName;
 global com.abc.rrc.query.criteria.BizzCriteriaFactory bizzCriteriaFactory;
 
-/*
-rule "姓名 and 身份证号 criteria" 
-	activation-group "people查询条件"
-	salience 9  
-when
-    $nameFB:FuseAttribute(name==PeopleItem.姓名,CommonCalculation.isBasicLawful(value));
-    $IdFB:FuseAttribute(name==PeopleItem.身份证号码,CommonCalculation.isBasicLawful(value));
-then 
-	bizzCriteriaFactory.addCriteria($nameFB.getAttribute(), CommonSymbol.EQUAL);
-	bizzCriteriaFactory.addCriteria($IdFB.getAttribute(), CommonSymbol.EQUAL);
-end
-*/
-
 rule "姓名 and 身份证号 criteria" 
 	activation-group "people查询条件"
 	salience 9  

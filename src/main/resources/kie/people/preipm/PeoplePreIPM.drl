@@ -15,12 +15,12 @@ import com.zhsq.biz.constant.EnumKeyValue;
 import com.zhsq.biz.constant.RelationType;
 import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
 import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.people.algorithm.IDIntrospection;
 import com.zhsq.biz.constant.DateUtils;
 import com.zhsq.biz.constant.BaseConstant;
 import com.abc.relation.RelationCorrelation;
 import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
 import com.zhsq.biz.people.algorithm.IDIntrospection;
+import com.zhsq.biz.constant.CommonAlgorithm;
 
 
 global java.lang.String hostCode; 
@@ -78,11 +78,8 @@ then
 	recordRelationOpsBuilder.putRelation(relationName,$huzCode); 
 	}
 	
-	Attribute attr = AttributeFactory.newInstance(PeopleItem.户主姓名, IDIntrospection.getPeopleName(recordComplexus, $huzCode));
+	Attribute attr = AttributeFactory.newInstance(PeopleItem.户主姓名, CommonAlgorithm.getDataValue(recordComplexus, $huzCode, PeopleItem.姓名));
 	attributeList.add(attr);
-	com.zhsq.biz.common.OutputDisplay.showText("户主code：" + $huzCode);
-	com.zhsq.biz.common.OutputDisplay.showText("户主姓名：" + IDIntrospection.getPeopleName(recordComplexus, $huzCode));
-	
 end
 
 rule "把身份证号从15位改为18位"

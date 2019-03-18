@@ -1,0 +1,56 @@
+package com.abc.rule.casemedreg.ipm
+
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.relation.RecordRelation;
+import com.abc.rrc.record.Attribute;
+import com.abc.rrc.factory.AttributeFactory;
+import com.zhsq.biz.family.algorithm.DataIntrospection;
+import com.zhsq.biz.constant.EnumKeyValue;
+import com.zhsq.biz.constant.RelationType;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.zhsq.biz.common.CommonCalculation;
+import com.zhsq.biz.constant.DateUtils;
+import com.zhsq.biz.common.AuthAlgorithm;
+import com.abc.auth.AuthHelper;
+import com.zhsq.biz.common.OutputDisplay;
+import com.zhsq.biz.constant.casemedreg.CaseMedRegItem;
+import com.zhsq.biz.constant.DateUtils;
+import com.zhsq.biz.casemedreg.algorithm.CaseMedIntrospection;
+import com.zhsq.biz.constant.CommonAlgorithm;
+
+global java.lang.String hostCode; 
+global java.lang.String hostType;
+
+global java.lang.String userCode;
+global java.lang.String recordCode;
+global java.lang.String recordName;
+
+global java.util.List attributeList;
+global java.util.List addedLabelList;
+global java.util.List removedLabelList;
+global java.util.List addedLabelList;
+global java.util.List putFuseLeafAttributeList;
+global java.util.List addedLeafAttrList;
+global java.util.Map removedLeafAttrMap;
+global com.abc.rrc.record.RootRecord rootRecord;
+global  com.abc.ops.builder.RecordRelationOpsBuilder recordRelationOpsBuilder;
+global com.abc.complexus.RecordComplexus recordComplexus;
+
+rule "更新调解结果"//根据调解记录最后一次调解结果更新基本字段的调解结果
+	salience 15
+	when
+		eval(CommonAlgorithm.isExistLeaf(recordComplexus, recordCode, CaseMedRegItem.调解记录))
+	then 
+		Object value = CaseMedIntrospection.getMediateRes(recordComplexus, recordCode);
+		Attribute attribute=AttributeFactory.newInstance(CaseMedRegItem.调解结果, value);
+		attributeList.add(attribute);
+end
+
+rule "赋值已履行金额"//履行记录中的履行金额全部加起来之和赋值给已履行金额
+	salience 15
+	when
+		eval(CommonAlgorithm.isExistLeaf(recordComplexus, recordCode, CaseMedRegItem.履行记录))
+	then  
+		Attribute attribute=AttributeFactory.newInstance(CaseMedRegItem.已履行金额,CaseMedIntrospection.getMoney(recordComplexus, recordCode));
+		attributeList.add(attribute);
+end

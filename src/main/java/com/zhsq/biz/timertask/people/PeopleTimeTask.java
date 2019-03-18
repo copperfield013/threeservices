@@ -51,6 +51,7 @@ public class PeopleTimeTask {
 		LocalDate localDate = LocalDate.now();
 		LocalDate date16 = localDate.plusYears(-16);//今天刚满16岁的 添加育龄妇女标签
 		LocalDate date51 = localDate.plusYears(-51);//今天刚满51岁的删除育龄妇女标签
+		LocalDate date59_ = localDate.plusYears(-60).plusMonths(3);//还差三个月才满60岁的
 		LocalDate date60 = localDate.plusYears(-60);//今天刚满60岁的
 		LocalDate date70 = localDate.plusYears(-70);//今天刚满70岁的
 		LocalDate date80 = localDate.plusYears(-80);//今天刚满80岁的

@@ -34,6 +34,7 @@ global com.abc.rrc.record.RootRecord rootRecord;
 global  com.abc.ops.builder.RecordRelationOpsBuilder recordRelationOpsBuilder;
 global com.abc.complexus.RecordComplexus recordComplexus;
 
+/*
 rule "无正確社区信息权限"
 	salience 10 
 when
@@ -62,7 +63,6 @@ then
 
 	recordRelationOpsBuilder.putRelation(RelationType.RR_人口信息_可被访问_权限,AuthAlgorithm.getAreaAuthCode((Integer)$areaValue));
 end
-
-
+*/
 
  
