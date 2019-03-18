@@ -5,10 +5,10 @@
 	<kbase name="familyidtquery" packages="kie.family.identity.query">
 		<ksession name="ks-family-idt-query" />
 	</kbase>
-	<kbase name="familypreipm" packages="kie.family.preipm.*">
+	<kbase name="familypreipm" packages="kie.family.preipm">
 		<ksession name="ks-family-preipm" />
 	</kbase>
-	<kbase name="familyipm" packages="kie.family.ipm.*">
+	<kbase name="familyipm" packages="kie.family.ipm, kie.family.ipm.ipmTimer">
 		<ksession name="ks-family-ipm" />
 	</kbase>
 	<kbase name="familypostimp" packages="kie.family.postimp">
@@ -22,35 +22,42 @@
 	<kbase name="peopleipmtimer" packages="kie.people.ipm.ipmTimer">
 		<ksession name="ks-people-ipm-ipmTimer" />
 	</kbase>
-	<kbase name="peoplepreipm" packages="kie.people.preipm.*">
+	<kbase name="peoplepreipm" packages="kie.people.preipm">
 		<ksession name="ks-people-preipm" />
 	</kbase>
-	<kbase name="peopleipm" packages="kie.people.ipm.*">
+	<kbase name="peopleipm" packages="kie.people.ipm, kie.people.ipm.ipmTimer">
 		<ksession name="ks-people-ipm" />
 	</kbase>
 	<kbase name="peoplePostIMP" packages="kie.people.postimp">
 		<ksession name="ks-people-postimp" />
 	</kbase>
 	
+	<kbase name="peopleSecondIPM" packages="kie.people.secondipm, kie.people.secondipm.secondipmTimer">
+		<ksession name="ks-people-secondipm" />
+	</kbase>
+	<kbase name="peopleSecondIPMTimer" packages="kie.people.secondipm.secondipmTimer">
+		<ksession name="ks-people-secondipm-secondipmTimer" />
+	</kbase>
+	
 	<!-- worktask -->
 	<kbase name="worktaskidtquery" packages="kie.worktask.identity.query">
 		<ksession name="ks-worktask-idt-query" />
 	</kbase>
-	<kbase name="worktaskipm" packages="kie.worktask.ipm.*">
+	<kbase name="worktaskipm" packages="kie.worktask.ipm, kie.worktask.ipm.tipmTimer">
 		<ksession name="ks-worktask-ipm" />
 	</kbase>
-	<kbase name="worktaskpreipm" packages="kie.worktask.preipm.*">
+	<kbase name="worktaskpreipm" packages="kie.worktask.preipm">
 		<ksession name="ks-worktask-preipm" />
 	</kbase>
 	<kbase name="worktaskipmtimer" packages="kie.worktask.ipm.ipmTimer">
 		<ksession name="ks-worktask-ipm-ipmTimer" />
 	</kbase>
 	
-	<kbase name="worktaskpostipm" packages="kie.worktask.postipm.*">
+	<kbase name="worktaskpostipm" packages="kie.worktask.postipm">
 		<ksession name="ks-worktask-postipm" />
 	</kbase>
 	<!-- 四类人员 -->
-	<kbase name="FourTypePeopleipm" packages="kie.FourTypePeople.ipm.*">
+	<kbase name="FourTypePeopleipm" packages="kie.FourTypePeople.ipm">
 		<ksession name="ks-FourTypePeople-ipm" />
 	</kbase>
 	
@@ -58,11 +65,16 @@
 	<kbase name="userquery" packages="kie.user.identity.query">
 		<ksession name="ks-user-idt-query" />
 	</kbase>
-	<kbase name="useripm" packages="kie.user.ipm.*">
+	<kbase name="useripm" packages="kie.user.ipm">
 		<ksession name="ks-user-ipm" />
 	</kbase>
-	<kbase name="usertwoipm" packages="kie.user.twoipm.*">
+	<kbase name="usertwoipm" packages="kie.user.twoipm">
 		<ksession name="ks-user-twoipm" />
+	</kbase>
+	
+	<!-- 案件调解登记 -->
+	<kbase name="caseMedRegipm" packages="kie.casemedreg.ipm">
+		<ksession name="ks-caseMedRegipm-ipm" />
 	</kbase>
 	
 </kmodule>

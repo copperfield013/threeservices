@@ -1,4 +1,3 @@
-
 package com.abc.rule.user.identity.query
 
 import com.abc.rrc.query.queryrecord.criteria.Criteria;

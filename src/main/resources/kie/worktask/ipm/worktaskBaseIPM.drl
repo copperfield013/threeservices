@@ -40,12 +40,13 @@ global com.abc.rrc.record.RootRecord rootRecord;
 global  com.abc.ops.builder.RecordRelationOpsBuilder recordRelationOpsBuilder;
 global com.abc.complexus.RecordComplexus recordComplexus;
 
+
 rule "规则文件"
 	when
 		eval(true)
 	then
-		System.out.println("111111111111111111");
-		System.out.println("111111111111111111");
+		System.out.println("我是0.0.91");
+		System.out.println("8888888");
 end
 
 rule "新建任务设置"
@@ -116,7 +117,6 @@ then
 	attributeList.add(task);
 	attributeList.add(gdVf);
 end
-
 
 rule "认领任务设置任务执行人"//并删除可领用关系
 	salience 10 
