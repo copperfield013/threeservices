@@ -1,4 +1,4 @@
-package com.zhsq.biz.casemedreg;
+package com.zhsq.biz.minzsalvation;
 
 import java.util.List;
 
@@ -15,13 +15,18 @@ import com.abc.ops.complexus.OpsComplexus;
 import com.abc.rrc.query.queryrecord.criteria.Criteria;
 import com.zhsq.biz.common.KIEHelper;
 import com.zhsq.biz.common.SessionFactory;
-
-@Repository(value = "XFJDE1407")
-public class CaseMedRegBNB implements BizNoBusy, IdentityQuery, ThreeRoundImprovement, IFusitionCallBack {
-
+/**
+ * 民政帮扶数据
+ * @author so-well
+ *
+ */
+@Repository(value = "XFJDE1691")
+public class MinZSalvationBNB implements BizNoBusy, IdentityQuery, ThreeRoundImprovement, IFusitionCallBack {
+	
 	@Override
 	public List<Criteria> getCriteriaList(String recordCode, RecordComplexus complexus) {
-		return null;
+		return KIEHelper.getBizCriteriaListFromKIE(recordCode, complexus,
+				SessionFactory.findScannerSession("ks-minzsalvation-idt-query"));
 	}
 
 	@Override
@@ -32,8 +37,7 @@ public class CaseMedRegBNB implements BizNoBusy, IdentityQuery, ThreeRoundImprov
 
 	@Override
 	public ImproveResult improve(BizFusionContext context, String recordCode, RecordComplexus recordComplexus) {
-		return KIEHelper.getImproveResultFromKIE(context, recordCode, recordComplexus,
-				SessionFactory.findScannerSession("ks-caseMedRegipm-ipm"));
+		return null;
 	} 
 
 	@Override
@@ -48,13 +52,12 @@ public class CaseMedRegBNB implements BizNoBusy, IdentityQuery, ThreeRoundImprov
 	}
 
 	@Override
-	public ImproveResult secondImprove(BizFusionContext arg0, String arg1, RecordComplexus arg2) {
-		
+	public ImproveResult secondImprove(BizFusionContext context, String recordCode, RecordComplexus recordComplexus) {
 		return null;
 	}
 
 	@Override
-	public ImproveResult thirdImprove(BizFusionContext arg0, String arg1, RecordComplexus arg2) {
+	public ImproveResult thirdImprove(BizFusionContext context, String recordCode, RecordComplexus recordComplexus) {
 		return null;
 	}
 }

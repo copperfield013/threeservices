@@ -436,4 +436,44 @@ public class EnumKeyValue {
 	public static final Integer ENUM_办理状态_办理完毕=30561;
 	public static final Integer ENUM_80岁老人月走访状态_已走访=30563;
 	public static final Integer ENUM_80岁老人月走访状态_未走访=30564;
+	public static final Integer ENUM_民政健康状况_一般_长病=30441;
+	
+	public static final Integer ENUM_救助类别_支出=30566;
+	public static final Integer ENUM_救助类别_应急=30567;
+	public static final Integer ENUM_家庭类型_低保=30569;
+	public static final Integer ENUM_家庭类型_残保=30570;
+	public static final Integer ENUM_家庭类型_市困=30571;
+	public static final Integer ENUM_家庭类型_区困=30572;
+	public static final Integer ENUM_家庭类型_低边=30573;
+	public static final Integer ENUM_家庭类型_外来人=30574;
+	public static final Integer ENUM_家庭类型_其他=30575;
+	public static final Integer ENUM_致困原因_因灾=30577;
+	public static final Integer ENUM_致困原因_因收入=30578;
+	public static final Integer ENUM_致困原因_因学=30579;
+	public static final Integer ENUM_致困原因_因病=30580;
+	public static final Integer ENUM_致困原因_综合性=30581;
+	public static final Integer ENUM_家庭人均收入类型_持救助证=30583;
+	public static final Integer ENUM_家庭人均收入类型_低于低保标准2点5倍=30584;
+	public static final Integer ENUM_家庭人均收入类型_低保标准2点5倍至本市人均收入0点6=30585;
+	public static final Integer ENUM_家庭人均收入类型_本市人均收入0点6至1点3=30586;
+	public static final Integer ENUM_持证类型_低保=30588;
+	public static final Integer ENUM_持证类型_残保=30589;
+	public static final Integer ENUM_持证类型_市困=30590;
+	public static final Integer ENUM_持证类型_区困=30591;
+	public static final Integer ENUM_持证类型_低边=30592;
+	public static final Integer ENUM_民政帮扶_帮扶=30594;
+	public static final Integer ENUM_帮扶_救助=30595;
+	public static final Integer ENUM_救助_最低生活保障边缘家庭_低边证=30596;
+	public static final Integer ENUM_救助_最低生活保障家庭_低保证=30598;
+	public static final Integer ENUM_救助_特定对象=30602;
+	public static final Integer ENUM_最低生活保障边缘家庭_低边证_低保边缘户=30597;
+	public static final Integer ENUM_最低生活保障家庭_低保证_残疾人单列施保=30599;
+	public static final Integer ENUM_最低生活保障家庭_低保证_收入型低保=30600;
+	public static final Integer ENUM_最低生活保障家庭_低保证_支出型贫困=30601;
+	public static final Integer ENUM_特定对象_农转非=30603;
+	public static final Integer ENUM_特定对象_五八城迁人员=30604;
+	public static final Integer ENUM_特定对象_精简辞退人员=30605;
+	
+	public static final Integer ENUM_人口标签_精准扶贫人员=30619;
+	public static final Integer ENUM_家庭标签_精准扶贫家庭=30618;
 }

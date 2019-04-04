@@ -9,15 +9,15 @@ import com.abc.application.BizNoBusy;
 import com.abc.callback.IFusitionCallBack;
 import com.abc.complexus.RecordComplexus;
 import com.abc.fuse.identity.query.IdentityQuery;
-import com.abc.fuse.improve.Improvement;
 import com.abc.fuse.improve.ImproveResult;
+import com.abc.fuse.improve.ThreeRoundImprovement;
 import com.abc.ops.complexus.OpsComplexus;
 import com.abc.rrc.query.queryrecord.criteria.Criteria;
 import com.zhsq.biz.common.KIEHelper;
 import com.zhsq.biz.common.SessionFactory;
 
 @Repository(value = "ABCBE002")
-public class UserBNB implements BizNoBusy, IdentityQuery, Improvement, IFusitionCallBack {
+public class UserBNB implements BizNoBusy, IdentityQuery, ThreeRoundImprovement, IFusitionCallBack {
 
 	@Override
 	public boolean afterFusition(String code, BizFusionContext context) {
@@ -62,6 +62,12 @@ public class UserBNB implements BizNoBusy, IdentityQuery, Improvement, IFusition
 		return KIEHelper.getBizCriteriaListFromKIE(recordCode, complexus,
 				SessionFactory.findScannerSession("ks-user-idt-query"));
 
+	}
+
+	@Override
+	public ImproveResult thirdImprove(BizFusionContext arg0, String arg1, RecordComplexus arg2) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

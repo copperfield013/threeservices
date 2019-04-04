@@ -16,7 +16,7 @@ public class PeopleItem {
 	public static final String 证件信息="XFJD035";
 	public static final String 身份证号码="XFJD038";
 	public static final String 户籍所在地="XFJD041";
-	public static final String 户籍地门牌号="XFJD042";
+	//public static final String 户籍地门牌号="XFJD042";  //弃用
 	public static final String 管理类型="XFJD043";
 	public static final String 人口状态="XFJD044";
 	public static final String 户编号="XFJD045";
@@ -166,4 +166,25 @@ public class PeopleItem {
 	public static final String 是否社会化管理="XFJD1522";
 	public static final String 服务需求="XFJD1523";
 	public static final String _80岁老人月走访状态="XFJD1524";
+	
+	
+	public static final String 户籍变更_变动前居委会="XFJD1519";
+	public static final String 补助信息_享受起始年月="XFJD1516";
+	public static final String 补助信息_享受中止年月="XFJD1517";
+	public static final String 补助信息_实际享受月数="XFJD1518";
+	public static final String 事项名称_事项名称="XFJD1733";
+	
+	public static final String 健康状况="XFJD1146";
+	public static final String 职业状况="XFJD1147";
+	public static final String 是否服刑人员="XFJD1511";
+	public static final String 矫正类型="XFJD1513";
+	public static final String 人员类别="XFJD1728";
+	public static final String 是否保障对象="XFJD1729";
+	public static final String 特定是否保障对象="XFJD1730";
+	public static final String 劳动能力="XFJD1731";
+	public static final String 事项名称="XFJD1732";
+	public static final String 事项数量="XFJD1734";
+	
+	public static final String 救助月发放金额="XFJD1754";
+	public static final String 救助年发放金额="XFJD1755";
 }

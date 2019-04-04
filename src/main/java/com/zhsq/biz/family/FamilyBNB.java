@@ -10,14 +10,14 @@ import com.abc.callback.IFusitionCallBack;
 import com.abc.complexus.RecordComplexus;
 import com.abc.fuse.identity.query.IdentityQuery;
 import com.abc.fuse.improve.ImproveResult;
-import com.abc.fuse.improve.Improvement;
+import com.abc.fuse.improve.ThreeRoundImprovement;
 import com.abc.ops.complexus.OpsComplexus;
 import com.abc.rrc.query.queryrecord.criteria.Criteria;
 import com.zhsq.biz.common.KIEHelper;
 import com.zhsq.biz.common.SessionFactory;
 
 @Repository(value = "XFJDE305")
-public class FamilyBNB implements BizNoBusy, IdentityQuery, Improvement, IFusitionCallBack {
+public class FamilyBNB implements BizNoBusy, IdentityQuery, ThreeRoundImprovement, IFusitionCallBack {
 	
 	/**
 	 * 只有关系改变时， 
@@ -79,9 +79,15 @@ public class FamilyBNB implements BizNoBusy, IdentityQuery, Improvement, IFusiti
 		return KIEHelper.getImproveResultFromKIE(context, recordCode, recordComplexus,
 				SessionFactory.findScannerSession("ks-family-postimp"));
 	}
-
+	
 	@Override
 	public ImproveResult secondImprove(BizFusionContext context, String recordCode, RecordComplexus recordComplexus) {
+		return KIEHelper.getImproveResultFromKIE(context, recordCode, recordComplexus,
+				SessionFactory.findScannerSession("ks-family-secondipm"));
+	}
+
+	@Override
+	public ImproveResult thirdImprove(BizFusionContext arg0, String arg1, RecordComplexus arg2) {
 		// TODO Auto-generated method stub
 		return null;
 	}

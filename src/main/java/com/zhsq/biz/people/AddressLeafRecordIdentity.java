@@ -9,10 +9,10 @@ import com.abc.rrc.record.LeafRecord;
 import com.abc.rrc.record.Record;
 import com.zhsq.biz.constant.people.PeopleItem;
 
-@Repository("XFJD059")
-public class AddressLeafRecordIdentity extends BaseLeafRecordIdentity{
-
-	@Override
+//@Repository("XFJD059")
+//public class AddressLeafRecordIdentity extends BaseLeafRecordIdentity{
+public class AddressLeafRecordIdentity {
+	/*@Override
 	public LeafRecord bizzIdentify(LeafRecord paramLeafRecord, Record paramRecord) {
 		 Object sqlValue = paramLeafRecord.findAttribute(PeopleItem.居住信息_居住地门牌号).getSqlValue();
 		
@@ -26,5 +26,5 @@ public class AddressLeafRecordIdentity extends BaseLeafRecordIdentity{
 		}
 		
 		return null;
-	}
+	}*/
 }

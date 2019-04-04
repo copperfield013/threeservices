@@ -15,7 +15,6 @@ public class AuthUtil {
 	public static Collection<String> getUserAuth(String userCode, Collection<Integer> labels) {
 		UserComplexus userComplexus = instance.getUserComplexus(userCode);
 		return userComplexus.findAuthHadTheseLabels(labels);
-
 	}
 	
 	public static String getUserName(String userCode) {

@@ -85,38 +85,6 @@ public class IDIntrospection {
 		return resultRecordRelation;
 	}
 	
-	
-	/**
-	 * 获取子女的数量， 
-	 * 下次更新》 获取指定关系的数量
-	 * @param recordComplexus
-	 * @param recordName
-	 * @param recordCode
-	 * @return
-	 */
-	public static Integer getChildrenCount(RecordComplexus recordComplexus,String recordName, String recordCode) {
-		Integer count = 0;
-		//RootRecord recordCompound=recordComplexus.getHostRootRecord();
-		/*RelationQueryPanel.get(recordName, recordCode);// 此方法是从数据库中读取
-		RelationCorrelation relationCorrelation = 
-		recordComplexus.getRelationCorrelation(recordCode);//此方法是当前页面加载进来的关系
-		*/
-		RelationCorrelation relationCorrelation = null;
-		relationCorrelation = CommonAlgorithm.getRelationCorrelation(recordComplexus, recordName, recordCode);
-		if (relationCorrelation !=null) {
-			Collection<RecordRelation> recordRelation = relationCorrelation.getRecordRelation();
-			if (!recordRelation.isEmpty()) {
-				for (RecordRelation recordRelation2 : recordRelation) {
-					if (RelationType.RR_人口信息_子女_人口信息.equals(recordRelation2.getType())) {
-						count++;
-					}
-				}
-			}
-		}
-		
-		return count;
-	}
-	
 	/**
 	 * 身份证号校验
 	 * @param id

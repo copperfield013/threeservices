@@ -12,20 +12,6 @@ import com.zhsq.biz.people.algorithm.IDIntrospection;
 
 public class DataIntrospection {
 	
-	
-	/**
-	 * 获取家庭中:家庭人口的数量
-	 * @param recordComplexus
-	 * @param recordCode
-	 * @return
-	 */
-	public static Integer getFamilyPeoCount(RecordComplexus recordComplexus, String recordName, String recordCode) {
-			Integer count = 0;
-			Collection<RecordRelation> recordRelation = getRecordRelation(recordComplexus,recordName, recordCode);
-			count = recordRelation.size();
-		return count;
-	}
-	
 	/**
 	 * 获取家庭中户主的数量
 	 * @param recordComplexus

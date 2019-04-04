@@ -29,7 +29,6 @@ global java.util.List attributeList;
 global java.util.List addedLabelList;
 global java.util.List removedLabelList;
 global java.util.List addedLabelList;
-global java.util.List putFuseLeafAttributeList;
 global java.util.List addedLeafAttrList;
 global java.util.Map removedLeafAttrMap;
 global com.abc.rrc.record.RootRecord rootRecord;
@@ -39,7 +38,7 @@ global com.abc.complexus.RecordComplexus recordComplexus;
 rule "更新调解结果"//根据调解记录最后一次调解结果更新基本字段的调解结果
 	salience 15
 	when
-		eval(CommonAlgorithm.isExistLeaf(recordComplexus, recordCode, CaseMedRegItem.调解记录))
+		eval(CommonAlgorithm.getLeafCount(recordComplexus, recordCode, CaseMedRegItem.调解记录) >0)
 	then 
 		Object value = CaseMedIntrospection.getMediateRes(recordComplexus, recordCode);
 		Attribute attribute=AttributeFactory.newInstance(CaseMedRegItem.调解结果, value);
@@ -49,7 +48,7 @@ end
 rule "赋值已履行金额"//履行记录中的履行金额全部加起来之和赋值给已履行金额
 	salience 15
 	when
-		eval(CommonAlgorithm.isExistLeaf(recordComplexus, recordCode, CaseMedRegItem.履行记录))
+		eval(CommonAlgorithm.getLeafCount(recordComplexus, recordCode, CaseMedRegItem.履行记录)>0)
 	then  
 		Attribute attribute=AttributeFactory.newInstance(CaseMedRegItem.已履行金额,CaseMedIntrospection.getMoney(recordComplexus, recordCode));
 		attributeList.add(attribute);

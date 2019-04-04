@@ -15,6 +15,7 @@ import com.abc.rrc.query.criteria.BizzCriteriaFactory;
 import com.abc.rrc.query.criteria.CommonSymbol;
 import com.abc.rrc.query.criteria.IncludeSymbol;
 import com.abc.rrc.query.criteria.NullSymbol;
+import com.abc.rrc.query.criteria.UnRecursionRelationCriteriaFactory;
 import com.abc.rrc.query.queryrecord.criteria.Criteria;
 import com.zhsq.biz.constant.BaseConstant;
 import com.zhsq.biz.constant.RelationType;
@@ -91,16 +92,11 @@ public class TaskIntrospection {
 	 */
 	public static Collection<String> getOrg(String userCode) {
 		BizzCriteriaFactory criteriaFactory = new BizzCriteriaFactory(BaseConstant.TYPE_组织);
-		BizzCriteriaFactory peoPleFactory = new BizzCriteriaFactory(BaseConstant.TYPE_用户);
-		
-		Collection<String>  relList = new ArrayList<String>();
-		relList.add(RelationType.RR_组织_拥有用户_用户);
-		
-		peoPleFactory.addCriteria(BaseConstant.Column_ABP0001, userCode, CommonSymbol.EQUAL);
-		List<Criteria> criterias = peoPleFactory.getCriterias();
-		
-		criteriaFactory.addRelationCriteria(relList, criterias);
-		Collection<String>	codeList = RecordQueryPanel.query(criteriaFactory.getCriterias());
+		UnRecursionRelationCriteriaFactory unRecursionRelationCriteriaFactory=UnRecursionRelationCriteriaFactory.getInstance(BaseConstant.TYPE_组织);
+		unRecursionRelationCriteriaFactory.addIncludeRTypeCode(RelationType.RR_组织_拥有用户_用户);
+		unRecursionRelationCriteriaFactory.addRightCode(userCode);
+		BizzCriteriaFactory addRelationCriteria = criteriaFactory.addRelationCriteria(unRecursionRelationCriteriaFactory.getRelationCriteria());
+		Collection<String>	codeList = RecordQueryPanel.query(addRelationCriteria.getCriterias());
 		return codeList;
 	}
 	

@@ -1,11 +1,9 @@
 package com.zhsq.biz.timertask.people;
 
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.context.annotation.Lazy;
@@ -16,12 +14,10 @@ import com.abc.rrc.query.RecordQueryPanel;
 import com.abc.rrc.query.criteria.BetweenSymbol;
 import com.abc.rrc.query.criteria.BizzCriteriaFactory;
 import com.abc.rrc.query.queryrecord.criteria.Criteria;
-import com.abc.rrc.query.queryrecord.criteria.CriteriaFactory;
 import com.zhsq.biz.constant.BaseConstant;
 import com.zhsq.biz.constant.people.PeopleItem;
 import com.zhsq.biz.people.PeopleBNBTimer;
 import com.zhsq.biz.timertask.LoadEntityToWorkMemory;
-import com.zhsq.biz.worktask.WorkTaskBNBTimer;
 
 @Component
 @Lazy(value=false)

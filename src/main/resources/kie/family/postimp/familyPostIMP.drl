@@ -33,7 +33,6 @@ global java.util.List attributeList;
 global java.util.List addedLabelList;
 global java.util.List removedLabelList;
 global java.util.List addedLabelList;
-global java.util.List putFuseLeafAttributeList;
 global java.util.List addedLeafAttrList;
 global java.util.Map removedLeafAttrMap;
 global com.abc.rrc.record.RootRecord rootRecord;
@@ -58,9 +57,9 @@ when
 then 
 	String code = CodeManager.newCode32();
 	FuseLeafAttribute leafAttr = FuseLeafAttrFactory.newInstance($value.getCode(), FamilyItem.家庭错误信息, code, FamilyItem.家庭错误信息_错误类型, EnumKeyValue.ENUM_错误类型_家庭信息错误);
-	putFuseLeafAttributeList.add(leafAttr);
+	addedLeafAttrList.add(leafAttr);
 	FuseLeafAttribute leafAttr2 = FuseLeafAttrFactory.newInstance($value.getCode(), FamilyItem.家庭错误信息, code, FamilyItem.家庭错误信息_描述, "家庭没有户主");
-	putFuseLeafAttributeList.add(leafAttr2);
+	addedLeafAttrList.add(leafAttr2);
 end
 
 rule "家庭有户主但是和户主关系不是户主"
@@ -75,9 +74,9 @@ when
 then 
 	String code = CodeManager.newCode32();
 	FuseLeafAttribute leafAttr = FuseLeafAttrFactory.newInstance($value.getCode(), FamilyItem.家庭错误信息, code, FamilyItem.家庭错误信息_错误类型, EnumKeyValue.ENUM_错误类型_家庭信息错误);
-	putFuseLeafAttributeList.add(leafAttr);
+	addedLeafAttrList.add(leafAttr);
 	FuseLeafAttribute leafAttr2 = FuseLeafAttrFactory.newInstance($value.getCode(), FamilyItem.家庭错误信息, code, FamilyItem.家庭错误信息_描述, "家庭有户主但是和户主关系不是户主");
-	putFuseLeafAttributeList.add(leafAttr2);
+	addedLeafAttrList.add(leafAttr2);
 end
 
 rule "家庭中户主大于一个"
@@ -90,44 +89,7 @@ when
 then 
 	String code = CodeManager.newCode32();
 	FuseLeafAttribute leafAttr = FuseLeafAttrFactory.newInstance($value.getCode(), FamilyItem.家庭错误信息, code, FamilyItem.家庭错误信息_错误类型, EnumKeyValue.ENUM_错误类型_家庭信息错误);
-	putFuseLeafAttributeList.add(leafAttr);
+	addedLeafAttrList.add(leafAttr);
 	FuseLeafAttribute leafAttr2 = FuseLeafAttrFactory.newInstance($value.getCode(), FamilyItem.家庭错误信息, code, FamilyItem.家庭错误信息_描述, "家庭中户主大于一个");
-	putFuseLeafAttributeList.add(leafAttr2);
+	addedLeafAttrList.add(leafAttr2);
 end
-
-rule "家庭与人存在户主关系判断户籍地址是否相同"
-	salience 10 
-when
-	FuseAttribute( name==FamilyItem.家庭分类, attribute.sqlValue==EnumKeyValue.ENUM_家庭分类_户籍家庭)
-	$value: FuseAttribute(name==FamilyItem.户籍地址, $famAdreValue:sqlValue)
- 	RecordRelation(type==RelationType.RR_家庭信息_户主_人口信息,$peopleCode:right)
- 	eval( recordComplexus.getRootRecord($peopleCode) !=null )
- 	eval( recordComplexus.getRootRecord($peopleCode).findAttribute(PeopleItem.户籍所在地) !=null )
- 	eval(recordComplexus.getRootRecord($peopleCode).findAttribute(PeopleItem.户籍所在地).getValueStr() !=null)
- 	eval(!recordComplexus.getRootRecord($peopleCode).findAttribute(PeopleItem.户籍所在地).getValueStr().equals($famAdreValue))
-then 
-	String code = CodeManager.newCode32();
-	FuseLeafAttribute leafAttr = FuseLeafAttrFactory.newInstance($value.getCode(), FamilyItem.家庭错误信息, code, FamilyItem.家庭错误信息_错误类型, EnumKeyValue.ENUM_错误类型_家庭信息错误);
-	putFuseLeafAttributeList.add(leafAttr);
-	FuseLeafAttribute leafAttr2 = FuseLeafAttrFactory.newInstance($value.getCode(), FamilyItem.家庭错误信息, code, FamilyItem.家庭错误信息_描述, "家庭和户主-户籍所在地不同");
-	putFuseLeafAttributeList.add(leafAttr2);
-end
-
-rule "家庭与人存在成员关系判断户籍地址是否相同"
-	salience 10 
-when
-	FuseAttribute( name==FamilyItem.家庭分类, attribute.sqlValue==EnumKeyValue.ENUM_家庭分类_户籍家庭)
-	$value: FuseAttribute(name==FamilyItem.户籍地址, $famAdreValue:sqlValue)
- 	RecordRelation(type==RelationType.RR_家庭信息_成员_人口信息,$peopleCode:right)
- 	eval( recordComplexus.getRootRecord($peopleCode) !=null )
- 	eval( recordComplexus.getRootRecord($peopleCode).findAttribute(PeopleItem.户籍所在地) !=null )
- 	eval(recordComplexus.getRootRecord($peopleCode).findAttribute(PeopleItem.户籍所在地).getValueStr() !=null)
- 	eval(!recordComplexus.getRootRecord($peopleCode).findAttribute(PeopleItem.户籍所在地).getValueStr().equals($famAdreValue))
-then 
-	String code = CodeManager.newCode32();
-	FuseLeafAttribute leafAttr = FuseLeafAttrFactory.newInstance($value.getCode(), FamilyItem.家庭错误信息, code, FamilyItem.家庭错误信息_错误类型, EnumKeyValue.ENUM_错误类型_家庭信息错误);
-	putFuseLeafAttributeList.add(leafAttr);
-	FuseLeafAttribute leafAttr2 = FuseLeafAttrFactory.newInstance($value.getCode(), FamilyItem.家庭错误信息, code, FamilyItem.家庭错误信息_描述, "家庭和成员-户籍所在地不同");
-	putFuseLeafAttributeList.add(leafAttr2);
-end
-

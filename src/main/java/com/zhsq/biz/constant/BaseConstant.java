@@ -15,6 +15,7 @@ public class BaseConstant {
 	public static final String TYPE_用户="ABCBE002";//用户
 	public static final String TYPE_组织="XFJDE1334";//组织
 	public static final String TYPE_走访记录="XFJDE1497";//走访记录
+	public static final String TYPE_民政帮扶数据="XFJDE1691";//民政帮扶数据
 	
 	public static final String Column_ABP0001 = "ABP0001";
 	
@@ -51,14 +52,13 @@ public class BaseConstant {
 			return null;
 		}
 		
-		int parseInt;
+		Integer parseInt;
 		try {
 			parseInt = Integer.parseInt(enumRelationName);
 		} catch (NumberFormatException e) {
 			return null;
 		}
 		
-		String relationName = (String)map.get(parseInt);
-		return relationName;
+		return (String)map.get(parseInt);
 	} 
 }

@@ -17,8 +17,6 @@ public class LoadEntityToWorkMemory {
 		context.setUserCode(AuthConstant.SUPERCODE);
 		context.setSource(FusionContext.SOURCE_COMMON);
 		if(codes!=null) {
-			
-			//integration.integrate(codes.get(0), context);
 			for(String code :codes) {
 				integration.integrate(context,code);
 			}

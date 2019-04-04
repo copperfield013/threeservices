@@ -94,5 +94,20 @@ public class RelationType {
 	public static final String RR_帮教信息_法制教育_法制教育统计="XFJDE1479R1487";
 	public static final String RR_走访记录_走访人口_人口信息="XFJDE1497R1503";
 	public static final String RR_走访记录_待走访人口_人口信息="XFJDE1497R1514";
+
+	public static final String RR_人口信息_老人走访任务_工作任务="XFJDE001R1527";
+	public static final String RR_组织_上级组织_组织="XFJDE1334R1525";
+	public static final String RR_组织_下级组织_组织="XFJDE1334R1526";
+	public static final String RR_工作任务_老人走访任务_人口信息="XFJDE379R1526";
 	
+	public static final String RR_人口信息_低边各类补贴表_低边家庭各类补贴发放表="XFJDE001R1690";
+	public static final String RR_人口信息_明证帮扶数据_民政帮扶数据="XFJDE001R1711";
+	public static final String RR_低边家庭各类补贴发放表_申请人_人口信息="XFJDE1590R1689";
+	public static final String RR_民政帮扶数据_关联人口_人口信息="XFJDE1691R1710";
+	
+	public static final String RR_人口信息_民证帮扶数据_民政帮扶数据="XFJDE001R1711";
+	public static final String RR_低边家庭各类补贴发放表_民政帮扶数据_民政帮扶数据="XFJDE1590R1715";
+	public static final String RR_民政帮扶数据_低边家庭各类补贴_低边家庭各类补贴发放表="XFJDE1691R1716";
+	public static final String RR_低边家庭各类补贴发放表_关联家庭_家庭信息="XFJDE1590R1726";
+	public static final String RR_家庭信息_低边家庭各类补贴_低边家庭各类补贴发放表="XFJDE305R1727";
 }

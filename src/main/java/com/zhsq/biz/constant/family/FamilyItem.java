@@ -71,4 +71,13 @@ public class FamilyItem {
 	public static final String 家庭总收入="XFJD1254";
 	public static final String 家庭财产情况="XFJD1255";
 	public static final String 住房面积="XFJD1256";
+	
+	public static final String 事项名称="XFJD1718";
+	public static final String 事项名称_事项名称="XFJD1720";
+	public static final String 户保障金="XFJD1717";
+	
+	public static final String 事项数量="XFJD1725";
+	public static final String 救助日期="XFJD303";
+	public static final String 救助月发放金额="XFJD1752";
+	public static final String 救助年发放金额="XFJD1753";
 }
