@@ -14,6 +14,9 @@
 	<kbase name="familypostimp" packages="kie.family.postimp">
 		<ksession name="ks-family-postimp" />
 	</kbase>
+	<kbase name="familysecondipm" packages="kie.family.secondipm">
+		<ksession name="ks-family-secondipm" />
+	</kbase>
 	
 	<!-- people -->
 	<kbase name="peopleidtquery" packages="kie.people.identity.query">
@@ -77,4 +80,21 @@
 		<ksession name="ks-caseMedRegipm-ipm" />
 	</kbase>
 	
+	<!-- 家庭各类补贴 -->
+	<kbase name="lackfamilytablequery" packages="kie.lackfamilytable.identity.query">
+		<ksession name="ks-lackfamilytable-idt-query" />
+	</kbase>
+	<kbase name="lackfamilytableipm" packages="kie.lackfamilytable.ipm">
+		<ksession name="ks-lackfamilytable-ipm" />
+	</kbase>
+	<kbase name="lackfamilytablesecondipm" packages="kie.lackfamilytable.secondipm">
+		<ksession name="ks-lackfamilytable-secondipm" />
+	</kbase>
+	<kbase name="lackfamilytablethirdIPM" packages="kie.lackfamilytable.thirdIPM">
+		<ksession name="ks-lackfamilytable-thirdIPM" />
+	</kbase>
+	<!-- 民政帮扶数据 -->
+	<kbase name="minzsalvationquery" packages="kie.minzsalvation.identity.query">
+		<ksession name="ks-minzsalvation-idt-query" />
+	</kbase>
 </kmodule>
