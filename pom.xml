@@ -4,7 +4,7 @@
 
 	<groupId>com.zhsq.biz</groupId>
 	<artifactId>threeservices</artifactId>
-	<version>0.0.35</version>
+	<version>0.1.83</version>
 	<packaging>jar</packaging>
 	
 	<url>http://maven.apache.org</url>
@@ -18,7 +18,8 @@
 		<version.proxool>0.9.1</version.proxool>
 		<version.kie>7.10.0.Final</version.kie>
 		<version.kie.ci>7.10.0.Final</version.kie.ci>
-		<version.item>4.1.84.alphal</version.item>
+		<version.item>4.2.20.alphal</version.item>
+		<version.kieutil>0.0.5</version.kieutil>
 		
 		<project.builder.sourcesEncoding>UTF-8</project.builder.sourcesEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -27,6 +28,11 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.zhsq.util</groupId>
+			<artifactId>kieutil</artifactId>
+			<version>${version.kieutil}</version>
+		</dependency>
 		
 		<dependency>
 			<groupId>com.abc</groupId>
@@ -291,9 +297,16 @@
 			<version>5.1.29</version>
 		</dependency>
 	</dependencies>
+	<repositories>
+		<repository>
+			<id>nexus</id>
+			<name>nexus</name>
+			<url>http://139.196.123.44:32108/repository/nexus-group/</url>
+		</repository>
+	</repositories>
 	<build>
 		<plugins>
-			 <!-- <plugin>
+			 <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.2.1</version>
@@ -311,7 +324,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>  -->
+			</plugin>
 			<!-- ProGuard混淆插件 -->
 			<plugin>
 				<groupId>com.github.wvengen</groupId>
@@ -365,6 +378,10 @@
 									{public *;}</option>
 								<option>-keep public class com.zhsq.biz.family.algorithm.*
 									{public *;}</option>
+									<option>-keep public class com.zhsq.biz.user.algorithm.*
+									{public *;}</option>
+									<option>-keep public class com.zhsq.biz.casemedreg.algorithm.*
+									{public *;}</option>
 							</options>
 							<libs>
 								<lib>${java.home}/lib/rt.jar</lib>
@@ -390,6 +407,12 @@
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.kie</groupId>
+				<artifactId>kie-maven-plugin</artifactId>
+				<version>${version.kie}</version>
+				<extensions>true</extensions>
 			</plugin>
 		</plugins>
 	</build>
