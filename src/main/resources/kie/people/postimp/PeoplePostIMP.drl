@@ -33,7 +33,6 @@ global java.util.List attributeList;
 global java.util.List addedLabelList;
 global java.util.List removedLabelList;
 global java.util.List addedLabelList;
-global java.util.List putFuseLeafAttributeList;
 global java.util.List addedLeafAttrList;
 global java.util.Map removedLeafAttrMap;
 global com.abc.rrc.record.RootRecord rootRecord;
@@ -59,9 +58,9 @@ when
 then 
 	String code = CodeManager.newCode32();
 	FuseLeafAttribute leafAttr = FuseLeafAttrFactory.newInstance($idValue.getCode(), PeopleItem.人口错误信息, code, PeopleItem.人口错误信息_错误类型, EnumKeyValue.ENUM_错误类型_身份证错误);
-	putFuseLeafAttributeList.add(leafAttr);
+	addedLeafAttrList.add(leafAttr);
 	FuseLeafAttribute leafAttr2 = FuseLeafAttrFactory.newInstance($idValue.getCode(), PeopleItem.人口错误信息, code, PeopleItem.人口错误信息_描述, "身份证校验错误");
-	putFuseLeafAttributeList.add(leafAttr2);
+	addedLeafAttrList.add(leafAttr2);
 end
 
 
@@ -75,9 +74,9 @@ when
 then
 	String code = CodeManager.newCode32();
 	FuseLeafAttribute leafAttr = FuseLeafAttrFactory.newInstance($idValue1.getCode(), PeopleItem.人口错误信息, code, PeopleItem.人口错误信息_错误类型, EnumKeyValue.ENUM_错误类型_身份证错误);
-	putFuseLeafAttributeList.add(leafAttr);
+	addedLeafAttrList.add(leafAttr);
 	FuseLeafAttribute leafAttr2 = FuseLeafAttrFactory.newInstance($idValue1.getCode(), PeopleItem.人口错误信息, code, PeopleItem.人口错误信息_描述, "身份证号出生日期与出生日期属性不一致");
-	putFuseLeafAttributeList.add(leafAttr2);
+	addedLeafAttrList.add(leafAttr2);
 end
 
 rule "身份证号性别与性别属性是否一致"
@@ -90,7 +89,7 @@ when
 then  
 	String code = CodeManager.newCode32();
 	FuseLeafAttribute leafAttr = FuseLeafAttrFactory.newInstance($idValue2.getCode(), PeopleItem.人口错误信息, code, PeopleItem.人口错误信息_错误类型, EnumKeyValue.ENUM_错误类型_身份证错误);
-	putFuseLeafAttributeList.add(leafAttr);
+	addedLeafAttrList.add(leafAttr);
 	FuseLeafAttribute leafAttr2 = FuseLeafAttrFactory.newInstance($idValue2.getCode(), PeopleItem.人口错误信息, code, PeopleItem.人口错误信息_描述, "身份证号性别与性别属性是不一致");
-	putFuseLeafAttributeList.add(leafAttr2);
+	addedLeafAttrList.add(leafAttr2);
 end

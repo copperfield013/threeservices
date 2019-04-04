@@ -26,6 +26,12 @@ import com.abc.transfer.builder.RootRecordBuilderFactory;
 import com.abc.rrc.record.RootRecord;
 import com.zhsq.biz.constant.CommonAlgorithm;
 import com.zhsq.biz.constant.DateUtils;
+import com.abc.transfer.builder.RootRecordBuilderFactory;
+import com.abc.transfer.builder.IRootRecordBuilder;
+import com.zhsq.biz.constant.worktask.WorkTaskItem;
+import com.abc.ops.builder.RootRecordOpsBuilder;
+import com.abc.ops.builder.RecordRelationOpsBuilder;
+import com.abc.sysdate.SystemDateTimeManager;
 
 global java.lang.String hostCode; 
 global java.lang.String hostType;
@@ -39,7 +45,6 @@ global java.util.List rootRecordList;
 global java.util.List attributeList;
 global java.util.List removedLabelList;
 global java.util.List addedLabelList;
-global java.util.List putFuseLeafAttributeList;
 global java.util.List addedLeafAttrList;
 global java.util.Map removedLeafAttrMap;
 global com.abc.rrc.record.RootRecord rootRecord;
@@ -87,9 +92,25 @@ rule "存在走访记录30天外"//与当前时间比较， 在30天外
 		Attribute attribute=AttributeFactory.newInstance(PeopleItem._80岁老人月走访状态, EnumKeyValue.ENUM_80岁老人月走访状态_未走访);
 		attributeList.add(attribute);
 		
-		//这里要发布一个任务
-		
-		
-		
+		//80岁老人月未走访， 发布任务 需要走访的任务
+	IRootRecordBuilder iRootRecordBuilder = RootRecordBuilderFactory.getPersistRootRecordBuilder(BaseConstant.TYPE_工作任务);
+	
+	iRootRecordBuilder.putAttribute(WorkTaskItem.任务状态, EnumKeyValue.ENUM_任务状态_新建);
+	iRootRecordBuilder.putAttribute(WorkTaskItem.任务标题,  " 80岁老人未走访，请执行任务");
+	iRootRecordBuilder.putAttribute(WorkTaskItem.任务编号, "NSOEFO39483");
+	iRootRecordBuilder.putAttribute(WorkTaskItem.具体描述, "80岁老人未走访，请执行任务");
+	iRootRecordBuilder.putAttribute(WorkTaskItem.类型, EnumKeyValue.ENUM_问题类型_民政);
+	iRootRecordBuilder.putAttribute(WorkTaskItem.任务开始时间,  SystemDateTimeManager.getCunrrentTime());
+	iRootRecordBuilder.putAttribute(WorkTaskItem.是否需要领用,  EnumKeyValue.ENUM_是否_是);
+	iRootRecordBuilder.putAttribute(WorkTaskItem.是否智能匹配, EnumKeyValue.ENUM_是否_否);
+	iRootRecordBuilder.putAttribute(WorkTaskItem.保存派发, EnumKeyValue.ENUM_保存派发_派发);
+	
+	RootRecord record = iRootRecordBuilder.getRootRecord();
+	rootRecordList.add(record);
+	//添加关系
+	RecordRelationOpsBuilder builderNew = RecordRelationOpsBuilder.getInstance(BaseConstant.TYPE_工作任务,
+				record.getCode());
+	builderNew.putRelation(RelationType.RR_工作任务_老人走访任务_人口信息, recordCode); 
+	recordRelationOpsBuilderNew.add(builderNew);	
 end
- 
+

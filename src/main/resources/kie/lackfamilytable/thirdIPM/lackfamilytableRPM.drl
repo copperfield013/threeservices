@@ -1,0 +1,55 @@
+package com.abc.rule.lackfamilytable.hirdIPM
+
+import com.abc.relation.RecordRelation;
+import com.zhsq.biz.constant.RelationType;
+import com.abc.transfer.builder.IRootRecordBuilder;
+import com.abc.transfer.builder.RootRecordBuilderFactory;
+import com.zhsq.biz.constant.BaseConstant;
+import com.zhsq.biz.constant.EnumKeyValue;
+import com.abc.rrc.record.RootRecord;
+import com.zhsq.biz.constant.item.MinZSalvationItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.zhsq.biz.constant.item.LackFamilyTableItem;
+import com.abc.ops.builder.RecordRelationOpsBuilder;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.util.CodeManager;
+import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+
+global java.lang.String hostCode; 
+global java.lang.String hostType;
+
+global java.lang.String userCode;
+global java.lang.String recordCode;
+global java.lang.String recordName;
+
+global java.util.List recordRelationOpsBuilderNew;
+global java.util.List rootRecordList;
+global java.util.List attributeList;
+global java.util.List addedLabelList;
+global java.util.List removedLabelList;
+global java.util.List addedLabelList;
+global java.util.List addedLeafAttrList;
+global java.util.Map removedLeafAttrMap;
+global com.abc.rrc.record.RootRecord rootRecord;
+global  com.abc.ops.builder.RecordRelationOpsBuilder recordRelationOpsBuilder;
+global com.abc.complexus.RecordComplexus recordComplexus;
+
+
+rule "增加事项名称"// 从人里面直接拿到家庭  或者是拿不到家庭
+	salience 25
+	when
+		$va : FuseAttribute(name==LackFamilyTableItem.事项名称, $v1:value)
+		RecordRelation(type==RelationType.RR_低边家庭各类补贴发放表_关联家庭_家庭信息, $familyValue:right)
+	then 
+		String code = CodeManager.newCode32();
+		//生成家庭实体
+		IRootRecordBuilder iRootRecordBuilder = RootRecordBuilderFactory.getPersistRootRecordBuilder(BaseConstant.TYPE_家庭信息);
+        iRootRecordBuilder.putAttribute(FamilyItem.户籍地址, CommonAlgorithm.getDataValue(recordComplexus, $familyValue, FamilyItem.户籍地址));
+        iRootRecordBuilder.putAttribute(FamilyItem.家庭分类, EnumKeyValue.ENUM_家庭分类_户籍家庭);
+		iRootRecordBuilder.putMultiAttr(FamilyItem.事项名称, code, FamilyItem.事项名称_事项名称, $v1);
+		RootRecord record = iRootRecordBuilder.getRootRecord();
+		rootRecordList.add(record);
+end
+

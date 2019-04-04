@@ -1,6 +1,5 @@
 package com.abc.rule.people.ipm.ipmTimer
 
-
 import com.abc.fuse.improve.attribute.FuseAttribute;
 import com.abc.relation.RecordRelation;
 import  com.zhsq.biz.constant.people.PeopleItem;
@@ -39,13 +38,11 @@ global java.util.List rootRecordList;
 global java.util.List attributeList;
 global java.util.List removedLabelList;
 global java.util.List addedLabelList;
-global java.util.List putFuseLeafAttributeList;
 global java.util.List addedLeafAttrList;
 global java.util.Map removedLeafAttrMap;
 global com.abc.rrc.record.RootRecord rootRecord;
 global  com.abc.ops.builder.RecordRelationOpsBuilder recordRelationOpsBuilder;
 global com.abc.complexus.RecordComplexus recordComplexus;
-
 
 rule "添加育龄妇女标签"//大于16周岁的女性
 	salience 8

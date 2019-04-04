@@ -43,7 +43,6 @@ global java.util.List attributeList;
 global java.util.List addedLabelList;
 global java.util.List removedLabelList;
 global java.util.List addedLabelList;
-global java.util.List putFuseLeafAttributeList;
 global java.util.List addedLeafAttrList;
 global java.util.Map removedLeafAttrMap;
 global com.abc.rrc.record.RootRecord rootRecord;
@@ -122,7 +121,6 @@ then
 	RootRecord record = iRootRecordBuilder.getRootRecord();
 	rootRecordList.add(record);
 	//添加关系
-	//recordRelationOpsBuilder.putRelation(RelationType.RR_人口信息_关联四类人员_四类人员,record.getCode()); 
 	
 	RecordRelationOpsBuilder builderNew = RecordRelationOpsBuilder.getInstance(BaseConstant.TYPE_四类人员,
 				record.getCode());
@@ -140,7 +138,6 @@ when
 	OpsAttribute( name==PeopleItem.就业形式, $jobType:sqlValue)
 	eval(EnumKeyValue.ENUM_就业形式_单位招用.equals($jobType) || EnumKeyValue.ENUM_就业形式_自谋职业.equals($jobType) ||	EnumKeyValue.ENUM_就业形式_公益性岗位.equals($jobType) ||	EnumKeyValue.ENUM_就业形式_灵活就业.equals($jobType) ||	 EnumKeyValue.ENUM_就业形式_其他形式就业.equals($jobType) ||	 EnumKeyValue.ENUM_就业形式_失业.equals($jobType))
 then 
-		com.zhsq.biz.common.OutputDisplay.showText("3333333333333");
 	Integer fouTypePeo = CommIntrospection.get4TypePeople(new Integer($jobType.toString()));
 	
 	//四类人员枚举对应的Str
@@ -163,7 +160,6 @@ then
 	
 	rootRecordList.add(record);
 	//添加关系
-	//recordRelationOpsBuilder.putRelation(RelationType.RR_人口信息_关联四类人员_四类人员,record.getCode()); 
 	RecordRelationOpsBuilder builderNew = RecordRelationOpsBuilder.getInstance(BaseConstant.TYPE_四类人员,
 				record.getCode());
 	builderNew.putRelation(RelationType.RR_四类人员_关联人口_人口信息, recordCode); 

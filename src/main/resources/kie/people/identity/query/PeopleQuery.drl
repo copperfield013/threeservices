@@ -31,9 +31,7 @@ rule "姓名 and 户籍地址 criteria"
 when
     $nameFA:FuseAttribute(name==PeopleItem.姓名,CommonCalculation.isBasicLawful(value));
     $siteFB:FuseAttribute(name == PeopleItem.户籍所在地,CommonCalculation.isBasicLawful(value));
-    $siteFC:FuseAttribute(name == PeopleItem.户籍地门牌号,CommonCalculation.isBasicLawful(value));
 then      
 	bizzCriteriaFactory.addCriteria($nameFA.getAttribute(), CommonSymbol.EQUAL);
 	bizzCriteriaFactory.addCriteria($siteFB.getAttribute(), CommonSymbol.EQUAL);
-	bizzCriteriaFactory.addCriteria($siteFC.getAttribute(), CommonSymbol.EQUAL);
 end

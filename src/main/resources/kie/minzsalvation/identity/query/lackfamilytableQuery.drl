@@ -1,0 +1,30 @@
+package com.abc.rule.minzsalvation.identity.query
+
+import com.abc.rrc.query.queryrecord.criteria.Criteria;
+
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.abc.rrc.query.queryrecord.criteria.CriteriaFactory;
+import com.zhsq.biz.common.CommonCalculation;
+import com.zhsq.biz.constant.EnumKeyValue;
+import com.abc.rrc.query.criteria.CommonSymbol;
+import com.zhsq.biz.constant.item.MinZSalvationItem;
+
+global java.lang.String recordName;
+global com.abc.rrc.query.criteria.BizzCriteriaFactory bizzCriteriaFactory;
+
+
+rule "民政帮扶数据 criteria" 
+	salience 9  
+when
+    $Fa: FuseAttribute(name==MinZSalvationItem.发放年月,CommonCalculation.isBasicLawful(value), $v1:sqlValue);
+    $Fb: FuseAttribute(name==MinZSalvationItem.事项名称,CommonCalculation.isBasicLawful(value), $v2:sqlValue);
+    $Fc: FuseAttribute(name==MinZSalvationItem.人口code,CommonCalculation.isBasicLawful(value), $v3:sqlValue);
+    $Fd: FuseAttribute(name==MinZSalvationItem.发放金额,CommonCalculation.isBasicLawful(value), $v4:sqlValue);
+then 
+	bizzCriteriaFactory.addCriteria($Fa.getAttribute(), CommonSymbol.EQUAL);
+	bizzCriteriaFactory.addCriteria($Fb.getAttribute(), CommonSymbol.EQUAL);
+	bizzCriteriaFactory.addCriteria($Fc.getAttribute(), CommonSymbol.EQUAL);
+	bizzCriteriaFactory.addCriteria($Fd.getAttribute(), CommonSymbol.EQUAL);
+end
+
