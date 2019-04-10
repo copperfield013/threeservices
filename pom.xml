@@ -19,7 +19,7 @@
 		<version.kie>7.10.0.Final</version.kie>
 		<version.kie.ci>7.10.0.Final</version.kie.ci>
 		<version.item>4.2.20.alphal</version.item>
-		<version.kieutil>0.0.5</version.kieutil>
+		<version.kieutil>0.0.7</version.kieutil>
 		
 		<project.builder.sourcesEncoding>UTF-8</project.builder.sourcesEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -341,6 +341,7 @@
 							<obfuscate>true</obfuscate>
 							<injar>\${project.build.finalName}-release\${project.build.finalName}\classes</injar>
 							<outjar>${project.build.finalName}.jar</outjar>
+							<addMavenDescriptor>true</addMavenDescriptor><!-- pom.xml -->
 							<options>
 								<option>-dontshrink</option>
 								<option>-dontwarn</option>
