@@ -1,50 +1,41 @@
 package com.zhsq.test.biz;
-
-
-
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.abc.application.BizFusionContext;
-import com.abc.application.FusionContext;
+import com.abc.hc.FusionContext;
+import com.abc.hc.HCFusionContext;
 import com.abc.mapping.entity.Entity;
-import com.abc.mapping.entity.SimpleEntity;
 import com.abc.panel.Discoverer;
 import com.abc.panel.Integration;
 import com.abc.panel.IntegrationMsg;
 import com.abc.panel.PanelFactory;
+import com.abc.rrc.query.criteria.BizzCriteriaFactory;
 import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.people.algorithm.BirthdayIntrospection;
-import com.zhsq.biz.people.algorithm.IDIntrospection;
-import com.zhsq.biz.timertask.people.PeopleTimeTask;
 
 import antlr.collections.List;
+
+
 @ContextConfiguration(locations = "classpath*:spring-core.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PeopleTest {
 	
 	private static Logger logger = Logger.getLogger(PeopleTest.class);
 	protected String mapperName = "人口信息";
-
+	
 	@Test
 	public void readData() {
 		
 			long startTime = System.currentTimeMillis();
-			BizFusionContext context=new BizFusionContext();
+			HCFusionContext context=new HCFusionContext();
 			context.setSource(FusionContext.SOURCE_COMMON);
 //			context.setToEntityRange(BizFusionContext.ENTITY_CONTENT_RANGE_ABCNODE_CONTAIN);
+			context.setMappingName(mapperName);
 			context.setUserCode("e10adc3949ba59abbe56e057f28888d5");
 			Integration integration=PanelFactory.getIntegration();
 			Entity entity=createEntity(mapperName);
@@ -62,18 +53,24 @@ public class PeopleTest {
 	private Entity createEntity(String mappingName) {
 		
 		Entity entity = new Entity(mappingName);
-		entity.putValue("唯一编码", "578ed545c48946ffad3f830726cef376");
-		entity.putValue("姓名", "1959-1-23"); 
+//		entity.putValue("唯一编码", "a5cc04023d2f43878a9f2c6921466fc0");
+		entity.putValue("姓名", "天空的"); 
 		entity.putValue("人口类型", "户籍人口");
-	//	entity.putValue("所属社区", EnumKeyValue.ENUM_祥符街道社区_祥符桥社区);
+		entity.putValue("所属社区", EnumKeyValue.ENUM_祥符街道社区_祥符桥社区);
+		entity.putValue("身份证号码", "234232");
+		//entity.putValue("身份证号码", "23231112");
+		//entity.putValue("身份证号码", "23231112");
 		/*entity.putValue("户籍所在地", "杭州ef1");
 		entity.putValue("户籍地门牌号", "西湖73829号fefw");*/
-		entity.putValue("身份证号码", "110101195901237997");
 		//entity.putValue("性别", EnumKeyValue.ENUM_性别_女);
 		//entity.putValue("出生日期", "2000-11-14");
 		/*entity.putValue("和户主关系", "配偶");*/
-		//entity.putValue("就业形式", EnumKeyValue.ENUM_就业形式_失业);
+		//entity.putValue("就业形式", EnumKeyValue.ENUM_就业形式_单位招用);
+		//entity.putValue("是否死亡", EnumKeyValue.ENUM_是否_是);
 		
+		/*SimpleEntity sentity3 = new SimpleEntity("事项名称");
+		sentity3.putValue("事项名称", "帮扶->救助->是了解佛额外->及我饿");
+		entity.putMultiAttrEntity(sentity3);*/
 		
 		/*Entity relationentity = new Entity("户籍家庭");
 		
@@ -90,19 +87,30 @@ public class PeopleTest {
 		sentity2.putValue("有效期结束", "2015-10-12");
 		entity.putMultiAttrEntity(sentity2);*/
 		
-		
 		/*SimpleEntity sentity = new SimpleEntity("居住信息");
-		sentity.putValue("居住地址", "祥符桥社区->红郡公寓->４幢->１单元->９０４室");
-		sentity.putValue("居住地门牌号", "");
+		sentity.putValue("居住地门牌号", "祥符桥社区玉泉公寓");
+		sentity.putValue("居住标识", "一般");
 		entity.putMultiAttrEntity(sentity);*/
 		
-		//Entity relationentity = new Entity("人口信息");
-		//relationentity.putValue("唯一编码", "2350fdeefd2a45048ff2d337b90802c6");
-		//relationentity.putValue("姓名", "张三00999"); 
-		//relationentity.putValue("人口类型", "户籍人口");
-		//relationentity.putValue("所属社区", EnumKeyValue.ENUM_祥符街道社区_祥符桥社区);
-		//relationentity.putValue("身份证号码", "110101191403070751");
 		
+		/*SimpleEntity sentity1 = new SimpleEntity("居住信息");
+		sentity1.putValue("居住地门牌号", "祥符社区xxx公益");
+		sentity1.putValue("居住标识", "默认");
+		entity.putMultiAttrEntity(sentity1);
+		
+		SimpleEntity sentity2 = new SimpleEntity("居住信息");
+		sentity2.putValue("居住地门牌号", "祥符社区ddd分为");
+		sentity2.putValue("居住标识", "常用");
+		entity.putMultiAttrEntity(sentity2);
+		
+		*/
+		
+		/*Entity relationentity = new Entity("走访记录");
+		relationentity.putValue("唯一编码", "cc7b211fb5ea48cc96cbfc44f19d29dd");
+		relationentity.putValue("走访时间", "2019-1-14"); 
+		relationentity.putValue("走访内容", "xxxxx");
+		relationentity.putValue("走访类型", EnumKeyValue.ENUM_走访类型_老年人走访);
+		entity.putRelationEntity("走访记录","走访记录", relationentity);*/
 		
 		//return relationentity;
 		
@@ -139,9 +147,9 @@ public class PeopleTest {
 		sentity1.putValue("变动后门（楼）详址", "41幢8单元902");
 		sentity1.putValue("更改户籍门牌号", EnumKeyValue.ENUM_是否_是);
 		sentity1.putValue("变动日期", "2018-10-14");
-		entity.putMultiAttrEntity(sentity1);*/
+		entity.putMultiAttrEntity(sentity1);
 		
-		/*SimpleEntity sentity = new SimpleEntity("户籍变更");
+		SimpleEntity sentity = new SimpleEntity("户籍变更");
 		sentity.putValue("申报人姓名", "李好帅");
 		sentity.putValue("变动前街路巷", "好帅社区");
 		sentity.putValue("变动前门（楼）详址", "5幢3单元504");
@@ -186,15 +194,6 @@ public class PeopleTest {
 		System.out.println(newDate);
 	}
 	
-	
-	@Test
-	public void fun3() {
-		Integer extractAge = BirthdayIntrospection.extractAge("2016-12-24");
-		
-		System.out.println(extractAge);
-	}
-	
 	*/
-	
 	
 }
