@@ -4,7 +4,7 @@
 
 	<groupId>com.zhsq.biz</groupId>
 	<artifactId>threeservices</artifactId>
-	<version>0.1.83</version>
+	<version>0.1.89</version>
 	<packaging>jar</packaging>
 	
 	<url>http://maven.apache.org</url>
@@ -18,8 +18,8 @@
 		<version.proxool>0.9.1</version.proxool>
 		<version.kie>7.10.0.Final</version.kie>
 		<version.kie.ci>7.10.0.Final</version.kie.ci>
-		<version.item>4.2.20.alphal</version.item>
-		<version.kieutil>0.0.7</version.kieutil>
+		<version.item>4.2.52.alphal</version.item>
+		<version.kieutil>0.0.8</version.kieutil>
 		
 		<project.builder.sourcesEncoding>UTF-8</project.builder.sourcesEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -409,12 +409,12 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.kie</groupId>
 				<artifactId>kie-maven-plugin</artifactId>
 				<version>${version.kie}</version>
 				<extensions>true</extensions>
-			</plugin>
+			</plugin> -->
 		</plugins>
 	</build>
 </project>
