@@ -1,17 +1,11 @@
 package com.abc.rule.family.ipm
 
-import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.relation.RecordRelation;
-import  com.zhsq.biz.constant.people.PeopleItem;
-import  com.zhsq.biz.constant.family.FamilyItem;
 import com.abc.rrc.record.Attribute;
-import com.abc.rrc.factory.AttributeFactory;
-import com.zhsq.biz.family.algorithm.DataIntrospection;
-import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.constant.RelationType;
-import com.zhsq.biz.common.OutputDisplay;
-import com.zhsq.biz.constant.BaseConstant;
+import com.abc.rrc.factory.DBAttributeFactory;
 import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
 import com.zhsq.biz.constant.EnumKeyValue;
 import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
 
@@ -35,27 +29,31 @@ global com.abc.complexus.RecordComplexus recordComplexus;
 rule "设置事项数量"//获取多值属性的数量
 	salience 10 
 when
-	FuseAttribute( name==FamilyItem.家庭分类, sqlValue == EnumKeyValue.ENUM_家庭分类_户籍家庭 )
+	FuseAttribute( name==FamilyItem.家庭分类, getValue(ValueType.INT) == EnumKeyValue.ENUM_家庭分类_户籍家庭 )
 	eval(CommonAlgorithm.getLeafCount(recordComplexus, recordCode, FamilyItem.事项名称) >0)
 then 
-	Attribute attribute=AttributeFactory.newInstance(FamilyItem.事项数量, CommonAlgorithm.getLeafCount(recordComplexus, recordCode, FamilyItem.事项名称));
+
+	System.out.println("yyyyyyyyyyyyyy");
+
+	Attribute attribute=DBAttributeFactory.newInstance(FamilyItem.事项数量, CommonAlgorithm.getLeafCount(recordComplexus, recordCode, FamilyItem.事项名称));
 	attributeList.add(attribute);
-	
+	System.out.println("1111111111111:  " + attribute);
 	//设置月发放金额
 	Integer monthMoney = CommonAlgorithm.getMonthMoney(recordComplexus, recordCode, FamilyItem.事项名称, FamilyItem.事项名称_事项名称);
-	Attribute monthattribute=AttributeFactory.newInstance(FamilyItem.救助月发放金额, monthMoney);
+	Attribute monthattribute=DBAttributeFactory.newInstance(FamilyItem.救助月发放金额, monthMoney);
 	attributeList.add(monthattribute);	
-	
+	System.out.println("2222222: " + monthMoney + " monthattribute: " + monthattribute);
 	//设置年发放金额
 	Integer yearMoney =CommonAlgorithm.getYearMoney(recordComplexus, recordCode, FamilyItem.事项名称, FamilyItem.事项名称_事项名称);
-	Attribute yearattribute=AttributeFactory.newInstance(FamilyItem.救助年发放金额, yearMoney);
+	Attribute yearattribute=DBAttributeFactory.newInstance(FamilyItem.救助年发放金额, yearMoney);
 	attributeList.add(yearattribute);
+	System.out.println("3333333 : " + yearMoney + " yearattribute: " + yearattribute);
 end
 
 rule "添加精准扶贫家庭标签"//事项数量大于等于3
 	salience 10
 	when
-		not FuseLabelAttribute(value == EnumKeyValue.ENUM_家庭标签_精准扶贫家庭);
+		not FuseLabelAttribute(getValue(ValueType.INT) == EnumKeyValue.ENUM_家庭标签_精准扶贫家庭);
 		eval(CommonAlgorithm.getLeafCount(recordComplexus, recordCode, FamilyItem.事项名称) >=3)
 	then
 		addedLabelList.add(EnumKeyValue.ENUM_家庭标签_精准扶贫家庭);
@@ -64,10 +62,9 @@ end
 rule "移除精准扶贫家庭标签"//事项数量小于3
 	salience 10
 	when
-		not FuseLabelAttribute(value == EnumKeyValue.ENUM_家庭标签_精准扶贫家庭);
+		not FuseLabelAttribute(getValue(ValueType.INT) == EnumKeyValue.ENUM_家庭标签_精准扶贫家庭);
 		eval(CommonAlgorithm.getLeafCount(recordComplexus, recordCode, FamilyItem.事项名称) <3)
 	then
 		removedLabelList.add(EnumKeyValue.ENUM_家庭标签_精准扶贫家庭);
 end
-
 

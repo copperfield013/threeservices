@@ -1,13 +1,12 @@
 package com.abc.rule.family.identity.query
 
-import com.zhsq.biz.constant.family.FamilyItem;
-import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
-import com.abc.rrc.query.queryrecord.criteria.CriteriaFactory;
-import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.constant.people.PeopleItem;
-import com.zhsq.biz.constant.EnumKeyValue;
 import com.abc.rrc.query.criteria.CommonSymbol;
+import com.zhsq.biz.constant.EnumKeyValue;
+import com.zhsq.biz.common.CommonCalculation;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
+import com.abc.rrc.record.Attribute;
+import com.zhsq.biz.constant.family.FamilyItem;
 
 global java.lang.String recordName;
 global com.abc.rrc.query.criteria.BizzCriteriaFactory bizzCriteriaFactory;
@@ -15,8 +14,8 @@ global com.abc.rrc.query.criteria.BizzCriteriaFactory bizzCriteriaFactory;
 rule "户籍地址 criteria" 
 	salience 9  
 when
-	FuseAttribute(name == FamilyItem.家庭分类, sqlValue == EnumKeyValue.ENUM_家庭分类_户籍家庭)
-    $nameFB:FuseAttribute(name==FamilyItem.户籍地址,CommonCalculation.isBasicLawful(value));
+	FuseAttribute(name == FamilyItem.家庭分类, getValue(ValueType.INT) == EnumKeyValue.ENUM_家庭分类_户籍家庭)
+    $nameFB:FuseAttribute(name==FamilyItem.户籍地址,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
 then 
 	bizzCriteriaFactory.addCriteria($nameFB.getAttribute(), CommonSymbol.EQUAL);
 end
@@ -24,8 +23,8 @@ end
 rule "居住地址 criteria" 
 	salience 9  
 when
-	FuseAttribute(name == FamilyItem.家庭分类, sqlValue == EnumKeyValue.ENUM_家庭分类_居住家庭)
-    $nameFB:FuseAttribute(name==FamilyItem.居住地址,CommonCalculation.isBasicLawful(value));
+	FuseAttribute(name == FamilyItem.家庭分类, getValue(ValueType.INT) == EnumKeyValue.ENUM_家庭分类_居住家庭)
+    $nameFB:FuseAttribute(name==FamilyItem.居住地址,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
 then 
-	bizzCriteriaFactory.addCriteria($nameFB.getAttribute(), CommonSymbol.EQUAL);
+	bizzCriteriaFactory.addCriteria((Attribute)$nameFB.getAttribute(), CommonSymbol.EQUAL);
 end

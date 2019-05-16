@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.abc.rrc.query.RecordQueryPanel;
+import com.abc.record.query.RecordQueryPanel;
 import com.abc.rrc.query.criteria.BetweenSymbol;
 import com.abc.rrc.query.criteria.BizzCriteriaFactory;
 import com.abc.rrc.query.criteria.CommonSymbol;

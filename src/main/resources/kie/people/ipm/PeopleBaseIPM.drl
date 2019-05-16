@@ -1,36 +1,30 @@
 package com.abc.rule.people.ipm
 
-import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.fuse.improve.attribute.OpsAttribute;
-import com.abc.fuse.improve.attribute.OpsRecordRelation;
-import com.abc.fuse.improve.attribute.leaf.OpsLeafAttribute;
-import com.abc.relation.RecordRelation;
-import com.abc.fuse.improve.attribute.AddedRecordRelation;
-import  com.zhsq.biz.constant.people.PeopleItem;
-import  com.zhsq.biz.constant.family.FamilyItem;
 import com.abc.rrc.record.Attribute;
-import com.abc.rrc.factory.AttributeFactory;
-import com.zhsq.biz.family.algorithm.DataIntrospection;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
 import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.constant.RelationType;
-import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
+import com.zhsq.biz.people.algorithm.BirthdayIntrospection;
 import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.people.algorithm.IDIntrospection;
+import java.util.Date;
+import com.abc.rrc.factory.DBAttributeFactory;
+import com.zhsq.biz.constant.people.PeopleItem;
 import com.zhsq.biz.constant.DateUtils;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
 import com.zhsq.biz.constant.BaseConstant;
-import com.abc.relation.RelationCorrelation;
-import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
-import com.zhsq.biz.people.algorithm.IDIntrospection;
+import com.abc.ops.builder.RecordRelationOpsBuilder;
+import com.zhsq.biz.constant.RelationType;
 import com.zhsq.biz.constant.worktask.WorkTaskItem;
-import com.abc.rrc.record.RootRecord;
-import com.abc.sysdate.SystemDateTimeManager;
-import com.zhsq.biz.common.AuthAlgorithm;
 import com.abc.transfer.builder.IRootRecordBuilder;
 import com.abc.transfer.builder.RootRecordBuilderFactory;
-import com.zhsq.biz.people.algorithm.CommIntrospection;
-import com.abc.ops.builder.RecordRelationOpsBuilder;
-import com.zhsq.biz.constant.CommonAlgorithm;
-import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
+import com.abc.rrc.record.RootRecord;
+import com.abc.sysdate.SystemDateTimeManager;
+import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+
+
 
 global java.lang.String hostCode; 
 global java.lang.String hostType;
@@ -54,22 +48,22 @@ global com.abc.complexus.RecordComplexus recordComplexus;
 rule "新增人口标记为没死亡"
 	salience 9 
 when
-	FuseAttribute(name==PeopleItem.是否死亡, attribute.sqlValue == null) or (not FuseAttribute(name==PeopleItem.是否死亡))
+	FuseAttribute(name==PeopleItem.是否死亡, getValue(ValueType.INT) == null) or (not FuseAttribute(name==PeopleItem.是否死亡))
 then
-	Attribute attr = AttributeFactory.newInstance(PeopleItem.是否死亡, EnumKeyValue.ENUM_是否_否);
+	Attribute attr = DBAttributeFactory.newInstance(PeopleItem.是否死亡, EnumKeyValue.ENUM_是否_否);
 	attributeList.add(attr);
 end
 
 rule "人口死亡标记为未确认"
 	salience 9 
 when
-	FuseAttribute(name==PeopleItem.姓名, $name:value);
-	FuseAttribute(name==PeopleItem.是否死亡,CommonCalculation.isBasicLawful(value), sqlValue==EnumKeyValue.ENUM_是否_是);
-    FuseAttribute(name==PeopleItem.待确认死亡, attribute.sqlValue==null) or (not  FuseAttribute(name==PeopleItem.待确认死亡));
+	FuseAttribute(name==PeopleItem.姓名, $name:getValue(ValueType.STRING));
+	FuseAttribute(name==PeopleItem.是否死亡,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)), getValue(ValueType.INT)==EnumKeyValue.ENUM_是否_是);
+    FuseAttribute(name==PeopleItem.待确认死亡, getValue(ValueType.INT)==null) or (not  FuseAttribute(name==PeopleItem.待确认死亡));
 then 
-	Attribute attrc = AttributeFactory.newInstance(PeopleItem.待确认死亡, EnumKeyValue.ENUM_待确认死亡_未确认);
+	Attribute attrc = DBAttributeFactory.newInstance(PeopleItem.待确认死亡, EnumKeyValue.ENUM_待确认死亡_未确认);
 	attributeList.add(attrc);
-	Attribute attra = AttributeFactory.newInstance(PeopleItem.死亡人口对应任务, "1.停止资金发送");
+	Attribute attra = DBAttributeFactory.newInstance(PeopleItem.死亡人口对应任务, "1.停止资金发送");
 	attributeList.add(attra);
 	
 	//新增死亡人口发布任务
@@ -97,15 +91,15 @@ end
 rule "人口没死亡标记待确认为null"
 	salience 9 
 when
-	$nameB:FuseAttribute(name==PeopleItem.是否死亡,CommonCalculation.isBasicLawful(value), sqlValue==EnumKeyValue.ENUM_是否_否);
+	$nameB:FuseAttribute(name==PeopleItem.是否死亡,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)), getValue(ValueType.INT)==EnumKeyValue.ENUM_是否_否);
 then 
-	Attribute namec = AttributeFactory.newInstance(PeopleItem.待确认死亡, null);
+	Attribute namec = DBAttributeFactory.newInstance(PeopleItem.待确认死亡, null);
 	attributeList.add(namec);
 
-	Attribute named = AttributeFactory.newInstance(PeopleItem.死亡时间, null);
+	Attribute named = DBAttributeFactory.newInstance(PeopleItem.死亡时间, null);
 	attributeList.add(named);
 	
-	Attribute attra = AttributeFactory.newInstance(PeopleItem.死亡人口对应任务, null);
+	Attribute attra = DBAttributeFactory.newInstance(PeopleItem.死亡人口对应任务, null);
 	attributeList.add(attra);
 end
 
@@ -114,11 +108,11 @@ rule "获取最新户籍变更信息设置户籍地门牌号"
 when
 	$FAa:FuseLeafAttribute(name==PeopleItem.户籍变更_变动后街路巷,$leafCode:leafCode);
     $FAb:FuseLeafAttribute(name==PeopleItem.户籍变更_变动后门楼详址, $leafCode==leafCode);
-    $FAc:FuseLeafAttribute(name==PeopleItem.户籍变更_更改户籍门牌号, $leafCode==leafCode, $value:sqlValue);
+    $FAc:FuseLeafAttribute(name==PeopleItem.户籍变更_更改户籍门牌号, $leafCode==leafCode, $value:getValue(ValueType.STRING));
 	eval(String.valueOf(EnumKeyValue.ENUM_是否_是).equals(String.valueOf($value)))
 then    
 	//设置户籍门牌号
-	Attribute attribute=AttributeFactory.newInstance(PeopleItem.户籍所在地, $FAa.getValueForShow()+$FAb.getValueForShow());
+	Attribute attribute=DBAttributeFactory.newInstance(PeopleItem.户籍所在地, $FAa.getValue(ValueType.STRING)+"" +$FAb.getValue(ValueType.STRING));
 	attributeList.add(attribute);
 	
 	FuseLeafAttribute leaf = FuseLeafAttrFactory.newInstance($FAc.getCode(), $FAc.getLeafName(), $FAc.getLeafCode(), PeopleItem.户籍变更_更改户籍门牌号, EnumKeyValue.ENUM_是否_否);
@@ -129,9 +123,9 @@ rule "残疾信息有值设置【是否残疾】为是"
 	salience 10 
 when
 	exists FuseLeafAttribute(name==PeopleItem.残疾信息_残疾类别)
-	(not FuseAttribute( name==PeopleItem.是否残疾 )) or FuseAttribute( name==PeopleItem.是否残疾, sqlValue!=EnumKeyValue.ENUM_是否_是 )
+	(not FuseAttribute( name==PeopleItem.是否残疾 )) or FuseAttribute( name==PeopleItem.是否残疾, getValue(ValueType.INT)!=EnumKeyValue.ENUM_是否_是 )
 then 
-	Attribute attr = AttributeFactory.newInstance(PeopleItem.是否残疾, EnumKeyValue.ENUM_是否_是);
+	Attribute attr = DBAttributeFactory.newInstance(PeopleItem.是否残疾, EnumKeyValue.ENUM_是否_是);
 	attributeList.add(attr);
 end
 
@@ -140,7 +134,7 @@ rule "把居住地址的值赋值给居住地门牌号"
 when
 	$fa: FuseLeafAttribute(name==PeopleItem.居住信息_居住地址)
 then 
-	FuseLeafAttribute leafAttr = FuseLeafAttrFactory.newInstance($fa.getCode(), $fa.getLeafName(), $fa.getLeafCode(), PeopleItem.居住信息_居住地门牌号, $fa.getAttribute().getValueStr());
+	FuseLeafAttribute leafAttr = FuseLeafAttrFactory.newInstance($fa.getCode(), $fa.getLeafName(), $fa.getLeafCode(), PeopleItem.居住信息_居住地门牌号, $fa.getAttribute().getValue(ValueType.STRING));
 	addedLeafAttrList.add(leafAttr);
 end 
 
@@ -149,24 +143,24 @@ rule "设置事项数量"//获取多值属性的数量 并且根据数量设置�
 when
 	eval(CommonAlgorithm.getLeafCount(recordComplexus, recordCode, PeopleItem.事项名称) >0)
 then 
-	Attribute attribute=AttributeFactory.newInstance(PeopleItem.事项数量, CommonAlgorithm.getLeafCount(recordComplexus, recordCode, PeopleItem.事项名称));
+	Attribute attribute=DBAttributeFactory.newInstance(PeopleItem.事项数量, CommonAlgorithm.getLeafCount(recordComplexus, recordCode, PeopleItem.事项名称));
 	attributeList.add(attribute);
 	
 	//设置月发放金额
 	Integer monthMoney = CommonAlgorithm.getMonthMoney(recordComplexus, recordCode, PeopleItem.事项名称, PeopleItem.事项名称_事项名称);
-	Attribute monthattribute=AttributeFactory.newInstance(PeopleItem.救助月发放金额, monthMoney);
+	Attribute monthattribute=DBAttributeFactory.newInstance(PeopleItem.救助月发放金额, monthMoney);
 	attributeList.add(monthattribute);	
 	
 	//设置年发放金额
 	Integer yearMoney =CommonAlgorithm.getYearMoney(recordComplexus, recordCode, PeopleItem.事项名称, PeopleItem.事项名称_事项名称);
-	Attribute yearattribute=AttributeFactory.newInstance(PeopleItem.救助年发放金额, yearMoney);
+	Attribute yearattribute=DBAttributeFactory.newInstance(PeopleItem.救助年发放金额, yearMoney);
 	attributeList.add(yearattribute);	
 end
 
 rule "添加精准扶贫人员标签"//事项数量大于等于3
 	salience 10
 	when
-		not FuseLabelAttribute(value == EnumKeyValue.ENUM_人口标签_精准扶贫人员);
+		not FuseLabelAttribute(getValue(ValueType.INT) == EnumKeyValue.ENUM_人口标签_精准扶贫人员);
 		eval(CommonAlgorithm.getLeafCount(recordComplexus, recordCode, PeopleItem.事项名称) >=3)
 	then
 		addedLabelList.add(EnumKeyValue.ENUM_人口标签_精准扶贫人员);
@@ -175,7 +169,7 @@ end
 rule "移除精准扶贫人员标签"//事项数量小于3
 	salience 10
 	when
-		not FuseLabelAttribute(value == EnumKeyValue.ENUM_人口标签_精准扶贫人员);
+		not FuseLabelAttribute(getValue(ValueType.INT) == EnumKeyValue.ENUM_人口标签_精准扶贫人员);
 		eval(CommonAlgorithm.getLeafCount(recordComplexus, recordCode, PeopleItem.事项名称) <3)
 	then
 		removedLabelList.add(EnumKeyValue.ENUM_人口标签_精准扶贫人员);

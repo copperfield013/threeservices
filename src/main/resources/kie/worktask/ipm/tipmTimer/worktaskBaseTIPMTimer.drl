@@ -1,24 +1,34 @@
 package com.abc.rule.worktask.ipm.tipmTimer
 
-import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.relation.RecordRelation;
-import  com.zhsq.biz.constant.people.PeopleItem;
-import  com.zhsq.biz.constant.family.FamilyItem;
 import com.abc.rrc.record.Attribute;
-import com.abc.rrc.factory.AttributeFactory;
-import com.zhsq.biz.family.algorithm.DataIntrospection;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
 import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.constant.RelationType;
-import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
+import com.zhsq.biz.people.algorithm.BirthdayIntrospection;
 import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.people.algorithm.IDIntrospection;
+import java.util.Date;
+import com.abc.rrc.factory.DBAttributeFactory;
+import com.zhsq.biz.constant.people.PeopleItem;
 import com.zhsq.biz.constant.DateUtils;
-import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
-import com.zhsq.biz.common.OutputDisplay;
-import com.zhsq.biz.common.AuthAlgorithm;
-import com.zhsq.biz.worktask.algorithm.TaskIntrospection;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.zhsq.biz.constant.BaseConstant;
+import com.abc.ops.builder.RecordRelationOpsBuilder;
+import com.zhsq.biz.constant.RelationType;
 import com.zhsq.biz.constant.worktask.WorkTaskItem;
-
+import com.abc.transfer.builder.IRootRecordBuilder;
+import com.abc.transfer.builder.RootRecordBuilderFactory;
+import com.abc.rrc.record.RootRecord;
+import com.abc.sysdate.SystemDateTimeManager;
+import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.abc.relation.RelationCorrelation;
+import com.abc.relation.RecordRelation;
+import com.abc.fuse.improve.attribute.OpsAttribute;
+import com.zhsq.biz.people.algorithm.IDIntrospection;
+import com.abc.fuse.improve.attribute.leaf.OpsLeafAttribute;
+import com.zhsq.biz.worktask.algorithm.TaskIntrospection;
 
 global java.lang.String hostCode; 
 global java.lang.String hostType;
@@ -40,12 +50,12 @@ global com.abc.complexus.RecordComplexus recordComplexus;
 rule "超时任务标记"//处理中的任务进行超时标记
 	salience 8
 when
-	$taskD:FuseAttribute( name==WorkTaskItem.任务状态, sqlValue==EnumKeyValue.ENUM_任务状态_处理中);
-	$taskE:FuseAttribute( name==WorkTaskItem.任务结束时间,CommonCalculation.isBasicLawful(value));
-	$taskF:FuseAttribute( name==WorkTaskItem.任务是否超时,sqlValue!=EnumKeyValue.ENUM_是否_是) or (not FuseAttribute(name==WorkTaskItem.任务是否超时))
-	eval(TaskIntrospection.inspectTimeOut($taskE.getValueForShow()))
+	$taskD:FuseAttribute( name==WorkTaskItem.任务状态, getValue(ValueType.INT)==EnumKeyValue.ENUM_任务状态_处理中);
+	$taskE:FuseAttribute( name==WorkTaskItem.任务结束时间,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
+	$taskF:FuseAttribute( name==WorkTaskItem.任务是否超时,getValue(ValueType.INT)!=EnumKeyValue.ENUM_是否_是) or (not FuseAttribute(name==WorkTaskItem.任务是否超时))
+	eval(TaskIntrospection.inspectTimeOut((String)$taskE.getValue(ValueType.STRING)))
 then  
-	Attribute taskF = AttributeFactory.newInstance(WorkTaskItem.任务是否超时, EnumKeyValue.ENUM_是否_是);
+	Attribute taskF = DBAttributeFactory.newInstance(WorkTaskItem.任务是否超时, EnumKeyValue.ENUM_是否_是);
 	attributeList.add(taskF);
 end
 

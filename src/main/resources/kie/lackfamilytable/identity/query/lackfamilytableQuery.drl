@@ -1,14 +1,10 @@
 package com.abc.rule.lackfamilytable.identity.query
 
-import com.abc.rrc.query.queryrecord.criteria.Criteria;
-
-import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
-import com.abc.rrc.query.queryrecord.criteria.CriteriaFactory;
-import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.constant.EnumKeyValue;
 import com.abc.rrc.query.criteria.CommonSymbol;
+import com.abc.fuse.improve.attribute.FuseAttribute;
 import com.zhsq.biz.constant.item.LackFamilyTableItem;
+import com.zhsq.biz.common.CommonCalculation;
+import com.abc.model.enun.ValueType;
 
 global java.lang.String recordName;
 global com.abc.rrc.query.criteria.BizzCriteriaFactory bizzCriteriaFactory;
@@ -17,10 +13,10 @@ global com.abc.rrc.query.criteria.BizzCriteriaFactory bizzCriteriaFactory;
 rule "家庭各类补贴 criteria" 
 	salience 9  
 when
-    $Fa: FuseAttribute(name==LackFamilyTableItem.发放年月,CommonCalculation.isBasicLawful(value), $v1:sqlValue);
-    $Fb: FuseAttribute(name==LackFamilyTableItem.事项名称,CommonCalculation.isBasicLawful(value), $v2:sqlValue);
-    $Fc: FuseAttribute(name==LackFamilyTableItem.身份证号,CommonCalculation.isBasicLawful(value), $v3:sqlValue);
-    $Fd: FuseAttribute(name==LackFamilyTableItem.银行打卡金额,CommonCalculation.isBasicLawful(value), $v4:sqlValue);
+    $Fa: FuseAttribute(name==LackFamilyTableItem.发放年月,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)), $v1:getValue(ValueType.STRING));
+    $Fb: FuseAttribute(name==LackFamilyTableItem.事项名称,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)), $v2:getValue(ValueType.STRING));
+    $Fc: FuseAttribute(name==LackFamilyTableItem.身份证号,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)), $v3:getValue(ValueType.STRING));
+    $Fd: FuseAttribute(name==LackFamilyTableItem.银行打卡金额,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)), $v4:getValue(ValueType.STRING));
 then 
 	bizzCriteriaFactory.addCriteria($Fa.getAttribute(), CommonSymbol.EQUAL);
 	bizzCriteriaFactory.addCriteria($Fb.getAttribute(), CommonSymbol.EQUAL);

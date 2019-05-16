@@ -1,34 +1,34 @@
 package com.abc.rule.people.ipm
 
-import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.relation.RecordRelation;
-import  com.zhsq.biz.constant.people.PeopleItem;
-import  com.zhsq.biz.constant.family.FamilyItem;
 import com.abc.rrc.record.Attribute;
-import com.abc.rrc.factory.AttributeFactory;
-import com.zhsq.biz.family.algorithm.DataIntrospection;
-import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.constant.RelationType;
-import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
-import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.people.algorithm.IDIntrospection;
-import com.zhsq.biz.constant.DateUtils;
-import com.zhsq.biz.constant.BaseConstant;
-import com.abc.relation.RelationCorrelation;
 import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
 import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.relation.RecordRelation;
-import com.zhsq.biz.constant.people.PeopleItem;
+import com.abc.model.enun.ValueType;
+import com.zhsq.biz.constant.EnumKeyValue;
+import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
+import com.zhsq.biz.people.algorithm.BirthdayIntrospection;
 import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.constant.CommonAlgorithm;
+import java.util.Date;
+import com.abc.rrc.factory.DBAttributeFactory;
+import com.zhsq.biz.constant.people.PeopleItem;
+import com.zhsq.biz.constant.DateUtils;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.zhsq.biz.constant.BaseConstant;
+import com.abc.ops.builder.RecordRelationOpsBuilder;
+import com.zhsq.biz.constant.RelationType;
+import com.zhsq.biz.constant.worktask.WorkTaskItem;
 import com.abc.transfer.builder.IRootRecordBuilder;
 import com.abc.transfer.builder.RootRecordBuilderFactory;
-import com.zhsq.biz.constant.BaseConstant;
-import com.zhsq.biz.constant.family.FamilyItem;
-import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.constant.RelationType;
-import com.abc.ops.builder.RecordRelationOpsBuilder;
 import com.abc.rrc.record.RootRecord;
+import com.abc.sysdate.SystemDateTimeManager;
+import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.abc.relation.RelationCorrelation;
+import com.abc.relation.RecordRelation;
+import com.abc.fuse.improve.attribute.OpsAttribute;
+import com.zhsq.biz.people.algorithm.IDIntrospection;
+import com.abc.fuse.improve.attribute.leaf.OpsLeafAttribute;
+
 
 global java.lang.String hostCode; 
 global java.lang.String hostType;
@@ -55,7 +55,7 @@ when
 	RecordRelation(type==RelationType.RR_人口信息_父母_人口信息,left==recordCode, $right:right);
 	eval(CommonAlgorithm.getAppointRecordRelationCount(recordComplexus, recordName, recordCode, RelationType.RR_人口信息_子女_人口信息) ==1)
 then 
-	Attribute attrbute=AttributeFactory.newInstance(PeopleItem.是否独生子, EnumKeyValue.ENUM_是否_是);
+	Attribute attrbute=DBAttributeFactory.newInstance(PeopleItem.是否独生子, EnumKeyValue.ENUM_是否_是);
 	attributeList.add(attrbute);
 end
 
@@ -65,7 +65,7 @@ when
 	RecordRelation(type==RelationType.RR_人口信息_父母_人口信息,left==recordCode, $right:right);
 	eval(CommonAlgorithm.getAppointRecordRelationCount(recordComplexus, recordName, recordCode, RelationType.RR_人口信息_子女_人口信息)  !=1)
 then 
-	Attribute attrbute=AttributeFactory.newInstance(PeopleItem.是否独生子, EnumKeyValue.ENUM_是否_否);
+	Attribute attrbute=DBAttributeFactory.newInstance(PeopleItem.是否独生子, EnumKeyValue.ENUM_是否_否);
 	attributeList.add(attrbute);
 end
 
@@ -90,7 +90,7 @@ rule "家庭中添加成员与户主的关系one2"//第一次添加户主和成�
 when
 	 RecordRelation(type==RelationType.RR_家庭信息_户主_人口信息,left==hostCode, $huzCode:right);
 	 RecordRelation(type==RelationType.RR_家庭信息_成员_人口信息,left==hostCode,right==recordCode);
-	 FuseAttribute(name==PeopleItem.和户主关系, $value:attribute.sqlValue);
+	 FuseAttribute(name==PeopleItem.和户主关系, $value:getValue(ValueType.INT));
 then 
 	//添加关系
 	String relationName = BaseConstant.getRelationName(String.valueOf($value));
@@ -98,7 +98,7 @@ then
 		recordRelationOpsBuilder.putRelation(relationName,$huzCode); 
 	}
 	
-	Attribute attr = AttributeFactory.newInstance(PeopleItem.户主姓名, CommonAlgorithm.getDataValue(recordComplexus, $huzCode, PeopleItem.姓名));
+	Attribute attr = DBAttributeFactory.newInstance(PeopleItem.户主姓名, CommonAlgorithm.getDataValue(recordComplexus, $huzCode, PeopleItem.姓名));
 	attributeList.add(attr);
 end
 
@@ -106,7 +106,7 @@ end
 rule "人的户籍地和户籍家庭的户籍地不一致"
 	salience 20
 	when
-		 FuseAttribute( name==PeopleItem.户籍所在地, CommonCalculation.isBasicLawful(value), $hjAddress:value)
+		 FuseAttribute( name==PeopleItem.户籍所在地, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)), $hjAddress:getValue(ValueType.STRING))
 		 RecordRelation(type == RelationType.RR_人口信息_户主家庭_家庭信息, $rightCode:right) 
 		 eval(!$hjAddress.equals(CommonAlgorithm.getDataValue(recordComplexus, $rightCode, FamilyItem.户籍地址)))
 	then 
@@ -130,7 +130,7 @@ end
 rule "人的户籍地和归属家庭的户籍地不一致"
 	salience 20
 	when
-		 FuseAttribute( name==PeopleItem.户籍所在地, CommonCalculation.isBasicLawful(value), $hjAddress:value)
+		 FuseAttribute( name==PeopleItem.户籍所在地, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)), $hjAddress:getValue(ValueType.STRING))
 		 RecordRelation(type == RelationType.RR_人口信息_归属家庭_家庭信息, $rightCode:right) 
 		 eval(!$hjAddress.equals(CommonAlgorithm.getDataValue(recordComplexus, $rightCode, FamilyItem.户籍地址)))
 	then 
@@ -154,7 +154,7 @@ end
 rule "人没有户籍家庭关系"
 	salience 25
 	when
-		 FuseAttribute( name==PeopleItem.户籍所在地, CommonCalculation.isBasicLawful(value), $hjAddress:value)
+		 FuseAttribute( name==PeopleItem.户籍所在地, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)), $hjAddress:getValue(ValueType.STRING))
 		 (not RecordRelation(type == RelationType.RR_人口信息_归属家庭_家庭信息))  &&  (not RecordRelation(type == RelationType.RR_人口信息_户主家庭_家庭信息)) 
 	then 
 		//新建家庭

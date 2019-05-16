@@ -1,19 +1,21 @@
 package com.abc.rule.lackfamilytable.secondipm
 
-import com.abc.relation.RecordRelation;
 import com.zhsq.biz.constant.RelationType;
-import com.abc.transfer.builder.IRootRecordBuilder;
-import com.abc.transfer.builder.RootRecordBuilderFactory;
 import com.zhsq.biz.constant.BaseConstant;
-import com.zhsq.biz.constant.EnumKeyValue;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.BaseConstant;
+import com.abc.relation.RecordRelation;
+import com.abc.transfer.builder.IRootRecordBuilder;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.transfer.builder.RootRecordBuilderFactory;
+import com.abc.ops.builder.RecordRelationOpsBuilder;
+import com.abc.ops.builder.RootRecordOpsBuilder;
 import com.abc.rrc.record.RootRecord;
 import com.zhsq.biz.constant.item.MinZSalvationItem;
 import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
+import com.zhsq.biz.constant.RelationType;
 import com.zhsq.biz.constant.item.LackFamilyTableItem;
-import com.abc.ops.builder.RecordRelationOpsBuilder;
-import com.zhsq.biz.constant.CommonAlgorithm;
-import com.zhsq.biz.constant.family.FamilyItem;
-import com.abc.util.CodeManager;
 
 global java.lang.String hostCode; 
 global java.lang.String hostType;
@@ -71,16 +73,14 @@ rule "关联家庭2"// 从人里面直接拿到家庭  或者是拿不到家庭
 		recordRelationOpsBuilderNew.add(builderNew);	
 end
 
-
-
 rule "生成民政帮扶数据"
 	salience 20
 	when
 		RecordRelation(type==RelationType.RR_低边家庭各类补贴发放表_申请人_人口信息, $peopleCode:right)
 		not RecordRelation(type==RelationType.RR_低边家庭各类补贴发放表_民政帮扶数据_民政帮扶数据);
-		FuseAttribute(name==LackFamilyTableItem.事项名称, $v1:value)
-		FuseAttribute(name==LackFamilyTableItem.发放年月, $v2:sqlValue)
-		FuseAttribute(name==LackFamilyTableItem.银行打卡金额, $v3:sqlValue)
+		FuseAttribute(name==LackFamilyTableItem.事项名称, $v1:getValue(ValueType.STRING))
+		FuseAttribute(name==LackFamilyTableItem.发放年月, $v2:getValue(ValueType.STRING))
+		FuseAttribute(name==LackFamilyTableItem.银行打卡金额, $v3:getValue(ValueType.STRING))
 	then
 		//新增民政帮扶数据
 		IRootRecordBuilder iRootRecordBuilder = RootRecordBuilderFactory.getPersistRootRecordBuilder(BaseConstant.TYPE_民政帮扶数据);
@@ -100,7 +100,3 @@ rule "生成民政帮扶数据"
 		builderNew.putRelation(RelationType.RR_民政帮扶数据_关联人口_人口信息,  $peopleCode); 
 		recordRelationOpsBuilderNew.add(builderNew);	
 end
-
-
-
-

@@ -1,14 +1,12 @@
 package com.abc.rule.user.identity.query
 
-import com.abc.rrc.query.queryrecord.criteria.Criteria;
-
 import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
-import com.abc.rrc.query.queryrecord.criteria.CriteriaFactory;
 import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.constant.user.UserItem;
-import com.zhsq.biz.constant.EnumKeyValue;
 import com.abc.rrc.query.criteria.CommonSymbol;
+import com.abc.model.enun.ValueType;
+import com.zhsq.biz.constant.user.UserItem;
+
+
 
 global com.abc.rrc.query.criteria.BizzCriteriaFactory bizzCriteriaFactory;
 global java.lang.String recordName;
@@ -16,7 +14,7 @@ global java.lang.String recordName;
 rule "用戶名 criteria" 
 	salience 8  
 when
-    $nameFA:FuseAttribute(name==UserItem.用户名,CommonCalculation.isBasicLawful(value));
+    $nameFA:FuseAttribute(name==UserItem.用户名,CommonCalculation.isBasicLawful((String)getValue(ValueType.STRING)));
 then 
 	bizzCriteriaFactory.addCriteria($nameFA.getAttribute(), CommonSymbol.EQUAL);
 end

@@ -1,19 +1,15 @@
 package com.zhsq.biz.common;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.rule.QueryResults;
-import org.kie.api.runtime.rule.QueryResultsRow;
 
-import com.abc.application.BizFusionContext;
 import com.abc.complexus.RecordComplexus;
-import com.abc.fuse.improve.ImproveResult;
+import com.abc.fuse.fg.FGFusionContext;
+import com.abc.fuse.fg.ImproveResult;
 import com.abc.fuse.improve.attribute.FuseAttribute;
 import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
 import com.abc.fuse.improve.ops.builder.RootRecordBizzOpsBuilder;
@@ -21,14 +17,10 @@ import com.abc.fuse.improve.transfer.BizzAttributeTransfer;
 import com.abc.ops.builder.RecordRelationOpsBuilder;
 
 import com.abc.ops.complexus.OpsComplexus;
-import com.abc.relation.RecordRelation;
 import com.abc.relation.RelationCorrelation;
 import com.abc.rrc.query.criteria.BizzCriteriaFactory;
 import com.abc.rrc.query.queryrecord.criteria.Criteria;
 import com.abc.rrc.record.RootRecord;
-import com.abc.transfer.builder.IRootRecordBuilder;
-import com.abc.transfer.builder.RootRecordBuilderFactory;
-import com.zhsq.biz.constant.BaseConstant;
 import com.abc.rrc.record.Attribute;
 
 public class KIEHelper {
@@ -63,10 +55,10 @@ public class KIEHelper {
 		return criteriaList;
 	}
 
-	public static ImproveResult getImproveResultFromKIE(BizFusionContext bizFusionContext, String recordCode,
+	public static ImproveResult getImproveResultFromKIE(FGFusionContext fgFusionContext, String recordCode,
 			OpsComplexus opsComplexus, RecordComplexus recordComplexus, KieSession kSession) {
 		
-		String userCode = bizFusionContext.getUserCode();
+		String userCode = fgFusionContext.getUserCode();
 		
 		RootRecord rootRecord = recordComplexus.getRootRecord(recordCode);
 		String recordName = rootRecord.getName();
@@ -163,7 +155,13 @@ public class KIEHelper {
 		}
 		
 		// insert object
-		BizzAttributeTransfer.transfer(rootRecord).forEach(fuseAttribute -> kSession.insert(fuseAttribute));
+		//BizzAttributeTransfer.transfer(rootRecord).forEach(fuseAttribute -> kSession.insert(fuseAttribute));
+		List<FuseAttribute> transfer = BizzAttributeTransfer.transfer(rootRecord);
+		
+		for (FuseAttribute fuseAttribute : transfer) {
+			kSession.insert(fuseAttribute);
+		}
+		
 		RelationCorrelation relationCorrelation = recordComplexus.getRelationCorrelation(recordCode);
 	
 		if (relationCorrelation != null) {
@@ -212,9 +210,9 @@ public class KIEHelper {
 		return imprveResult;
 	}
 
-	public static ImproveResult getImproveResultFromKIE(BizFusionContext bizFusionContext, String recordCode,
+	public static ImproveResult getImproveResultFromKIE(FGFusionContext context, String recordCode,
 			RecordComplexus recordComplexus, KieSession kSession) {
-		return getImproveResultFromKIE(bizFusionContext, recordCode, null, recordComplexus, kSession);
+		return getImproveResultFromKIE(context, recordCode, null, recordComplexus, kSession);
 	}
 
 }

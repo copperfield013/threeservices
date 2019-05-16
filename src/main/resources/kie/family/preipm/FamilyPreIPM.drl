@@ -1,14 +1,18 @@
 package com.abc.rule.family.ipm
 
-import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.relation.RecordRelation;
-import  com.zhsq.biz.constant.people.PeopleItem;
-import  com.zhsq.biz.constant.family.FamilyItem;
 import com.abc.rrc.record.Attribute;
-import com.abc.rrc.factory.AttributeFactory;
-import com.zhsq.biz.family.algorithm.DataIntrospection;
+import com.abc.rrc.factory.DBAttributeFactory;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
 import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.constant.RelationType;
+import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.abc.util.CodeManager;
+import com.abc.relation.RecordRelation;
+import com.zhsq.biz.constant.people.PeopleItem;
 
 global java.lang.String hostCode; 
 global java.lang.String hostType;

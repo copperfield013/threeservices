@@ -1,30 +1,20 @@
 package com.abc.rule.people.ipm.ipmTimer
 
-import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.relation.RecordRelation;
-import  com.zhsq.biz.constant.people.PeopleItem;
-import  com.zhsq.biz.constant.family.FamilyItem;
 import com.abc.rrc.record.Attribute;
-import com.abc.rrc.factory.AttributeFactory;
-import com.zhsq.biz.family.algorithm.DataIntrospection;
-import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.constant.RelationType;
-import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
-import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.people.algorithm.IDIntrospection;
-import com.zhsq.biz.constant.DateUtils;
-import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
-import com.zhsq.biz.people.algorithm.BirthdayIntrospection;
-import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
-import com.abc.ops.builder.RecordRelationOpsBuilder;
-import com.abc.ops.builder.RootRecordOpsBuilder;
-import com.abc.transfer.builder.IRootRecordBuilder;
-import com.zhsq.biz.constant.BaseConstant;
-import com.zhsq.biz.constant.interview.InterviewItem;
-import com.abc.transfer.builder.RootRecordBuilderFactory;
-import com.abc.rrc.record.RootRecord;
 import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
+import com.zhsq.biz.constant.EnumKeyValue;
+import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
+import com.zhsq.biz.people.algorithm.BirthdayIntrospection;
+import com.zhsq.biz.common.CommonCalculation;
+import java.util.Date;
+import com.abc.rrc.factory.DBAttributeFactory;
+import com.zhsq.biz.constant.people.PeopleItem;
 import com.zhsq.biz.constant.DateUtils;
+
+
 
 global java.lang.String hostCode; 
 global java.lang.String hostType;
@@ -47,10 +37,10 @@ global com.abc.complexus.RecordComplexus recordComplexus;
 rule "添加育龄妇女标签"//大于16周岁的女性
 	salience 8
 when
-	not FuseLabelAttribute(value == EnumKeyValue.ENUM_人口标签_育龄妇女);
-	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(attribute.sqlValue));
-	FuseAttribute(name==PeopleItem.性别, EnumKeyValue.ENUM_性别_女.equals(sqlValue));
-	eval(BirthdayIntrospection.extractAge($nameA.getValueForShow())>=16 && BirthdayIntrospection.extractAge($nameA.getValueForShow()) <=50);
+	not FuseLabelAttribute(getValue(ValueType.INT) == EnumKeyValue.ENUM_人口标签_育龄妇女);
+	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful( getValue(ValueType.STRING)));
+	FuseAttribute(name==PeopleItem.性别, EnumKeyValue.ENUM_性别_女 == getValue(ValueType.INT));
+	eval(BirthdayIntrospection.extractAge((Date)$nameA.getValue(ValueType.DATE))>=16 && BirthdayIntrospection.extractAge((Date)$nameA.getValue(ValueType.DATE)) <=50);
 then  
 	addedLabelList.add(EnumKeyValue.ENUM_人口标签_育龄妇女);
 end
@@ -58,9 +48,9 @@ end
 rule "删除育龄妇女标签"//小于16周岁的女性
 	salience 8
 when
-	FuseLabelAttribute(value== EnumKeyValue.ENUM_人口标签_育龄妇女)
-	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(attribute.sqlValue));
-	eval(BirthdayIntrospection.extractAge($nameA.getValueForShow())<16 || BirthdayIntrospection.extractAge($nameA.getValueForShow())>50);
+	FuseLabelAttribute(getValue(ValueType.INT)== EnumKeyValue.ENUM_人口标签_育龄妇女)
+	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
+	eval(BirthdayIntrospection.extractAge((Date)$nameA.getValue(ValueType.DATE))<16 || BirthdayIntrospection.extractAge((Date)$nameA.getValue(ValueType.DATE))>50);
 then 
 	removedLabelList.add(EnumKeyValue.ENUM_人口标签_育龄妇女);
 end
@@ -68,9 +58,9 @@ end
 rule "添加新生儿标签"//5周岁
 	salience 8
 when
-	not FuseLabelAttribute(value == EnumKeyValue.ENUM_人口标签_新生儿);
-	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(attribute.sqlValue));
-	eval(BirthdayIntrospection.extractAge($nameA.getValueForShow()) <=5);
+	not FuseLabelAttribute(getValue(ValueType.INT) == EnumKeyValue.ENUM_人口标签_新生儿);
+	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
+	eval(BirthdayIntrospection.extractAge((Date)$nameA.getValue(ValueType.DATE)) <=5);
 then  
 	addedLabelList.add(EnumKeyValue.ENUM_人口标签_新生儿);
 end
@@ -78,9 +68,9 @@ end
 rule "删除新生儿标签"//5周岁
 	salience 8
 when
-	FuseLabelAttribute(value == EnumKeyValue.ENUM_人口标签_新生儿);
-	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(attribute.sqlValue));
-	eval(BirthdayIntrospection.extractAge($nameA.getValueForShow()) >5);
+	FuseLabelAttribute(getValue(ValueType.INT) == EnumKeyValue.ENUM_人口标签_新生儿);
+	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
+	eval(BirthdayIntrospection.extractAge((Date)$nameA.getValue(ValueType.DATE)) >5);
 then  
 	removedLabelList.add(EnumKeyValue.ENUM_人口标签_新生儿);
 end
@@ -88,50 +78,50 @@ end
 rule "小于60岁去除所有老人标签"
 	salience 8
 when
-	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(attribute.sqlValue));
-	eval(BirthdayIntrospection.extractAge($nameA.getValueForShow())<60);
+	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
+	eval(BirthdayIntrospection.extractAge((Date)$nameA.getValue(ValueType.DATE))<60);
 then 
-	Attribute attribute=AttributeFactory.newInstance(PeopleItem.几岁老人, null);
+	Attribute attribute=DBAttributeFactory.newInstance(PeopleItem.几岁老人, null);
 	attributeList.add(attribute);
 end
 
 rule "60-69岁老人"
 	salience 8
 when
-	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(attribute.sqlValue));
-	eval(BirthdayIntrospection.extractAge($nameA.getValueForShow())>=60 && BirthdayIntrospection.extractAge($nameA.getValueForShow()) <=69);
+	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
+	eval(BirthdayIntrospection.extractAge((Date)$nameA.getValue(ValueType.DATE))>=60 && BirthdayIntrospection.extractAge((Date)$nameA.getValue(ValueType.DATE)) <=69);
 then 
-	Attribute attribute=AttributeFactory.newInstance(PeopleItem.几岁老人, EnumKeyValue.ENUM_老人标签_60_69岁老人);
+	Attribute attribute=DBAttributeFactory.newInstance(PeopleItem.几岁老人, EnumKeyValue.ENUM_老人标签_60_69岁老人);
 	attributeList.add(attribute);
 end
 
 rule "70-79岁老人"
 	salience 8
 when
-	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(attribute.sqlValue));
-	eval(BirthdayIntrospection.extractAge($nameA.getValueForShow())>=70 && BirthdayIntrospection.extractAge($nameA.getValueForShow()) <=79);
+	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
+	eval(BirthdayIntrospection.extractAge((Date)$nameA.getValue(ValueType.DATE))>=70 && BirthdayIntrospection.extractAge((Date)$nameA.getValue(ValueType.DATE)) <=79);
 then 
-	Attribute attribute=AttributeFactory.newInstance(PeopleItem.几岁老人, EnumKeyValue.ENUM_老人标签_70_79岁老人);
+	Attribute attribute=DBAttributeFactory.newInstance(PeopleItem.几岁老人, EnumKeyValue.ENUM_老人标签_70_79岁老人);
 	attributeList.add(attribute);
 end
 
 rule "80-89岁老人"
 	salience 8
 when
-	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(attribute.sqlValue));
-	eval(BirthdayIntrospection.extractAge($nameA.getValueForShow())>=80 && BirthdayIntrospection.extractAge($nameA.getValueForShow()) <=89);
+	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
+	eval(BirthdayIntrospection.extractAge((Date)$nameA.getValue(ValueType.DATE))>=80 && BirthdayIntrospection.extractAge((Date)$nameA.getValue(ValueType.DATE)) <=89);
 then 
-	Attribute attribute=AttributeFactory.newInstance(PeopleItem.几岁老人, EnumKeyValue.ENUM_老人标签_80_89岁老人);
+	Attribute attribute=DBAttributeFactory.newInstance(PeopleItem.几岁老人, EnumKeyValue.ENUM_老人标签_80_89岁老人);
 	attributeList.add(attribute);
 end
 
 rule "90岁以上老人"
 	salience 8
 when
-	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(attribute.sqlValue));
-	eval(BirthdayIntrospection.extractAge($nameA.getValueForShow())>=90);
+	$nameA:FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
+	eval(BirthdayIntrospection.extractAge((Date)$nameA.getValue(ValueType.DATE))>=90);
 then 
-	Attribute attribute=AttributeFactory.newInstance(PeopleItem.几岁老人, EnumKeyValue.ENUM_老人标签_90岁以上老人);
+	Attribute attribute=DBAttributeFactory.newInstance(PeopleItem.几岁老人, EnumKeyValue.ENUM_老人标签_90岁以上老人);
 	attributeList.add(attribute);
 end
 
@@ -139,12 +129,12 @@ end
 rule "60岁老年优待证"
 	salience 8
 when
-	not FuseLabelAttribute(EnumKeyValue.ENUM_人口标签_可办60岁老年优待证 == value);
-	FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(sqlValue), $birthStr:sqlValue);
-	eval(DateUtils.getBirthByAge(-60).plusMonths(3).isAfter(DateUtils.getLocalDate($birthStr.toString())))//出生日期在60岁之前的三个月的之前出生
-	eval(DateUtils.getBirthByAge(-70).plusMonths(3).isBefore(DateUtils.getLocalDate($birthStr.toString())))//出生日期在70之前三个月之后出生
+	not FuseLabelAttribute(EnumKeyValue.ENUM_人口标签_可办60岁老年优待证 == getValue(ValueType.INT));
+	$date: FuseAttribute(name==PeopleItem.出生日期, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
+	eval(DateUtils.getBirthByAge(-60).plusMonths(3).isAfter(DateUtils.getLocalDate((Date)$date.getValue(ValueType.DATE))))//出生日期在60岁之前的三个月的之前出生
+	eval(DateUtils.getBirthByAge(-70).plusMonths(3).isBefore(DateUtils.getLocalDate((Date)$date.getValue(ValueType.DATE))))//出生日期在70之前三个月之后出生
 then 
 	addedLabelList.add(EnumKeyValue.ENUM_人口标签_可办60岁老年优待证);
-	Attribute attribute=AttributeFactory.newInstance(PeopleItem.办理60岁老年优待证状态, EnumKeyValue.ENUM_办理状态_可办理);
+	Attribute attribute=DBAttributeFactory.newInstance(PeopleItem.办理60岁老年优待证状态, EnumKeyValue.ENUM_办理状态_可办理);
 	attributeList.add(attribute);
 end

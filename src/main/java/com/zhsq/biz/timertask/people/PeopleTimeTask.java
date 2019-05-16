@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.abc.rrc.query.RecordQueryPanel;
+import com.abc.record.query.RecordQueryPanel;
 import com.abc.rrc.query.criteria.BetweenSymbol;
 import com.abc.rrc.query.criteria.BizzCriteriaFactory;
 import com.abc.rrc.query.queryrecord.criteria.Criteria;

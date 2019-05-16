@@ -1,6 +1,15 @@
 package com.zhsq.biz.common;
 
+import java.io.File;
+
 import org.apache.log4j.Logger;
+import org.drools.core.impl.InternalKnowledgeBase;
+import org.drools.core.impl.KnowledgeBaseFactory;
+import org.kie.api.KieBase;
+import org.kie.api.KieServices;
+import org.kie.api.builder.KieBuilder;
+import org.kie.api.builder.KieModule;
+import org.kie.api.builder.ReleaseId;
 import org.kie.api.event.rule.AfterMatchFiredEvent;
 import org.kie.api.event.rule.AgendaEventListener;
 import org.kie.api.event.rule.AgendaGroupPoppedEvent;
@@ -12,7 +21,15 @@ import org.kie.api.event.rule.MatchCancelledEvent;
 import org.kie.api.event.rule.MatchCreatedEvent;
 import org.kie.api.event.rule.RuleFlowGroupActivatedEvent;
 import org.kie.api.event.rule.RuleFlowGroupDeactivatedEvent;
+import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.internal.builder.KnowledgeBuilder;
+import org.kie.internal.builder.KnowledgeBuilderError;
+import org.kie.internal.builder.KnowledgeBuilderErrors;
+import org.kie.internal.builder.KnowledgeBuilderFactory;
+import org.kie.internal.io.ResourceFactory;
+import org.kie.internal.utils.KieHelper;
 
 import com.zhsq.util.kieutil.KieSessionFactory;
 
@@ -23,7 +40,11 @@ public class SessionFactory {
 	//findKeepSession
 	public static KieSession findScannerSession(String sessionName) {
 		
-		KieSession kSession = KieSessionFactory.findKeepSession(sessionName);
+		//KieSession kSession = KieSessionFactory.findKeepSession(sessionName);
+		
+		KieServices kieServices = KieServices.Factory.get();
+		KieContainer kieContainer = kieServices.getKieClasspathContainer();
+		KieSession kSession = kieContainer.newKieSession(sessionName);
 		
 		kSession.addEventListener(new AgendaEventListener() {
             public void matchCreated(MatchCreatedEvent event) {

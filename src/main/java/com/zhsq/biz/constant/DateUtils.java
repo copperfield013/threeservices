@@ -15,7 +15,7 @@ public class DateUtils {
 	private static SimpleDateFormat sdf = null;
 	
 	/**
-	 * 当前时间与给定时间差几天
+	 *	 当前时间与给定时间差几天
 	 * @return 返回时间差
 	 * @param time  格式必须为YYYY-MM-dd
 	 * @return
@@ -25,11 +25,11 @@ public class DateUtils {
 		 LocalDate today = LocalDate.now();
 		try {
 			
-			if (birthStr == null || birthStr == "") {
+			if (birthStr == null) {
 				return null;
 			}
-			
-			LocalDate birthDate =getLocalDate(birthStr);
+			sdf = new SimpleDateFormat(dateTime);
+			LocalDate birthDate =getLocalDate(sdf.parse(birthStr));
 		  long between = ChronoUnit.DAYS.between(birthDate, today);
 		  return  (int) Math.abs(between);
 		} catch (Exception e) {
@@ -44,17 +44,15 @@ public class DateUtils {
 	 * @param dateStr
 	 * @return
 	 */
-	public static LocalDate getLocalDate(String dateStr) {
+	public static LocalDate getLocalDate(Date date) {
 		 try {
 			 
-			 if (dateStr == null || dateStr == "") {
+			 if (date == null) {
 					return null;
 				}
 			 
-			SimpleDateFormat sdf = new SimpleDateFormat(date);
-			Date birthday = sdf.parse(dateStr);
 			Calendar ca =Calendar.getInstance();
-			ca.setTime(birthday);
+			ca.setTime(date);
 			int IDYear=ca.get(Calendar.YEAR);
 			int IDMonth=ca.get(Calendar.MONTH)+1;
 			int IDDay=ca.get(Calendar.DAY_OF_MONTH);

@@ -1,28 +1,36 @@
 package com.abc.rule.worktask.twoipm
 
-import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.relation.RecordRelation;
-import  com.zhsq.biz.constant.people.PeopleItem;
-import  com.zhsq.biz.constant.family.FamilyItem;
 import com.abc.rrc.record.Attribute;
-import com.abc.rrc.factory.AttributeFactory;
-import com.zhsq.biz.family.algorithm.DataIntrospection;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
 import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.constant.RelationType;
-import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
+import com.zhsq.biz.people.algorithm.BirthdayIntrospection;
 import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.people.algorithm.IDIntrospection;
+import java.util.Date;
+import com.abc.rrc.factory.DBAttributeFactory;
+import com.zhsq.biz.constant.people.PeopleItem;
 import com.zhsq.biz.constant.DateUtils;
-import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
-import com.zhsq.biz.common.OutputDisplay;
-import com.zhsq.biz.common.AuthAlgorithm;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.zhsq.biz.constant.BaseConstant;
+import com.abc.ops.builder.RecordRelationOpsBuilder;
+import com.zhsq.biz.constant.RelationType;
 import com.zhsq.biz.constant.worktask.WorkTaskItem;
+import com.abc.transfer.builder.IRootRecordBuilder;
+import com.abc.transfer.builder.RootRecordBuilderFactory;
+import com.abc.rrc.record.RootRecord;
 import com.abc.sysdate.SystemDateTimeManager;
-import com.zhsq.biz.common.AuthUtil;
-import java.util.Collection;
-import com.zhsq.biz.worktask.algorithm.TaskIntrospection;
-import com.zhsq.biz.constant.user.UserItem;
+import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.abc.relation.RelationCorrelation;
+import com.abc.relation.RecordRelation;
+import com.abc.fuse.improve.attribute.OpsAttribute;
+import com.zhsq.biz.people.algorithm.IDIntrospection;
+import com.abc.fuse.improve.attribute.leaf.OpsLeafAttribute;
 import com.zhsq.biz.user.algorithm.UserIntrospection;
+import com.zhsq.biz.constant.user.UserItem;
+
 
 global java.lang.String hostCode; 
 global java.lang.String hostType;
@@ -46,7 +54,7 @@ rule "设置组织名称"//和用户有关系的组织名称设置到用户【�
 		RecordRelation(type==RelationType.RR_用户_属于组织_组织,left==recordCode);
 	then 
 		String orgNames = UserIntrospection.getOrgName(recordComplexus, recordName, recordCode);
-		Attribute attrbute=AttributeFactory.newInstance(UserItem.组织名称,orgNames);
+		Attribute attrbute=DBAttributeFactory.newInstance(UserItem.组织名称,orgNames);
 		attributeList.add(attrbute);
 end
 

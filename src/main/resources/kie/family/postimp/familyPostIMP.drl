@@ -1,26 +1,19 @@
 package com.abc.rule.family.postimp
 
-import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.fuse.improve.attribute.OpsAttribute;
-import com.abc.fuse.improve.attribute.OpsRecordRelation;
-import com.abc.relation.RecordRelation;
-import com.abc.fuse.improve.attribute.AddedRecordRelation;
-import com.zhsq.biz.constant.people.PeopleItem;
-import  com.zhsq.biz.constant.family.FamilyItem;
 import com.abc.rrc.record.Attribute;
-import com.abc.rrc.factory.AttributeFactory;
-import com.zhsq.biz.family.algorithm.DataIntrospection;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
 import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.constant.RelationType;
+import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
 import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
-import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.people.algorithm.IDIntrospection;
-import com.zhsq.biz.constant.DateUtils;
-import com.zhsq.biz.constant.BaseConstant;
-import com.abc.relation.RelationCorrelation;
-import com.abc.util.CodeManager;
-import com.abc.util.ValueType;
 import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.abc.util.CodeManager;
+import com.abc.relation.RecordRelation;
+import com.zhsq.biz.constant.people.PeopleItem;
+import com.zhsq.biz.family.algorithm.DataIntrospection;
+import com.zhsq.biz.constant.RelationType;
 
 global java.lang.String hostCode; 
 global java.lang.String hostType;
@@ -52,7 +45,7 @@ rule "家庭没有户主"
 	salience 6
 when
 	$value :FuseAttribute( name==FamilyItem.户籍地址)
-	FuseAttribute( name==FamilyItem.家庭分类, sqlValue==EnumKeyValue.ENUM_家庭分类_户籍家庭)
+	FuseAttribute( name==FamilyItem.家庭分类, (Integer)getValue(ValueType.INT)==EnumKeyValue.ENUM_家庭分类_户籍家庭)
  	not RecordRelation(type == RelationType.RR_家庭信息_户主_人口信息);
 then 
 	String code = CodeManager.newCode32();
@@ -60,17 +53,18 @@ then
 	addedLeafAttrList.add(leafAttr);
 	FuseLeafAttribute leafAttr2 = FuseLeafAttrFactory.newInstance($value.getCode(), FamilyItem.家庭错误信息, code, FamilyItem.家庭错误信息_描述, "家庭没有户主");
 	addedLeafAttrList.add(leafAttr2);
+	
 end
 
 rule "家庭有户主但是和户主关系不是户主"
 	salience 6
 when
-	FuseAttribute( name==FamilyItem.家庭分类, sqlValue==EnumKeyValue.ENUM_家庭分类_户籍家庭)
+	FuseAttribute( name==FamilyItem.家庭分类, getValue(ValueType.INT)==EnumKeyValue.ENUM_家庭分类_户籍家庭)
 	$value :FuseAttribute( name==FamilyItem.户籍地址 )
  	 RecordRelation(type == RelationType.RR_家庭信息_户主_人口信息, $huzCode:right);
  	 eval(recordComplexus.getRootRecord($huzCode) != null)
  	 eval( recordComplexus.getRootRecord($huzCode).findAttribute(PeopleItem.和户主关系) !=null)
- 	 eval(!String.valueOf(EnumKeyValue.ENUM_和户主关系_户主).equals(String.valueOf(recordComplexus.getRootRecord($huzCode).findAttribute(PeopleItem.和户主关系).getSqlValue())) )
+ 	 eval(!String.valueOf(EnumKeyValue.ENUM_和户主关系_户主).equals(String.valueOf(recordComplexus.getRootRecord($huzCode).findAttribute(PeopleItem.和户主关系).getValue(ValueType.STRING))) )
 then 
 	String code = CodeManager.newCode32();
 	FuseLeafAttribute leafAttr = FuseLeafAttrFactory.newInstance($value.getCode(), FamilyItem.家庭错误信息, code, FamilyItem.家庭错误信息_错误类型, EnumKeyValue.ENUM_错误类型_家庭信息错误);
@@ -82,7 +76,7 @@ end
 rule "家庭中户主大于一个"
 	salience 6
 when
-	FuseAttribute( name==FamilyItem.家庭分类, sqlValue==EnumKeyValue.ENUM_家庭分类_户籍家庭)
+	FuseAttribute( name==FamilyItem.家庭分类, getValue(ValueType.INT)==EnumKeyValue.ENUM_家庭分类_户籍家庭)
 	$value :FuseAttribute( name==FamilyItem.户籍地址 )
  	RecordRelation(type == RelationType.RR_家庭信息_户主_人口信息, $left:left);
  	eval(DataIntrospection.getHzCount(recordComplexus, recordName, $left)>1 )

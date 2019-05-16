@@ -1,34 +1,36 @@
 package com.abc.rule.people.preipm
 
-import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.fuse.improve.attribute.OpsAttribute;
-import com.abc.fuse.improve.attribute.OpsRecordRelation;
-import com.abc.fuse.improve.attribute.leaf.OpsLeafAttribute;
-import com.abc.relation.RecordRelation;
-import com.abc.fuse.improve.attribute.AddedRecordRelation;
-import  com.zhsq.biz.constant.people.PeopleItem;
-import  com.zhsq.biz.constant.family.FamilyItem;
 import com.abc.rrc.record.Attribute;
-import com.abc.rrc.factory.AttributeFactory;
-import com.zhsq.biz.family.algorithm.DataIntrospection;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
 import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.constant.RelationType;
-import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
+import com.zhsq.biz.people.algorithm.BirthdayIntrospection;
 import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.people.algorithm.IDIntrospection;
+import java.util.Date;
+import com.abc.rrc.factory.DBAttributeFactory;
+import com.zhsq.biz.constant.people.PeopleItem;
 import com.zhsq.biz.constant.DateUtils;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
 import com.zhsq.biz.constant.BaseConstant;
-import com.abc.relation.RelationCorrelation;
-import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
-import com.zhsq.biz.people.algorithm.IDIntrospection;
-import com.zhsq.biz.constant.FourTypePeople.FourTypePeopleItem;
-import com.abc.rrc.record.RootRecord;
-import com.abc.sysdate.SystemDateTimeManager;
-import com.zhsq.biz.common.AuthAlgorithm;
+import com.abc.ops.builder.RecordRelationOpsBuilder;
+import com.zhsq.biz.constant.RelationType;
+import com.zhsq.biz.constant.worktask.WorkTaskItem;
 import com.abc.transfer.builder.IRootRecordBuilder;
 import com.abc.transfer.builder.RootRecordBuilderFactory;
+import com.abc.rrc.record.RootRecord;
+import com.abc.sysdate.SystemDateTimeManager;
+import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.abc.relation.RelationCorrelation;
+import com.abc.relation.RecordRelation;
+import com.abc.fuse.improve.attribute.OpsAttribute;
+import com.zhsq.biz.people.algorithm.IDIntrospection;
+import com.abc.fuse.improve.attribute.leaf.OpsLeafAttribute;
+import com.zhsq.biz.constant.FourTypePeople.FourTypePeopleItem;
 import com.zhsq.biz.people.algorithm.CommIntrospection;
-import com.abc.ops.builder.RecordRelationOpsBuilder;
+
 
 global java.lang.String hostCode; 
 global java.lang.String hostType;
@@ -51,11 +53,11 @@ global com.abc.complexus.RecordComplexus recordComplexus;
 
 rule "记录之前就业形式"
 	when
-		OpsAttribute( name==PeopleItem.就业形式,CommonCalculation.isBasicLawful(sqlValue), $opsValue:sqlValue)
-		$fuseJOB: FuseAttribute( name== PeopleItem.就业形式, $fuseValue:sqlValue)
+		OpsAttribute( name==PeopleItem.就业形式,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)), $opsValue:getValue(ValueType.STRING))
+		$fuseJOB: FuseAttribute( name== PeopleItem.就业形式, $fuseValue:getValue(ValueType.STRING))
 		eval(!$opsValue.equals($fuseValue))
 	then
-		Attribute jobType = AttributeFactory.newInstance(PeopleItem.之前就业形式, $fuseJOB.getValueForShow());
+		Attribute jobType = DBAttributeFactory.newInstance(PeopleItem.之前就业形式, $fuseJOB.getValue(ValueType.STRING));
 		attributeList.add(jobType);
 		kcontext.getKnowledgeRuntime().getAgenda().getAgendaGroup( "人员分类" ).setFocus();
 end
@@ -90,14 +92,13 @@ rule "根据就业形式给人员分类"
 	agenda-group "人员分类"
 	salience 10 
 when
-	OpsAttribute(name==PeopleItem.姓名, $nameValue:value);
-	OpsAttribute(name==PeopleItem.身份证号码, $IDValue:value);
-	OpsAttribute(name==PeopleItem.所属社区,$areaValue:sqlValue);
-	OpsAttribute( name==PeopleItem.就业形式, $jobType:sqlValue)
-	FuseAttribute( name== PeopleItem.就业形式,$fuseValue:sqlValue) 
+	OpsAttribute(name==PeopleItem.姓名, $nameValue:getValue(ValueType.STRING));
+	OpsAttribute(name==PeopleItem.身份证号码, $IDValue:getValue(ValueType.STRING));
+	OpsAttribute(name==PeopleItem.所属社区,$areaValue:getValue(ValueType.INT));
+	OpsAttribute( name==PeopleItem.就业形式, $jobType:getValue(ValueType.INT))
+	FuseAttribute( name== PeopleItem.就业形式,$fuseValue:getValue(ValueType.INT)) 
 	//eval(EnumKeyValue.ENUM_就业形式_单位招用.equals($jobType) || EnumKeyValue.ENUM_就业形式_自谋职业.equals($jobType) ||	EnumKeyValue.ENUM_就业形式_公益性岗位.equals($jobType) ||	EnumKeyValue.ENUM_就业形式_灵活就业.equals($jobType) ||	 EnumKeyValue.ENUM_就业形式_其他形式就业.equals($jobType) ||	 EnumKeyValue.ENUM_就业形式_失业.equals($jobType))
 then 
-
 	Integer oldfouTypePeo = CommIntrospection.get4TypePeople(new Integer($fuseValue.toString()));
 	Integer fouTypePeo = CommIntrospection.get4TypePeople(new Integer($jobType.toString()));
 	
@@ -105,7 +106,7 @@ then
 	String oldfouTypePeoStr= CommIntrospection.get4TypePeopleStr(oldfouTypePeo);
 	String fouTypePeoStr= CommIntrospection.get4TypePeopleStr(fouTypePeo);
 	
-	Attribute peopleType = AttributeFactory.newInstance(PeopleItem.四类人员, fouTypePeo);
+	Attribute peopleType = DBAttributeFactory.newInstance(PeopleItem.四类人员, fouTypePeo);
 	attributeList.add(peopleType);
 	
 	//生产统计
@@ -132,10 +133,10 @@ rule "新增就业形式给人员分类"
 	agenda-group "新增人员分类"
 	salience 10 
 when
-	OpsAttribute(name==PeopleItem.姓名, $nameValue:value);
-	OpsAttribute(name==PeopleItem.身份证号码, $IDValue:value);
-	OpsAttribute(name==PeopleItem.所属社区,$areaValue:sqlValue);
-	OpsAttribute( name==PeopleItem.就业形式, $jobType:sqlValue)
+	OpsAttribute(name==PeopleItem.姓名, $nameValue:getValue(ValueType.STRING));
+	OpsAttribute(name==PeopleItem.身份证号码, $IDValue:getValue(ValueType.STRING));
+	OpsAttribute(name==PeopleItem.所属社区,$areaValue:getValue(ValueType.INT));
+	OpsAttribute( name==PeopleItem.就业形式, $jobType:getValue(ValueType.INT))
 	eval(EnumKeyValue.ENUM_就业形式_单位招用.equals($jobType) || EnumKeyValue.ENUM_就业形式_自谋职业.equals($jobType) ||	EnumKeyValue.ENUM_就业形式_公益性岗位.equals($jobType) ||	EnumKeyValue.ENUM_就业形式_灵活就业.equals($jobType) ||	 EnumKeyValue.ENUM_就业形式_其他形式就业.equals($jobType) ||	 EnumKeyValue.ENUM_就业形式_失业.equals($jobType))
 then 
 	Integer fouTypePeo = CommIntrospection.get4TypePeople(new Integer($jobType.toString()));
@@ -143,7 +144,7 @@ then
 	//四类人员枚举对应的Str
 	String fouTypePeoStr= CommIntrospection.get4TypePeopleStr(fouTypePeo);
 	
-	Attribute peopleType = AttributeFactory.newInstance(PeopleItem.四类人员, fouTypePeo);
+	Attribute peopleType = DBAttributeFactory.newInstance(PeopleItem.四类人员, fouTypePeo);
 	attributeList.add(peopleType);
 	
 	//生产统计

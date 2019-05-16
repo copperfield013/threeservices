@@ -1,26 +1,37 @@
 package com.abc.rule.people.preipm
 
-import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.fuse.improve.attribute.OpsAttribute;
-import com.abc.fuse.improve.attribute.OpsRecordRelation;
-import com.abc.fuse.improve.attribute.leaf.OpsLeafAttribute;
-import com.abc.relation.RecordRelation;
-import com.abc.fuse.improve.attribute.AddedRecordRelation;
-import  com.zhsq.biz.constant.people.PeopleItem;
-import  com.zhsq.biz.constant.family.FamilyItem;
 import com.abc.rrc.record.Attribute;
-import com.abc.rrc.factory.AttributeFactory;
-import com.zhsq.biz.family.algorithm.DataIntrospection;
-import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.constant.RelationType;
-import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
-import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.constant.DateUtils;
-import com.zhsq.biz.constant.BaseConstant;
-import com.abc.relation.RelationCorrelation;
-import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
-import com.zhsq.biz.people.algorithm.IDIntrospection;
 import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
+import com.zhsq.biz.constant.EnumKeyValue;
+import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
+import com.zhsq.biz.people.algorithm.BirthdayIntrospection;
+import com.zhsq.biz.common.CommonCalculation;
+import java.util.Date;
+import com.abc.rrc.factory.DBAttributeFactory;
+import com.zhsq.biz.constant.people.PeopleItem;
+import com.zhsq.biz.constant.DateUtils;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.zhsq.biz.constant.BaseConstant;
+import com.abc.ops.builder.RecordRelationOpsBuilder;
+import com.zhsq.biz.constant.RelationType;
+import com.zhsq.biz.constant.worktask.WorkTaskItem;
+import com.abc.transfer.builder.IRootRecordBuilder;
+import com.abc.transfer.builder.RootRecordBuilderFactory;
+import com.abc.rrc.record.RootRecord;
+import com.abc.sysdate.SystemDateTimeManager;
+import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.abc.relation.RelationCorrelation;
+import com.abc.relation.RecordRelation;
+import com.abc.fuse.improve.attribute.OpsAttribute;
+import com.zhsq.biz.people.algorithm.IDIntrospection;
+import com.abc.fuse.improve.attribute.leaf.OpsLeafAttribute;
+
+
+
+
 
 
 global java.lang.String hostCode; 
@@ -61,8 +72,8 @@ rule "编辑家庭成员与户主的关系"//编辑户主与成员的关系
 when
  RecordRelation(type==RelationType.RR_家庭信息_户主_人口信息,left==hostCode, $huzCode:right);
  RecordRelation(type==RelationType.RR_家庭信息_成员_人口信息,left==hostCode,right==recordCode);
- FuseAttribute(name==PeopleItem.和户主关系,sqlValue != null, $fa:sqlValue);
- OpsAttribute( name==PeopleItem.和户主关系 , sqlValue!=null, $opsValue:sqlValue)
+ FuseAttribute(name==PeopleItem.和户主关系,getValue(ValueType.INT) != null, $fa:getValue(ValueType.INT));
+ OpsAttribute( name==PeopleItem.和户主关系 , getValue(ValueType.INT)!=null, $opsValue:getValue(ValueType.INT))
  eval(!$fa.equals($opsValue))
 then    
 	//移除关系
@@ -77,32 +88,32 @@ then
 	recordRelationOpsBuilder.putRelation(relationName,$huzCode); 
 	}
 	
-	Attribute attr = AttributeFactory.newInstance(PeopleItem.户主姓名, CommonAlgorithm.getDataValue(recordComplexus, $huzCode, PeopleItem.姓名));
+	Attribute attr = DBAttributeFactory.newInstance(PeopleItem.户主姓名, CommonAlgorithm.getDataValue(recordComplexus, $huzCode, PeopleItem.姓名));
 	attributeList.add(attr);
 end
 
 rule "把身份证号从15位改为18位"
 	salience 20 
 when 
-	OpsAttribute(name==PeopleItem.身份证号码, $value:value);
+	OpsAttribute(name==PeopleItem.身份证号码, $value:getValue(ValueType.STRING));
 	eval(IDIntrospection.validate15IDCard(String.valueOf($value)))
 then
-	Attribute attr = AttributeFactory.newInstance(PeopleItem.身份证号码, IDIntrospection.convertIdTo18(String.valueOf($value)));
+	Attribute attr = DBAttributeFactory.newInstance(PeopleItem.身份证号码, IDIntrospection.convertIdTo18(String.valueOf($value)));
 	attributeList.add(attr);
 end
 
 rule "根据身份证号自动填写性别和生日"
 	salience 15
 when
-	$idtype:OpsLeafAttribute(name==PeopleItem.证件信息_证件类型,sqlValue==EnumKeyValue.ENUM_证件类型_身份证,$leafCode:leafCode);
-    $idValue:OpsLeafAttribute(name==PeopleItem.证件信息_证件号码,leafCode==$leafCode,CommonCalculation.isBasicLawful(value));
-	 eval(IDIntrospection.inspectId($idValue.getValueForShow()));
+	$idtype:OpsLeafAttribute(name==PeopleItem.证件信息_证件类型,getValue(ValueType.INT)==EnumKeyValue.ENUM_证件类型_身份证,$leafCode:leafCode);
+    $idValue:OpsLeafAttribute(name==PeopleItem.证件信息_证件号码,leafCode==$leafCode,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
+	 eval(IDIntrospection.inspectId((String)$idValue.getValue(ValueType.STRING)));
 then 
 	//设置出生日期
-	Attribute birthday=AttributeFactory.newInstance(PeopleItem.出生日期, IDIntrospection.extractBirthday($idValue.getValueForShow()));
+	Attribute birthday=DBAttributeFactory.newInstance(PeopleItem.出生日期, IDIntrospection.extractBirthday((String)$idValue.getValue(ValueType.STRING)));
 	attributeList.add(birthday);
 	//设置性别
-	Attribute sex=AttributeFactory.newInstance(PeopleItem.性别, IDIntrospection.extractSex($idValue.getValueForShow()));
+	Attribute sex=DBAttributeFactory.newInstance(PeopleItem.性别, IDIntrospection.extractSex((String)$idValue.getValue(ValueType.STRING)));
 	attributeList.add(sex);
 end
 

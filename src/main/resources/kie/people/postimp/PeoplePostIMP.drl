@@ -1,26 +1,31 @@
 package com.abc.rule.people.postimp
 
-import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.fuse.improve.attribute.OpsAttribute;
-import com.abc.fuse.improve.attribute.OpsRecordRelation;
-import com.abc.relation.RecordRelation;
-import com.abc.fuse.improve.attribute.AddedRecordRelation;
-import  com.zhsq.biz.constant.people.PeopleItem;
-import  com.zhsq.biz.constant.family.FamilyItem;
 import com.abc.rrc.record.Attribute;
-import com.abc.rrc.factory.AttributeFactory;
-import com.zhsq.biz.family.algorithm.DataIntrospection;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
 import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.constant.RelationType;
-import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
+import com.zhsq.biz.people.algorithm.BirthdayIntrospection;
 import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.people.algorithm.IDIntrospection;
+import java.util.Date;
+import com.abc.rrc.factory.DBAttributeFactory;
+import com.zhsq.biz.constant.people.PeopleItem;
 import com.zhsq.biz.constant.DateUtils;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
 import com.zhsq.biz.constant.BaseConstant;
-import com.abc.relation.RelationCorrelation;
-import com.abc.util.CodeManager;
-import com.abc.util.ValueType;
+import com.abc.ops.builder.RecordRelationOpsBuilder;
+import com.zhsq.biz.constant.RelationType;
+import com.zhsq.biz.constant.worktask.WorkTaskItem;
+import com.abc.transfer.builder.IRootRecordBuilder;
+import com.abc.transfer.builder.RootRecordBuilderFactory;
+import com.abc.rrc.record.RootRecord;
+import com.abc.sysdate.SystemDateTimeManager;
 import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.zhsq.biz.people.algorithm.IDIntrospection;
+import com.abc.util.CodeManager;
+
 
 global java.lang.String hostCode; 
 global java.lang.String hostType;
@@ -52,9 +57,9 @@ end
 rule "身份证校验错误"
 	salience 6
 when
-    $idtype:FuseLeafAttribute(name==PeopleItem.证件信息_证件类型,sqlValue==EnumKeyValue.ENUM_证件类型_身份证,$leafCode:leafCode);
-    $idValue:FuseLeafAttribute(name==PeopleItem.证件信息_证件号码,leafCode==$leafCode,CommonCalculation.isBasicLawful(value));
-    eval(!IDIntrospection.inspectId($idValue.getValueForShow()));
+    $idtype:FuseLeafAttribute(name==PeopleItem.证件信息_证件类型,getValue(ValueType.INT)==EnumKeyValue.ENUM_证件类型_身份证,$leafCode:leafCode);
+    $idValue:FuseLeafAttribute(name==PeopleItem.证件信息_证件号码,leafCode==$leafCode,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
+    eval(!IDIntrospection.inspectId((String)$idValue.getValue(ValueType.STRING)));
 then 
 	String code = CodeManager.newCode32();
 	FuseLeafAttribute leafAttr = FuseLeafAttrFactory.newInstance($idValue.getCode(), PeopleItem.人口错误信息, code, PeopleItem.人口错误信息_错误类型, EnumKeyValue.ENUM_错误类型_身份证错误);
@@ -63,14 +68,13 @@ then
 	addedLeafAttrList.add(leafAttr2);
 end
 
-
 rule "身份证号出生日期与出生日期属性是否一致"
 	salience 5
 when 
-    $idtype1:FuseLeafAttribute(name==PeopleItem.证件信息_证件类型,sqlValue==EnumKeyValue.ENUM_证件类型_身份证,$leafCode:leafCode);
-    $idValue1:FuseLeafAttribute(name==PeopleItem.证件信息_证件号码,leafCode==$leafCode,CommonCalculation.isBasicLawful(value));
-   	$birthday: FuseAttribute(name==PeopleItem.出生日期 ,CommonCalculation.isBasicLawful(value))
-    eval(!IDIntrospection.inspectBirthday($idValue1.getValueForShow(), $birthday.getValueForShow()));
+    $idtype1:FuseLeafAttribute(name==PeopleItem.证件信息_证件类型, getValue(ValueType.INT)==EnumKeyValue.ENUM_证件类型_身份证,$leafCode:leafCode);
+    $idValue1:FuseLeafAttribute(name==PeopleItem.证件信息_证件号码,leafCode==$leafCode,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
+   	$birthday: FuseAttribute(name==PeopleItem.出生日期 ,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)))
+    eval(!IDIntrospection.inspectBirthday((String)$idValue1.getValue(ValueType.STRING), (String)$birthday.getValue(ValueType.STRING)));
 then
 	String code = CodeManager.newCode32();
 	FuseLeafAttribute leafAttr = FuseLeafAttrFactory.newInstance($idValue1.getCode(), PeopleItem.人口错误信息, code, PeopleItem.人口错误信息_错误类型, EnumKeyValue.ENUM_错误类型_身份证错误);
@@ -82,10 +86,10 @@ end
 rule "身份证号性别与性别属性是否一致"
 	salience 5
 when
-    $idtype2:FuseLeafAttribute(name==PeopleItem.证件信息_证件类型,sqlValue==EnumKeyValue.ENUM_证件类型_身份证,$leafCode:leafCode);
-    $idValue2:FuseLeafAttribute(name==PeopleItem.证件信息_证件号码,leafCode==$leafCode,CommonCalculation.isBasicLawful(value));
-   	$sex: FuseAttribute(name==PeopleItem.性别 ,CommonCalculation.isBasicLawful(value))
-    eval(!IDIntrospection.inspectSex($idValue2.getValueForShow(), String.valueOf($sex.getAttribute().getSqlValue())));
+    $idtype2:FuseLeafAttribute(name==PeopleItem.证件信息_证件类型,getValue(ValueType.INT)==EnumKeyValue.ENUM_证件类型_身份证,$leafCode:leafCode);
+    $idValue2:FuseLeafAttribute(name==PeopleItem.证件信息_证件号码,leafCode==$leafCode,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)));
+   	$sex: FuseAttribute(name==PeopleItem.性别 ,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)))
+    eval(!IDIntrospection.inspectSex((String)$idValue2.getValue(ValueType.STRING), (String)$sex.getAttribute().getValue(ValueType.STRING)));
 then  
 	String code = CodeManager.newCode32();
 	FuseLeafAttribute leafAttr = FuseLeafAttrFactory.newInstance($idValue2.getCode(), PeopleItem.人口错误信息, code, PeopleItem.人口错误信息_错误类型, EnumKeyValue.ENUM_错误类型_身份证错误);

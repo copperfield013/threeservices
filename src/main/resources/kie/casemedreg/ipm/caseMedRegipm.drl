@@ -1,22 +1,11 @@
 package com.abc.rule.casemedreg.ipm
 
-import com.abc.fuse.improve.attribute.FuseAttribute;
-import com.abc.relation.RecordRelation;
-import com.abc.rrc.record.Attribute;
-import com.abc.rrc.factory.AttributeFactory;
-import com.zhsq.biz.family.algorithm.DataIntrospection;
-import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.constant.RelationType;
-import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
-import com.zhsq.biz.common.CommonCalculation;
-import com.zhsq.biz.constant.DateUtils;
-import com.zhsq.biz.common.AuthAlgorithm;
-import com.abc.auth.AuthHelper;
-import com.zhsq.biz.common.OutputDisplay;
-import com.zhsq.biz.constant.casemedreg.CaseMedRegItem;
-import com.zhsq.biz.constant.DateUtils;
-import com.zhsq.biz.casemedreg.algorithm.CaseMedIntrospection;
 import com.zhsq.biz.constant.CommonAlgorithm;
+import java.text.AttributedCharacterIterator;
+import com.zhsq.biz.casemedreg.algorithm.CaseMedIntrospection;
+import com.zhsq.biz.constant.casemedreg.CaseMedRegItem;
+import com.abc.rrc.factory.DBAttributeFactory;
+import com.abc.rrc.record.Attribute;
 
 global java.lang.String hostCode; 
 global java.lang.String hostType;
@@ -41,7 +30,7 @@ rule "更新调解结果"//根据调解记录最后一次调解结果更新基�
 		eval(CommonAlgorithm.getLeafCount(recordComplexus, recordCode, CaseMedRegItem.调解记录) >0)
 	then 
 		Object value = CaseMedIntrospection.getMediateRes(recordComplexus, recordCode);
-		Attribute attribute=AttributeFactory.newInstance(CaseMedRegItem.调解结果, value);
+		Attribute attribute=DBAttributeFactory.newInstance(CaseMedRegItem.调解结果, value);
 		attributeList.add(attribute);
 end
 
@@ -50,6 +39,6 @@ rule "赋值已履行金额"//履行记录中的履行金额全部加起来之�
 	when
 		eval(CommonAlgorithm.getLeafCount(recordComplexus, recordCode, CaseMedRegItem.履行记录)>0)
 	then  
-		Attribute attribute=AttributeFactory.newInstance(CaseMedRegItem.已履行金额,CaseMedIntrospection.getMoney(recordComplexus, recordCode));
+		Attribute attribute=DBAttributeFactory.newInstance(CaseMedRegItem.已履行金额,CaseMedIntrospection.getMoney(recordComplexus, recordCode));
 		attributeList.add(attribute);
 end

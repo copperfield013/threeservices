@@ -19,7 +19,7 @@ public class BirthdayIntrospection {
 	 * @return  60-69岁老人  70-79岁老人
 	 */
 	@SuppressWarnings("deprecation")
-	public static Integer getOldLaber(String birthday) {
+	public static Integer getOldLaber(Date birthday) {
 		if (birthday == null || "".equals(birthday)) {
 			return null;
 		}
@@ -42,17 +42,17 @@ public class BirthdayIntrospection {
 	}
 	
 	/**
-	 * 提取年龄信息
+	 * 	提取年龄信息
 	 * @param id
 	 * @return
 	 */
-	public static Integer extractAge(String birthday){
+	public static Integer extractAge(Date birthday){
 		
 		if (birthday == null || "".equals(birthday)) {
 			return 0;
 		}
 		try {
-			Date birthdayDate = sdf.parse(birthday);
+			Date birthdayDate = birthday;
 			
 			//获取当前年， 月
 			Calendar ca =Calendar.getInstance();
@@ -82,7 +82,7 @@ public class BirthdayIntrospection {
 					return nowYear-IDYear-1;
 				}
 			}
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return 0;

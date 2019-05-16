@@ -3,12 +3,10 @@ package com.zhsq.biz.common;
 import java.util.List;
 
 import com.abc.complexus.RecordComplexus;
-import com.abc.fuse.identity.query.IdentityQuery;
+import com.abc.fuse.fg.IdentityQuery;
 import com.abc.fuse.identity.query.impl.DeniedIdentityQuery;
 import com.abc.fuse.identity.query.impl.RecordCodeIdentityQuery;
 import com.abc.rrc.query.queryrecord.criteria.Criteria;
-
-
 
 
 public abstract class AbstractIdentityQuery  implements IdentityQuery{

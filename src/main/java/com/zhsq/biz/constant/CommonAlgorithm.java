@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 
 import com.abc.complexus.RecordComplexus;
+import com.abc.model.enun.ValueType;
 import com.abc.relation.RecordRelation;
 import com.abc.relation.RelationCorrelation;
 import com.abc.relation.RelationQueryPanel;
@@ -28,6 +29,10 @@ public class CommonAlgorithm {
 		帮扶->救助->最低生活保障家庭（低保证）->收入型低保
 		帮扶->救助->最低生活保障边缘家庭（低边证）->低保边缘户
 		帮扶->救助->最低生活保障家庭（低保证）->残疾人单列施保*/
+		
+		if (str== null) {
+			return 0;
+		}
 		
 		switch (str) {
 			case "帮扶->救助->最低生活保障家庭（低保证）->支出型贫困":
@@ -61,7 +66,7 @@ public class CommonAlgorithm {
 		Collection<LeafRecord> findLeafs = CommonAlgorithm.getLeaFecords(recordComplexus, recordCode, leaf);
 		if (findLeafs != null) {
 			for (LeafRecord leafRecord : findLeafs) {
-				String sqlValue = (String)leafRecord.findAttribute(item).getValue();
+				String sqlValue = (String) leafRecord.findAttribute(item).getValue(ValueType.INT);
 				money += dynamicAmountCalculation(sqlValue);
 			}
 		}
@@ -141,8 +146,17 @@ public class CommonAlgorithm {
 	 * @return
 	 */
 	public static RelationCorrelation getRelationCorrelation(RecordComplexus recordComplexus,String recordName, String recordCode) {
-		return recordComplexus.getRelationCorrelation(recordCode);
+		RelationCorrelation relationCorrelation = recordComplexus.getRelationCorrelation(recordCode);
+		return relationCorrelation;
 	}
+	
+	public static RelationCorrelation getRe(RecordComplexus recordComplexus,String recordName, String recordCode) {
+		System.out.println();
+		RelationCorrelation relationCorrelation = CommonAlgorithm.getRelationCorrelation(recordComplexus, recordName, recordCode);
+		RelationCorrelation relationCorrelation2 = CommonAlgorithm.getRelationCorrelation(recordComplexus, recordName, "5f947aefebfc429e9a6336252f49d27c");
+	return relationCorrelation2;
+	}
+	
 	
 	/**
 	 * 根据  recordCode 获取本实例  指定属性的值
@@ -161,7 +175,7 @@ public class CommonAlgorithm {
 		if (rootRecord != null) {
 			Attribute findAttribute = rootRecord.findAttribute(itemValue);
 			if (findAttribute != null) {
-				name = findAttribute.getSqlValue();
+				name = findAttribute.getValue(ValueType.STRING);
 			}
 		}
 		return name;
