@@ -11,7 +11,6 @@ import com.zhsq.biz.constant.people.PeopleItem;
 global java.lang.String recordName;
 global com.abc.rrc.query.criteria.BizzCriteriaFactory bizzCriteriaFactory;
 
-
 rule "姓名 and 身份证号 criteria" 
 	activation-group "people查询条件"
 	salience 9  

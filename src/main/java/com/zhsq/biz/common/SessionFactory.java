@@ -9,13 +9,16 @@ import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieModule;
+import org.kie.api.builder.KieScanner;
 import org.kie.api.builder.ReleaseId;
+import org.kie.api.event.kiebase.KieBaseEventListener;
 import org.kie.api.event.rule.AfterMatchFiredEvent;
 import org.kie.api.event.rule.AgendaEventListener;
 import org.kie.api.event.rule.AgendaGroupPoppedEvent;
 import org.kie.api.event.rule.AgendaGroupPushedEvent;
 import org.kie.api.event.rule.BeforeMatchFiredEvent;
 import org.kie.api.event.rule.DebugAgendaEventListener;
+import org.kie.api.event.rule.DebugRuleRuntimeEventListener;
 import org.kie.api.event.rule.DefaultAgendaEventListener;
 import org.kie.api.event.rule.MatchCancelledEvent;
 import org.kie.api.event.rule.MatchCreatedEvent;
@@ -23,15 +26,15 @@ import org.kie.api.event.rule.RuleFlowGroupActivatedEvent;
 import org.kie.api.event.rule.RuleFlowGroupDeactivatedEvent;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieRuntime;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.Match;
 import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderError;
 import org.kie.internal.builder.KnowledgeBuilderErrors;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
 import org.kie.internal.utils.KieHelper;
-
-import com.zhsq.util.kieutil.KieSessionFactory;
 
 
 public class SessionFactory {
@@ -46,26 +49,28 @@ public class SessionFactory {
 		KieContainer kieContainer = kieServices.getKieClasspathContainer();
 		KieSession kSession = kieContainer.newKieSession(sessionName);
 		
-		kSession.addEventListener(new AgendaEventListener() {
+		
+		kSession.addEventListener(new DebugAgendaEventListener() {
             public void matchCreated(MatchCreatedEvent event) {
-                System.out.println("The rule "
+            	
+            	logger.debug("The rule 【"
                         + event.getMatch().getRule().getName()
-                        + " can be fired in agenda");
+                        + "】 匹配成功！");
             }
             public void matchCancelled(MatchCancelledEvent event) {
-                System.out.println("The rule "
+            	logger.debug("The rule 【"
                         + event.getMatch().getRule().getName()
-                        + " cannot b in agenda");
+                        + "】 取消匹配");
             }
             public void beforeMatchFired(BeforeMatchFiredEvent event) {
-                System.out.println("The rule "
+/*            	logger.debug("The rule "
                         + event.getMatch().getRule().getName()
-                        + " will be fired");
-            }
+                        + "  将被解雇");
+*/            }
             public void afterMatchFired(AfterMatchFiredEvent event) {
-                System.out.println("The rule "
+            	logger.debug("The rule 【"
                         + event.getMatch().getRule().getName()
-                        + " has be fired");
+                        + "】 执行成功！！");
             }
             public void agendaGroupPopped(AgendaGroupPoppedEvent event) {
             }
@@ -85,7 +90,7 @@ public class SessionFactory {
 	}
 	
 	//findScannerSession
-	public static KieSession  findKeepSession(String sessionName){
+	/*public static KieSession  findKeepSession(String sessionName){
 		KieSession kSession = KieSessionFactory.newScannerSession("com.zhsq.biz", "threeservices", "LATEST", sessionName);
 		kSession.addEventListener( new DefaultAgendaEventListener() {
 			public void afterMatchFired(AfterMatchFiredEvent event) {
@@ -95,6 +100,6 @@ public class SessionFactory {
 			});
 		
 		return kSession;
-	}
+	}*/
 	
 }

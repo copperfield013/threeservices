@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.kie.api.runtime.KieSession;
 
 import com.abc.complexus.RecordComplexus;
@@ -24,6 +25,8 @@ import com.abc.rrc.record.RootRecord;
 import com.abc.rrc.record.Attribute;
 
 public class KIEHelper {
+	
+	private static Logger logger = Logger.getLogger(KIEHelper.class);
 	
 	public static List<Criteria> getBizCriteriaListFromKIE(String recordCode, RecordComplexus complexus,
 			KieSession kSession) {
@@ -79,88 +82,70 @@ public class KIEHelper {
 		RecordRelationOpsBuilder recordRelationOpsBuilder = RecordRelationOpsBuilder.getInstance(recordName,
 				recordCode);
 
-		kSession.setGlobal("userCode", userCode);
-		kSession.setGlobal("recordCode", recordCode);
-		kSession.setGlobal("recordName", recordName);
-		kSession.setGlobal("recordComplexus", recordComplexus);
-		kSession.setGlobal("recordRelationOpsBuilder", recordRelationOpsBuilder);
-		
 		try {
+			kSession.setGlobal("userCode", userCode);
+			kSession.setGlobal("recordCode", recordCode);
+			kSession.setGlobal("recordName", recordName);
+			kSession.setGlobal("recordComplexus", recordComplexus);
+			kSession.setGlobal("recordRelationOpsBuilder", recordRelationOpsBuilder);
+			
 			kSession.setGlobal("recordRelationOpsBuilderNew", recordRelationOpsBuilderNew);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("全局变量未设置： recordRelationOpsBuilderNew");
 		}
-		
 		try {
 			kSession.setGlobal("rootRecordList", rootRecordList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("全局变量未设置： rootRecordList");
 		}
-		
 		try {
 			kSession.setGlobal("hostCode", hostCode);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("全局变量未设置： hostCode");
 		}
-		
 		try {
 			kSession.setGlobal("hostType", hostType);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("全局变量未设置： hostType");
 		}
 		try {
 			kSession.setGlobal("addedLabelList", addedLabelList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("全局变量未设置： addedLabelList");
 		}
-
 		try {
 			kSession.setGlobal("removedLabelList", removedLabelList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("全局变量未设置： removedLabelList");
 		}
 		try {
-			
 			kSession.setGlobal("attributeList", attributeList);
-
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("全局变量未设置： attributeList");
 		}
 		try {
-			
 			kSession.setGlobal("addedLeafAttrList", addedLeafAttrList);
-
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("全局变量未设置： addedLeafAttrList");
 		}
-		
 		try {
-
 			kSession.setGlobal("removedLeafAttrMap", removedLeafAttrMap);
-
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("全局变量未设置： removedLeafAttrMap");
 		}
-
 		try {
 			kSession.setGlobal("rootRecord", rootRecord);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("全局变量未设置： rootRecord");
 		}
-		
 		try {
 			kSession.setGlobal("recordComplexus", recordComplexus);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("全局变量未设置： recordComplexus");
 		}
 		
 		// insert object
-		//BizzAttributeTransfer.transfer(rootRecord).forEach(fuseAttribute -> kSession.insert(fuseAttribute));
-		List<FuseAttribute> transfer = BizzAttributeTransfer.transfer(rootRecord);
-		
-		for (FuseAttribute fuseAttribute : transfer) {
-			kSession.insert(fuseAttribute);
-		}
+		BizzAttributeTransfer.transfer(rootRecord).forEach(fuseAttribute -> kSession.insert(fuseAttribute));
 		
 		RelationCorrelation relationCorrelation = recordComplexus.getRelationCorrelation(recordCode);
 	
@@ -182,7 +167,11 @@ public class KIEHelper {
 		}
 
 		// 触发规则
-		kSession.fireAllRules();
+		logger.debug("开始执行规则===================== ");
+		
+		int fireAllRules = kSession.fireAllRules();
+		logger.debug("本次触发规则数量 =  " + fireAllRules);
+		logger.debug("规则执行完毕===================== ");
 		kSession.destroy();
 
 		// 组装结果

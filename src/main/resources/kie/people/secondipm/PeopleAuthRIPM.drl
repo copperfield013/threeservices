@@ -51,11 +51,10 @@ global com.abc.complexus.RecordComplexus recordComplexus;
 rule "无正確社区信息权限"
 	salience 10 
 when
-  	FuseAttribute(name==PeopleItem.所属社区,getValue(ValueType.STRING) == null) or (not FuseAttribute(name==PeopleItem.所属社区))
-then
+  	FuseAttribute(name==PeopleItem.所属社区,!CommonCalculation.isBasicLawful(getValue(ValueType.STRING))) or (not FuseAttribute(name==PeopleItem.所属社区))
+then 
 	recordRelationOpsBuilder.putRelation(RelationType.RR_人口信息_可被访问_权限,AuthAlgorithm.getNoAreaAuthCode());
 end
-
 
 rule "移除原社区数据访问"
 	salience 10 
@@ -72,22 +71,7 @@ when
  $areaFA:FuseAttribute(name==PeopleItem.所属社区,$areaValue:getValue(ValueType.INT));
 not RecordRelation(type==RelationType.RR_人口信息_可被访问_权限,$oldauth:right,AuthHelper.isMatchedAuthAndLabel($oldauth,EnumKeyValue.ENUM_权限标签_社区数据访问),$oldauth==AuthAlgorithm.getAreaAuthCode((Integer)$areaValue));
 then
+	com.zhsq.biz.common.OutputDisplay.showText("$areaValue : " + $areaValue);
+
 	recordRelationOpsBuilder.putRelation(RelationType.RR_人口信息_可被访问_权限,AuthAlgorithm.getAreaAuthCode((Integer)$areaValue));
 end
-
-rule "输出社区的值"
-	salience 10 
-when
- $areaFA:FuseAttribute(name==PeopleItem.所属社区);
-then 
-	com.zhsq.biz.common.OutputDisplay.showText($areaFA.getValue(ValueType.INT));
-end
-
-rule "new rule"
-	when
-		eval( true )
-	then
-		com.zhsq.biz.common.OutputDisplay.showText("我输出了！！！");
-end
-
- 

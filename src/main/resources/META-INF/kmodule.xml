@@ -97,4 +97,5 @@
 	<kbase name="minzsalvationquery" packages="kie.minzsalvation.identity.query">
 		<ksession name="ks-minzsalvation-idt-query" />
 	</kbase>
+	
 </kmodule>

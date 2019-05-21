@@ -24,8 +24,6 @@ import com.abc.rrc.record.RootRecord;
 import com.abc.sysdate.SystemDateTimeManager;
 import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
 
-
-
 global java.lang.String hostCode; 
 global java.lang.String hostType;
 
@@ -108,8 +106,8 @@ rule "获取最新户籍变更信息设置户籍地门牌号"
 when
 	$FAa:FuseLeafAttribute(name==PeopleItem.户籍变更_变动后街路巷,$leafCode:leafCode);
     $FAb:FuseLeafAttribute(name==PeopleItem.户籍变更_变动后门楼详址, $leafCode==leafCode);
-    $FAc:FuseLeafAttribute(name==PeopleItem.户籍变更_更改户籍门牌号, $leafCode==leafCode, $value:getValue(ValueType.STRING));
-	eval(String.valueOf(EnumKeyValue.ENUM_是否_是).equals(String.valueOf($value)))
+    $FAc:FuseLeafAttribute(name==PeopleItem.户籍变更_更改户籍门牌号, $leafCode==leafCode, $value:getValue(ValueType.INT));
+	eval(EnumKeyValue.ENUM_是否_是.equals($value))
 then    
 	//设置户籍门牌号
 	Attribute attribute=DBAttributeFactory.newInstance(PeopleItem.户籍所在地, $FAa.getValue(ValueType.STRING)+"" +$FAb.getValue(ValueType.STRING));

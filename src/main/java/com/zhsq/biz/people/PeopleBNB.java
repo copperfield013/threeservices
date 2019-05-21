@@ -24,7 +24,6 @@ public class PeopleBNB implements FuseCheck,FunctionalGroup, IdentityQuery,OneRo
 
 	@Override
 	public List<Criteria> getCriteriaList(String recordCode, RecordComplexus complexus) {
-		System.out.println("执行了PeopleBNB -- getCriteriaList");
 		return KIEHelper.getBizCriteriaListFromKIE(recordCode, complexus,
 				SessionFactory.findScannerSession("ks-people-idt-query"));
 	}
@@ -32,14 +31,12 @@ public class PeopleBNB implements FuseCheck,FunctionalGroup, IdentityQuery,OneRo
 	@Override
 	public ImproveResult preImprove(FGFusionContext context, String recordCode, OpsComplexus opsComplexus,
 			RecordComplexus recordComplexus) {
-		System.out.println("执行了PeopleBNB -- preImprove");
 		return KIEHelper.getImproveResultFromKIE(context, recordCode, opsComplexus, recordComplexus,
 				SessionFactory.findScannerSession("ks-people-preipm"));
 	}
 
 	@Override
 	public ImproveResult improve(FGFusionContext context, String recordCode, RecordComplexus recordComplexus) {
-		System.out.println("执行了PeopleBNB -- improve");
 		return KIEHelper.getImproveResultFromKIE(context, recordCode, recordComplexus,
 				SessionFactory.findScannerSession("ks-people-ipm"));
 	} 
@@ -58,27 +55,25 @@ public class PeopleBNB implements FuseCheck,FunctionalGroup, IdentityQuery,OneRo
 
 	@Override
 	public ImproveResult secondImprove(FGFusionContext context, String recordCode, RecordComplexus recordComplexus) {
-		System.out.println("执行了PeopleBNB -- secondImprove");
 		return KIEHelper.getImproveResultFromKIE(context, recordCode, recordComplexus,
 				SessionFactory.findScannerSession("ks-people-secondipm"));
 	}
 
 	@Override
 	public ImproveResult thirdImprove(FGFusionContext context, String recordCode, RecordComplexus recordComplexus) {
-		System.out.println("执行了PeopleBNB -- thirdImprove");
 		return null;
 	}
 
 	@Override
 	public FuseCheckInfo afterCheck(FGFusionContext context, String recordCode, RecordComplexus recordComplexus) {
 		// TODO Auto-generated method stub
-		return new FuseCheckInfo(recordCode);
+		return null;
 	}
 
 	@Override
 	public FuseCheckInfo beforeCheck(FGFusionContext context, String recordCode, RecordComplexus recordComplexus) {
 		// TODO Auto-generated method stub
-		return new FuseCheckInfo(recordCode);
+		return null;
 	}
 	
 }

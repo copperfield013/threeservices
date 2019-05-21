@@ -97,8 +97,11 @@ when
 	OpsAttribute(name==PeopleItem.所属社区,$areaValue:getValue(ValueType.INT));
 	OpsAttribute( name==PeopleItem.就业形式, $jobType:getValue(ValueType.INT))
 	FuseAttribute( name== PeopleItem.就业形式,$fuseValue:getValue(ValueType.INT)) 
-	//eval(EnumKeyValue.ENUM_就业形式_单位招用.equals($jobType) || EnumKeyValue.ENUM_就业形式_自谋职业.equals($jobType) ||	EnumKeyValue.ENUM_就业形式_公益性岗位.equals($jobType) ||	EnumKeyValue.ENUM_就业形式_灵活就业.equals($jobType) ||	 EnumKeyValue.ENUM_就业形式_其他形式就业.equals($jobType) ||	 EnumKeyValue.ENUM_就业形式_失业.equals($jobType))
 then 
+
+
+
+
 	Integer oldfouTypePeo = CommIntrospection.get4TypePeople(new Integer($fuseValue.toString()));
 	Integer fouTypePeo = CommIntrospection.get4TypePeople(new Integer($jobType.toString()));
 	

@@ -15,6 +15,8 @@
     
     <context:component-scan base-package="com.zhsq" />
     <context:component-scan base-package="com.abc" />
+   <!--   <import resource="classpath*:carbon-spring-redis.xml"/> -->
+    
 		<!-- 加载jdbc.properties配置文件 -->
     <bean id="propConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="order" value="1" />
