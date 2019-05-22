@@ -1,0 +1,82 @@
+package com.abc.rule.family.ipm
+
+import com.abc.rrc.record.Attribute;
+import com.abc.rrc.factory.DBAttributeFactory;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
+import com.zhsq.biz.constant.EnumKeyValue;
+import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.abc.util.CodeManager;
+import com.abc.relation.RecordRelation;
+import com.zhsq.biz.constant.people.PeopleItem;
+import com.zhsq.biz.constant.RelationType;
+
+global java.lang.String hostCode; 
+global java.lang.String hostType;
+
+global java.lang.String userCode;
+global java.lang.String recordCode;
+global java.lang.String recordName;
+
+global java.util.List attributeList;
+global java.util.List addedLabelList;
+global java.util.List removedLabelList;
+global java.util.List addedLabelList;
+global java.util.List addedLeafAttrList;
+global java.util.Map removedLeafAttrMap;
+global com.abc.rrc.record.RootRecord rootRecord;
+global  com.abc.ops.builder.RecordRelationOpsBuilder recordRelationOpsBuilder;
+global com.abc.complexus.RecordComplexus recordComplexus;
+
+rule "设置户籍家庭人口数为0"
+	salience 10 
+when
+	FuseAttribute( name==FamilyItem.家庭分类,getValue(ValueType.INT)==EnumKeyValue.ENUM_家庭分类_户籍家庭 )
+ 	(not RecordRelation(type==RelationType.RR_家庭信息_户主_人口信息))  &&( not RecordRelation(type==RelationType.RR_家庭信息_成员_人口信息))
+then 
+	//设置户籍家庭人口数量
+	Attribute attr=DBAttributeFactory.newInstance(FamilyItem.家庭总人数, 0);
+	attributeList.add(attr);
+end
+
+rule "设置户籍家庭人口数"
+	salience 10 
+when
+	FuseAttribute( name==FamilyItem.家庭分类,getValue(ValueType.INT)==EnumKeyValue.ENUM_家庭分类_户籍家庭 )
+ 	exists RecordRelation(type==RelationType.RR_家庭信息_户主_人口信息)  or exists RecordRelation(type==RelationType.RR_家庭信息_成员_人口信息);
+then 
+	Integer hzCount = CommonAlgorithm.getAppointRecordRelationCount(recordComplexus, recordName, recordCode, RelationType.RR_家庭信息_户主_人口信息);
+	Integer cyCount = CommonAlgorithm.getAppointRecordRelationCount(recordComplexus, recordName, recordCode, RelationType.RR_家庭信息_成员_人口信息);
+
+	//设置户籍家庭人口数量
+	Attribute attr=DBAttributeFactory.newInstance(FamilyItem.家庭总人数, hzCount + cyCount);
+	attributeList.add(attr);
+end
+
+rule "设置居住家庭人口数为0"
+	salience 10 
+when
+	FuseAttribute( name==FamilyItem.家庭分类,getValue(ValueType.INT)==EnumKeyValue.ENUM_家庭分类_居住家庭 )
+ 	 not RecordRelation(type==RelationType.RR_家庭信息_居住成员_人口信息) 
+then 
+	//设置居住家庭人口数量
+	Attribute attr=DBAttributeFactory.newInstance(FamilyItem.家庭总人数, 0);
+	attributeList.add(attr);
+end
+
+rule "设置居住家庭人口数"
+	salience 10 
+when
+	FuseAttribute( name==FamilyItem.家庭分类,getValue(ValueType.INT)==EnumKeyValue.ENUM_家庭分类_居住家庭 )
+ 	 exists RecordRelation(type==RelationType.RR_家庭信息_居住成员_人口信息) 
+then 
+	Integer cyCount = CommonAlgorithm.getAppointRecordRelationCount(recordComplexus, recordName, recordCode, RelationType.RR_家庭信息_居住成员_人口信息);
+	//设置居住家庭人口数量
+	Attribute attr=DBAttributeFactory.newInstance(FamilyItem.家庭总人数, cyCount);
+	attributeList.add(attr);
+end
+

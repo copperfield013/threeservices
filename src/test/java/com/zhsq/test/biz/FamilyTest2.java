@@ -9,11 +9,11 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.abc.application.BizFusionContext;
-import com.abc.application.FusionContext;
 import com.abc.fuse.improve.attribute.OpsRecordRelation;
+import com.abc.hc.FusionContext;
+import com.abc.hc.HCFusionContext;
 import com.abc.mapping.entity.Entity;
-import com.abc.mapping.entity.SimpleEntity;
+import com.abc.mapping.entity.LeafEntity;
 import com.abc.panel.Discoverer;
 import com.abc.panel.Integration;
 import com.abc.panel.IntegrationMsg;
@@ -36,7 +36,7 @@ public class FamilyTest2 {
 	public void readData() {
 		
 		long startTime = System.currentTimeMillis();
-		BizFusionContext context=new BizFusionContext();
+		HCFusionContext context=new HCFusionContext();
 		context.setSource(FusionContext.SOURCE_COMMON);
 //		context.setToEntityRange(BizFusionContext.ENTITY_CONTENT_RANGE_ABCNODE_CONTAIN);
 		context.setUserCode("e10adc3949ba59abbe56e057f28888d5");
@@ -69,7 +69,7 @@ public class FamilyTest2 {
 		relationentity.putValue("所属社区", EnumKeyValue.ENUM_祥符街道社区_祥符桥社区);
 		//relationentity.putValue("身份证号码", "23423423");
 		
-		SimpleEntity sentity2 = new SimpleEntity("证件信息");
+		LeafEntity sentity2 = new LeafEntity("证件信息");
 		sentity2.putValue("证件类型", EnumKeyValue.ENUM_证件类型_身份证);
 		sentity2.putValue("证件号码", "928637423402");
 		sentity2.putValue("有效期结束", "2015-10-12");

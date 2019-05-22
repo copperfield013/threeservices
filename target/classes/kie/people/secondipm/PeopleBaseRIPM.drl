@@ -1,0 +1,172 @@
+package com.abc.rule.people.ipm
+
+import com.abc.rrc.record.Attribute;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
+import com.zhsq.biz.constant.EnumKeyValue;
+import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
+import com.zhsq.biz.people.algorithm.BirthdayIntrospection;
+import com.zhsq.biz.common.CommonCalculation;
+import java.util.Date;
+import com.abc.rrc.factory.DBAttributeFactory;
+import com.zhsq.biz.constant.people.PeopleItem;
+import com.zhsq.biz.constant.DateUtils;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.zhsq.biz.constant.BaseConstant;
+import com.abc.ops.builder.RecordRelationOpsBuilder;
+import com.zhsq.biz.constant.RelationType;
+import com.zhsq.biz.constant.worktask.WorkTaskItem;
+import com.abc.transfer.builder.IRootRecordBuilder;
+import com.abc.transfer.builder.RootRecordBuilderFactory;
+import com.abc.rrc.record.RootRecord;
+import com.abc.sysdate.SystemDateTimeManager;
+import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.abc.relation.RelationCorrelation;
+import com.abc.relation.RecordRelation;
+import com.abc.fuse.improve.attribute.OpsAttribute;
+import com.zhsq.biz.people.algorithm.IDIntrospection;
+import com.abc.fuse.improve.attribute.leaf.OpsLeafAttribute;
+
+
+global java.lang.String hostCode; 
+global java.lang.String hostType;
+
+global java.lang.String userCode;
+global java.lang.String recordCode;
+global java.lang.String recordName;
+
+global java.util.List recordRelationOpsBuilderNew;
+global java.util.List rootRecordList;
+global java.util.List attributeList;
+global java.util.List addedLabelList;
+global java.util.List removedLabelList;
+global java.util.List addedLabelList;
+global java.util.List addedLeafAttrList;
+global java.util.Map removedLeafAttrMap;
+global com.abc.rrc.record.RootRecord rootRecord;
+global  com.abc.ops.builder.RecordRelationOpsBuilder recordRelationOpsBuilder;
+global com.abc.complexus.RecordComplexus recordComplexus;
+
+rule "根据子女数量设置【是否独生子女】为是"
+	salience 10 
+when
+	RecordRelation(type==RelationType.RR_人口信息_父母_人口信息,left==recordCode, $right:right);
+	eval(CommonAlgorithm.getAppointRecordRelationCount(recordComplexus, recordName, recordCode, RelationType.RR_人口信息_子女_人口信息) ==1)
+then 
+	Attribute attrbute=DBAttributeFactory.newInstance(PeopleItem.是否独生子, EnumKeyValue.ENUM_是否_是);
+	attributeList.add(attrbute);
+end
+
+rule "根据子女数量设置【是否独生子女】为否"
+	salience 11 
+when
+	RecordRelation(type==RelationType.RR_人口信息_父母_人口信息,left==recordCode, $right:right);
+	eval(CommonAlgorithm.getAppointRecordRelationCount(recordComplexus, recordName, recordCode, RelationType.RR_人口信息_子女_人口信息)  !=1)
+then 
+	Attribute attrbute=DBAttributeFactory.newInstance(PeopleItem.是否独生子, EnumKeyValue.ENUM_是否_否);
+	attributeList.add(attrbute);
+end
+
+rule "人和家庭的关系放进空间2"
+salience 10 
+when
+	eval(BaseConstant.TYPE_家庭信息.equals(hostType));
+then 
+		RelationCorrelation relationCorrelation = recordComplexus.getRelationCorrelation(hostCode);
+		if (relationCorrelation != null) {
+			relationCorrelation.getRecordRelation().forEach(recordRelation -> 
+			insert(recordRelation)
+			);
+		}
+	//激活 
+	kcontext.getKnowledgeRuntime().getAgenda().getAgendaGroup( "a_家庭与人的关系" ).setFocus();
+end
+
+rule "家庭中添加成员与户主的关系one2"//第一次添加户主和成员
+	agenda-group "a_家庭与人的关系"
+	salience 10 
+when
+	 RecordRelation(type==RelationType.RR_家庭信息_户主_人口信息,left==hostCode, $huzCode:right);
+	 RecordRelation(type==RelationType.RR_家庭信息_成员_人口信息,left==hostCode,right==recordCode);
+	 FuseAttribute(name==PeopleItem.和户主关系, $value:getValue(ValueType.INT));
+then 
+	//添加关系
+	String relationName = BaseConstant.getRelationName(String.valueOf($value));
+	if (relationName!=null) {
+		recordRelationOpsBuilder.putRelation(relationName,$huzCode); 
+	}
+	
+	Attribute attr = DBAttributeFactory.newInstance(PeopleItem.户主姓名, CommonAlgorithm.getDataValue(recordComplexus, $huzCode, PeopleItem.姓名));
+	attributeList.add(attr);
+end
+
+// 人的户籍地址和家庭的户籍地址保持一致	 若不一致， 建立新的家庭， 家庭关联当前人口
+rule "人的户籍地和户籍家庭的户籍地不一致"
+	salience 20
+	when
+		 FuseAttribute( name==PeopleItem.户籍所在地, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)), $hjAddress:getValue(ValueType.STRING))
+		 RecordRelation(type == RelationType.RR_人口信息_户主家庭_家庭信息, $rightCode:right) 
+		 eval(!$hjAddress.equals(CommonAlgorithm.getDataValue(recordComplexus, $rightCode, FamilyItem.户籍地址)))
+	then 
+		//移除原有关系
+		recordRelationOpsBuilder.removeRelation(RelationType.RR_人口信息_户主家庭_家庭信息, $rightCode);
+	
+		//新建家庭
+		IRootRecordBuilder iRootRecordBuilder = RootRecordBuilderFactory.getPersistRootRecordBuilder(BaseConstant.TYPE_家庭信息);
+		iRootRecordBuilder.putAttribute(FamilyItem.户籍地址, $hjAddress);
+		iRootRecordBuilder.putAttribute(FamilyItem.家庭分类, EnumKeyValue.ENUM_家庭分类_户籍家庭);
+		RootRecord record = iRootRecordBuilder.getRootRecord();
+		rootRecordList.add(record);
+		
+		//添加关系
+		RecordRelationOpsBuilder builderNew = RecordRelationOpsBuilder.getInstance(BaseConstant.TYPE_家庭信息,
+					record.getCode());
+		builderNew.putRelation(RelationType.RR_家庭信息_户主_人口信息, recordCode); 
+		recordRelationOpsBuilderNew.add(builderNew);	
+end
+
+rule "人的户籍地和归属家庭的户籍地不一致"
+	salience 20
+	when
+		 FuseAttribute( name==PeopleItem.户籍所在地, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)), $hjAddress:getValue(ValueType.STRING))
+		 RecordRelation(type == RelationType.RR_人口信息_归属家庭_家庭信息, $rightCode:right) 
+		 eval(!$hjAddress.equals(CommonAlgorithm.getDataValue(recordComplexus, $rightCode, FamilyItem.户籍地址)))
+	then 
+		//移除原有关系
+		recordRelationOpsBuilder.removeRelation(RelationType.RR_人口信息_归属家庭_家庭信息, $rightCode);
+	
+		//新建家庭
+		IRootRecordBuilder iRootRecordBuilder = RootRecordBuilderFactory.getPersistRootRecordBuilder(BaseConstant.TYPE_家庭信息);
+		iRootRecordBuilder.putAttribute(FamilyItem.户籍地址, $hjAddress);
+		iRootRecordBuilder.putAttribute(FamilyItem.家庭分类, EnumKeyValue.ENUM_家庭分类_户籍家庭);
+		RootRecord record = iRootRecordBuilder.getRootRecord();
+		rootRecordList.add(record);
+		
+		//添加关系
+		RecordRelationOpsBuilder builderNew = RecordRelationOpsBuilder.getInstance(BaseConstant.TYPE_家庭信息,
+					record.getCode());
+		builderNew.putRelation(RelationType.RR_家庭信息_成员_人口信息, recordCode); 
+		recordRelationOpsBuilderNew.add(builderNew);	
+end
+
+rule "人没有户籍家庭关系"
+	salience 25
+	when
+		 FuseAttribute( name==PeopleItem.户籍所在地, CommonCalculation.isBasicLawful(getValue(ValueType.STRING)), $hjAddress:getValue(ValueType.STRING))
+		 (not RecordRelation(type == RelationType.RR_人口信息_归属家庭_家庭信息))  &&  (not RecordRelation(type == RelationType.RR_人口信息_户主家庭_家庭信息)) 
+	then 
+		//新建家庭
+		IRootRecordBuilder iRootRecordBuilder = RootRecordBuilderFactory.getPersistRootRecordBuilder(BaseConstant.TYPE_家庭信息);
+		iRootRecordBuilder.putAttribute(FamilyItem.户籍地址, $hjAddress);
+		iRootRecordBuilder.putAttribute(FamilyItem.家庭分类, EnumKeyValue.ENUM_家庭分类_户籍家庭);
+		RootRecord record = iRootRecordBuilder.getRootRecord();
+		rootRecordList.add(record);
+		
+		//添加关系
+		RecordRelationOpsBuilder builderNew = RecordRelationOpsBuilder.getInstance(BaseConstant.TYPE_家庭信息,
+					record.getCode());
+		builderNew.putRelation(RelationType.RR_家庭信息_成员_人口信息, recordCode); 
+		recordRelationOpsBuilderNew.add(builderNew);	
+end

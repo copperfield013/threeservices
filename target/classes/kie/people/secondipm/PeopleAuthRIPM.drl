@@ -1,0 +1,77 @@
+package com.abc.rule.people.secondipm
+
+import com.abc.rrc.record.Attribute;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
+import com.zhsq.biz.constant.EnumKeyValue;
+import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
+import com.zhsq.biz.people.algorithm.BirthdayIntrospection;
+import com.zhsq.biz.common.CommonCalculation;
+import java.util.Date;
+import com.abc.rrc.factory.DBAttributeFactory;
+import com.zhsq.biz.constant.people.PeopleItem;
+import com.zhsq.biz.constant.DateUtils;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.zhsq.biz.constant.BaseConstant;
+import com.abc.ops.builder.RecordRelationOpsBuilder;
+import com.zhsq.biz.constant.RelationType;
+import com.zhsq.biz.constant.worktask.WorkTaskItem;
+import com.abc.transfer.builder.IRootRecordBuilder;
+import com.abc.transfer.builder.RootRecordBuilderFactory;
+import com.abc.rrc.record.RootRecord;
+import com.abc.sysdate.SystemDateTimeManager;
+import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.abc.relation.RelationCorrelation;
+import com.abc.relation.RecordRelation;
+import com.abc.fuse.improve.attribute.OpsAttribute;
+import com.zhsq.biz.people.algorithm.IDIntrospection;
+import com.abc.fuse.improve.attribute.leaf.OpsLeafAttribute;
+import com.zhsq.biz.common.AuthAlgorithm;
+import com.abc.auth.AuthHelper;
+
+global java.lang.String hostCode; 
+global java.lang.String hostType;
+
+global java.lang.String userCode;
+global java.lang.String recordCode;
+global java.lang.String recordName;
+
+global java.util.List attributeList;
+global java.util.List addedLabelList;
+global java.util.List removedLabelList;
+global java.util.List addedLabelList;
+global java.util.List addedLeafAttrList;
+global java.util.Map removedLeafAttrMap;
+global com.abc.rrc.record.RootRecord rootRecord;
+global  com.abc.ops.builder.RecordRelationOpsBuilder recordRelationOpsBuilder;
+global com.abc.complexus.RecordComplexus recordComplexus;
+
+rule "无正確社区信息权限"
+	salience 10 
+when
+  	FuseAttribute(name==PeopleItem.所属社区,!CommonCalculation.isBasicLawful(getValue(ValueType.STRING))) or (not FuseAttribute(name==PeopleItem.所属社区))
+then 
+	recordRelationOpsBuilder.putRelation(RelationType.RR_人口信息_可被访问_权限,AuthAlgorithm.getNoAreaAuthCode());
+end
+
+rule "移除原社区数据访问"
+	salience 10 
+when
+ $areaFA:FuseAttribute(name==PeopleItem.所属社区,$areaValue:getValue(ValueType.INT));
+ RecordRelation(type==RelationType.RR_人口信息_可被访问_权限,$oldauth:right,AuthHelper.isMatchedAuthAndLabel($oldauth,EnumKeyValue.ENUM_权限标签_社区数据访问),$oldauth!=AuthAlgorithm.getAreaAuthCode((Integer)$areaValue));
+then 
+	recordRelationOpsBuilder.removeRelation(RelationType.RR_人口信息_可被访问_权限,$oldauth);
+end
+
+rule "添加社区数据访问"
+	salience 9
+when
+ $areaFA:FuseAttribute(name==PeopleItem.所属社区,$areaValue:getValue(ValueType.INT));
+not RecordRelation(type==RelationType.RR_人口信息_可被访问_权限,$oldauth:right,AuthHelper.isMatchedAuthAndLabel($oldauth,EnumKeyValue.ENUM_权限标签_社区数据访问),$oldauth==AuthAlgorithm.getAreaAuthCode((Integer)$areaValue));
+then
+	com.zhsq.biz.common.OutputDisplay.showText("$areaValue : " + $areaValue);
+
+	recordRelationOpsBuilder.putRelation(RelationType.RR_人口信息_可被访问_权限,AuthAlgorithm.getAreaAuthCode((Integer)$areaValue));
+end

@@ -1,31 +1,33 @@
 package com.zhsq.test.biz;
 
 
-import java.util.Collection;
-
 import org.apache.log4j.Logger;
+import org.drools.core.metadata.With;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.api.runtime.KieSession;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.abc.hc.FusionContext;
 import com.abc.hc.HCFusionContext;
 import com.abc.mapping.entity.Entity;
+import com.abc.mapping.entity.LeafEntity;
 import com.abc.panel.Discoverer;
 import com.abc.panel.Integration;
 import com.abc.panel.IntegrationMsg;
 import com.abc.panel.PanelFactory;
 import com.zhsq.biz.constant.EnumKeyValue;
+import com.zhsq.biz.constant.casemedreg.CaseMedRegItem;
 
 @ContextConfiguration(locations = "classpath*:spring-core.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class WorkTaskTest {
+public class CaseMedRegTest {
 	
-	private static Logger logger = Logger.getLogger(WorkTaskTest.class);
-	protected String mapperName = "工作任务";
+	private static Logger logger = Logger.getLogger(CaseMedRegTest.class);
+	protected String mapperName = "案件调解登记";
 
    @Before
     public void setUp() throws Exception {
@@ -40,12 +42,11 @@ public class WorkTaskTest {
 	public void readData() {
 
     	long startTime = System.currentTimeMillis();
-    	HCFusionContext context=new HCFusionContext();
+		HCFusionContext context=new HCFusionContext();
 		context.setSource(FusionContext.SOURCE_COMMON);
 //		context.setToEntityRange(BizFusionContext.ENTITY_CONTENT_RANGE_ABCNODE_CONTAIN);
 		context.setUserCode("e10adc3949ba59abbe56e057f28888d5");
 		Integration integration=PanelFactory.getIntegration();
-		
 		Entity entity=createEntity(mapperName);
 		logger.debug(entity.toJson());
 		IntegrationMsg imsg=integration.integrate(context,entity);
@@ -60,38 +61,26 @@ public class WorkTaskTest {
 
 	private Entity createEntity(String mappingName) {
 		Entity entity = new Entity(mappingName);
-		entity.putValue("唯一编码", "120fc092edbe4f3884caab1c76c20870");
-		entity.putValue("任务标题", "第99个任务"); 
-		entity.putValue("任务状态", "处理中");
-		entity.putValue("任务结束时间", "2019-02-17");
-		entity.putValue("任务是否超时", "否");
-		entity.putValue("保存派发", "派发");
-		entity.putValue("类型", "公安");
-		entity.putValue("是否需要领用", "是");
-		entity.putValue("是否智能匹配", "否");
+		entity.putValue("唯一编码", "5ac55ce001b94b6789af496a590804ae");
+		entity.putValue("登记日期", "2019-03-08"); 
 		
+		LeafEntity sentity = new LeafEntity("调解记录");
+		sentity.putValue("调解日期", "2019-3-28");
+		sentity.putValue("本次调解结果", EnumKeyValue.ENUM_调解结果_达成书面协议);
+		entity.putMultiAttrEntity(sentity);
 		
-		//entity.removeAllRelationEntity("任务执行人");
+		LeafEntity sentity1 = new LeafEntity("调解记录");
+		sentity1.putValue("调解日期", "2019-3-19");
+		sentity1.putValue("本次调解结果", EnumKeyValue.ENUM_调解结果_达成口头协议);
+		entity.putMultiAttrEntity(sentity1);
 		
-		/*Entity relationentity = new Entity("任务执行人");
-		relationentity.putValue("唯一编码", "e10adc3949ba59abbe56e057f28888d5");
-		relationentity.putValue("用户名", "admin");
-		entity.putRelationEntity("任务执行人","任务执行人", relationentity);
-		*/
-		/*Entity relationentity1 = new Entity("用户");
-		relationentity1.putValue("唯一编码", "e10adc3949ba59abbe56e057f28888u5");
-		relationentity1.putValue("用户名", "admin");
-		entity.putRelationEntity("任务创建人","创建人", relationentity1);*/
+		LeafEntity sentity2 = new LeafEntity("调解记录");
+		sentity2.putValue("调解日期", "2019-3-10");
+		sentity2.putValue("本次调解结果", EnumKeyValue.ENUM_调解结果_调解不成功);
+		entity.putMultiAttrEntity(sentity2);
+		
 		return entity;
 	}
 	
-	
-	//新建任务设置
-	private Entity testNewTask(String mappingName) {
-		Entity entity = new Entity(mappingName);
-		entity.putValue("任务标题", "新建任务设置"); 
-		entity.putValue("任务状态", EnumKeyValue.ENUM_任务状态_新建);
-		return entity;
-	}
 
 }

@@ -1,0 +1,102 @@
+package com.abc.rule.lackfamilytable.secondipm
+
+import com.zhsq.biz.constant.RelationType;
+import com.zhsq.biz.constant.BaseConstant;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.BaseConstant;
+import com.abc.relation.RecordRelation;
+import com.abc.transfer.builder.IRootRecordBuilder;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.transfer.builder.RootRecordBuilderFactory;
+import com.abc.ops.builder.RecordRelationOpsBuilder;
+import com.abc.ops.builder.RootRecordOpsBuilder;
+import com.abc.rrc.record.RootRecord;
+import com.zhsq.biz.constant.item.MinZSalvationItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
+import com.zhsq.biz.constant.RelationType;
+import com.zhsq.biz.constant.item.LackFamilyTableItem;
+
+global java.lang.String hostCode; 
+global java.lang.String hostType;
+
+global java.lang.String userCode;
+global java.lang.String recordCode;
+global java.lang.String recordName;
+
+global java.util.List recordRelationOpsBuilderNew;
+global java.util.List rootRecordList;
+global java.util.List attributeList;
+global java.util.List addedLabelList;
+global java.util.List removedLabelList;
+global java.util.List addedLabelList;
+global java.util.List addedLeafAttrList;
+global java.util.Map removedLeafAttrMap;
+global com.abc.rrc.record.RootRecord rootRecord;
+global  com.abc.ops.builder.RecordRelationOpsBuilder recordRelationOpsBuilder;
+global com.abc.complexus.RecordComplexus recordComplexus;
+
+
+rule "关联家庭1"// 从人里面直接拿到家庭  或者是拿不到家庭
+	salience 25
+	when
+		RecordRelation(type==RelationType.RR_低边家庭各类补贴发放表_申请人_人口信息, $peopleCode:right)
+		not RecordRelation(type==RelationType.RR_低边家庭各类补贴发放表_关联家庭_家庭信息)
+		eval(CommonAlgorithm.getAppointRecordRelation(recordComplexus, BaseConstant.TYPE_人口信息, $peopleCode, RelationType.RR_人口信息_户主家庭_家庭信息) != null)
+	then 
+		recordRelationOpsBuilder.putRelation(RelationType.RR_低边家庭各类补贴发放表_关联家庭_家庭信息, CommonAlgorithm.getAppointRecordRelation(recordComplexus, BaseConstant.TYPE_人口信息, $peopleCode, RelationType.RR_人口信息_户主家庭_家庭信息) );
+end
+
+rule "关联家庭2"// 从人里面直接拿到家庭  或者是拿不到家庭
+	salience 25
+	when
+		RecordRelation(type==RelationType.RR_低边家庭各类补贴发放表_申请人_人口信息, $peopleCode:right)
+		not RecordRelation(type==RelationType.RR_低边家庭各类补贴发放表_关联家庭_家庭信息)
+		eval(CommonAlgorithm.getAppointRecordRelation(recordComplexus, BaseConstant.TYPE_人口信息, $peopleCode, RelationType.RR_人口信息_户主家庭_家庭信息) == null)
+	then 
+	
+		//生成家庭实体
+		IRootRecordBuilder iRootRecordBuilder = RootRecordBuilderFactory.getPersistRootRecordBuilder(BaseConstant.TYPE_家庭信息);
+		
+		iRootRecordBuilder.putAttribute(FamilyItem.家庭总人数,  0);
+		//iRootRecordBuilder.putMultiAttr(String multiAttrName, String buildMACode, String attrName, Object attrValue);
+
+		RootRecord record = iRootRecordBuilder.getRootRecord();
+		
+		rootRecordList.add(record);
+		//添加关系
+		RecordRelationOpsBuilder builderNew = RecordRelationOpsBuilder.getInstance(BaseConstant.TYPE_家庭信息,
+					record.getCode());
+					
+		builderNew.putRelation(RelationType.RR_家庭信息_户主_人口信息, $peopleCode); 
+		builderNew.putRelation(RelationType.RR_家庭信息_低边家庭各类补贴_低边家庭各类补贴发放表,  recordCode); 
+		recordRelationOpsBuilderNew.add(builderNew);	
+end
+
+rule "生成民政帮扶数据"
+	salience 20
+	when
+		RecordRelation(type==RelationType.RR_低边家庭各类补贴发放表_申请人_人口信息, $peopleCode:right)
+		not RecordRelation(type==RelationType.RR_低边家庭各类补贴发放表_民政帮扶数据_民政帮扶数据);
+		FuseAttribute(name==LackFamilyTableItem.事项名称, $v1:getValue(ValueType.STRING))
+		FuseAttribute(name==LackFamilyTableItem.发放年月, $v2:getValue(ValueType.STRING))
+		FuseAttribute(name==LackFamilyTableItem.银行打卡金额, $v3:getValue(ValueType.STRING))
+	then
+		//新增民政帮扶数据
+		IRootRecordBuilder iRootRecordBuilder = RootRecordBuilderFactory.getPersistRootRecordBuilder(BaseConstant.TYPE_民政帮扶数据);
+		
+		iRootRecordBuilder.putAttribute(MinZSalvationItem.事项名称, $v1);
+		iRootRecordBuilder.putAttribute(MinZSalvationItem.发放年月,  $v2);
+		iRootRecordBuilder.putAttribute(MinZSalvationItem.人口code,  $peopleCode);
+		iRootRecordBuilder.putAttribute(MinZSalvationItem.发放金额, $v3);
+		
+		RootRecord record = iRootRecordBuilder.getRootRecord();
+		
+		rootRecordList.add(record);
+		//添加关系
+		RecordRelationOpsBuilder builderNew = RecordRelationOpsBuilder.getInstance(BaseConstant.TYPE_民政帮扶数据,
+					record.getCode());
+		builderNew.putRelation(RelationType.RR_民政帮扶数据_低边家庭各类补贴_低边家庭各类补贴发放表, recordCode); 
+		builderNew.putRelation(RelationType.RR_民政帮扶数据_关联人口_人口信息,  $peopleCode); 
+		recordRelationOpsBuilderNew.add(builderNew);	
+end

@@ -1,10 +1,7 @@
 package com.zhsq.test.biz;
 
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.drools.core.metadata.With;
@@ -27,10 +24,10 @@ import com.zhsq.biz.people.algorithm.BirthdayIntrospection;
 
 @ContextConfiguration(locations = "classpath*:spring-core.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class UserTest {
+public class LackFamilyTableTest {
 	
-	private static Logger logger = Logger.getLogger(UserTest.class);
-	protected String mapperName = "系统用户";
+	private static Logger logger = Logger.getLogger(LackFamilyTableTest.class);
+	protected String mapperName = "低边家庭各类补贴发放表";
 
    @Before
     public void setUp() throws Exception {
@@ -44,8 +41,6 @@ public class UserTest {
     @Test
 	public void readData() {
 
-    	
-    	
     	long startTime = System.currentTimeMillis();
     	HCFusionContext context=new HCFusionContext();
 		context.setSource(FusionContext.SOURCE_COMMON);
@@ -66,17 +61,16 @@ public class UserTest {
 
 	private Entity createEntity(String mappingName) {
 		Entity entity = new Entity(mappingName);
-		//entity.putValue("唯一编码", "e2a7abaebab643b7831de05469e4895c");
-		entity.putValue("用户名", "ww咿i"); 
-		entity.putValue("昵称", "222咿i"); 
-		entity.putValue("真实姓名", "sss"); 
+		entity.putValue("唯一编码", "e54e44fd0c58472387dbeba8dc8fedb1");
+		entity.putValue("事项名称", "->->最低生活保障边缘家庭（低边证）->低保边缘户"); 
+		entity.putValue("发放年月", "2019-3-24"); 
+		entity.putValue("银行打卡金额", "78"); 
 		
-		//entity.removeAllRelationEntity("任务执行人");
-		
-		/*Entity relationentity = new Entity("属于组织");
+		Entity relationentity = new Entity("申请人");
 		//relationentity.putValue("唯一编码", "e10adc3949ba59abbe56e057f28888d5");
-		relationentity.putValue("名称", "1111");
-		entity.putRelationEntity("属于组织","属于组织", relationentity);*/
+		relationentity.putValue("姓名", "eeee");
+		relationentity.putValue("身份证号码", "1234567");
+		entity.putRelationEntity("申请人","申请人", relationentity);
 		
 		
 		
@@ -92,28 +86,4 @@ public class UserTest {
 		entity.putRelationEntity("任务创建人","创建人", relationentity1);*/
 		return entity;
 	}
-	
-	
-	@Test
-	public void fun3() {
-		LocalDate localDate  = LocalDate.now();
-		System.out.println(localDate.plusYears(-60).plusDays(90));
-		
-		LocalDate ldate = localDate.plusYears(-60).plusDays(90);
-		
-		
-		 ZoneId zone = ZoneId.systemDefault();
-		    Instant instant = ldate.atStartOfDay().atZone(zone).toInstant();
-		    java.util.Date date = Date.from(instant);
-		
-		Integer extractAge = BirthdayIntrospection.extractAge(date);
-		
-		System.out.println(extractAge);
-		
-		String str = "1111;&%$;2222";
-		String[] split = str.split(";&%\\$;");
-		
-		System.out.println(split[0]);
-	}
-
 }
