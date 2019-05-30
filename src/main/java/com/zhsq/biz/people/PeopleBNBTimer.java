@@ -15,7 +15,7 @@ import com.abc.rrc.query.queryrecord.criteria.Criteria;
 import com.zhsq.biz.common.KIEHelper;
 import com.zhsq.biz.common.SessionFactory;
 
-public class PeopleBNBTimer extends PeopleBNB {
+public class PeopleBNBTimer extends PeopleFG {
 	
 	/**
 	 * true: 只要为true， 任何情况都融合

@@ -20,7 +20,7 @@ import com.zhsq.biz.common.KIEHelper;
 import com.zhsq.biz.common.SessionFactory;
 
 @Repository(value = "XFJDE001")
-public class PeopleBNB implements FuseCheck,FunctionalGroup, IdentityQuery,OneRoundImprovement, ThreeRoundImprovement, IFusitionCallBack {
+public class PeopleFG implements FuseCheck,FunctionalGroup, IdentityQuery,OneRoundImprovement, ThreeRoundImprovement, IFusitionCallBack {
 
 	@Override
 	public List<Criteria> getCriteriaList(String recordCode, RecordComplexus complexus) {
