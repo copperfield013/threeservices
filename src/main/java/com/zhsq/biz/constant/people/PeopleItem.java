@@ -187,4 +187,15 @@ public class PeopleItem {
 	
 	public static final String 救助月发放金额="XFJD1754";
 	public static final String 救助年发放金额="XFJD1755";
+	public static final String 救助圈等级="XFJD1884";
+	public static final String 可享受的补贴项目="XFJD1885";
+	public static final String 已享受的补贴项目="XFJD1890";
+	public static final String 可享受的补贴项目_享受标准="XFJD1888";
+	public static final String 可享受的补贴项目_所需材料="XFJD1887";
+	public static final String 可享受的补贴项目_补贴项目="XFJD1886";
+	public static final String 可享受的补贴项目_预估补贴金额="XFJD1889";
+	public static final String 已享受的补贴项目_补贴开始时间="XFJD1892";
+	public static final String 已享受的补贴项目_补贴结束时间="XFJD1893";
+	public static final String 已享受的补贴项目_补贴金额="XFJD1894";
+	public static final String 已享受的补贴项目_补贴项目="XFJD1891";
 }

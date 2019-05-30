@@ -167,7 +167,7 @@ end
 rule "移除精准扶贫人员标签"//事项数量小于3
 	salience 10
 	when
-		not FuseLabelAttribute(getValue(ValueType.INT) == EnumKeyValue.ENUM_人口标签_精准扶贫人员);
+		FuseLabelAttribute(getValue(ValueType.INT) == EnumKeyValue.ENUM_人口标签_精准扶贫人员);
 		eval(CommonAlgorithm.getLeafCount(recordComplexus, recordCode, PeopleItem.事项名称) <3)
 	then
 		removedLabelList.add(EnumKeyValue.ENUM_人口标签_精准扶贫人员);
