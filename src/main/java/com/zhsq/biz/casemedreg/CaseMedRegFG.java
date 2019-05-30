@@ -19,7 +19,7 @@ import com.zhsq.biz.common.SessionFactory;
 
 
 @Repository(value = "XFJDE1407")
-public class CaseMedRegBNB implements FunctionalGroup, IdentityQuery, ThreeRoundImprovement, IFusitionCallBack {
+public class CaseMedRegFG implements FunctionalGroup, IdentityQuery, ThreeRoundImprovement, IFusitionCallBack {
 
 	@Override
 	public List<Criteria> getCriteriaList(String recordCode, RecordComplexus complexus) {

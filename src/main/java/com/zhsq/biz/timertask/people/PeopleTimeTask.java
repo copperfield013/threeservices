@@ -16,7 +16,7 @@ import com.abc.rrc.query.criteria.BizzCriteriaFactory;
 import com.abc.rrc.query.queryrecord.criteria.Criteria;
 import com.zhsq.biz.constant.BaseConstant;
 import com.zhsq.biz.constant.people.PeopleItem;
-import com.zhsq.biz.people.PeopleBNBTimer;
+import com.zhsq.biz.people.PeopleFGTimer;
 import com.zhsq.biz.timertask.LoadEntityToWorkMemory;
 
 @Component
@@ -28,7 +28,7 @@ public class PeopleTimeTask {
 	@Scheduled(cron = "0 0 1 * * ?")
 	public void doSomething() {
 		Collection<String> codes = getCodes();
-		LoadEntityToWorkMemory.loadEntity(BaseConstant.TYPE_人口信息, codes, new PeopleBNBTimer());
+		LoadEntityToWorkMemory.loadEntity(BaseConstant.TYPE_人口信息, codes, new PeopleFGTimer());
 	}
 	
 	private Collection<String> getCodes() {

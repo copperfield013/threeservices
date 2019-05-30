@@ -1,4 +1,4 @@
-package com.zhsq.biz.worktask;
+package com.zhsq.biz.minzsalvation;
 
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -15,28 +15,29 @@ import com.abc.ops.complexus.OpsComplexus;
 import com.abc.rrc.query.queryrecord.criteria.Criteria;
 import com.zhsq.biz.common.KIEHelper;
 import com.zhsq.biz.common.SessionFactory;
-
-@Repository(value = "XFJDE379")
-public class WorkTaskBNB implements FunctionalGroup, IdentityQuery, ThreeRoundImprovement, IFusitionCallBack {
+/**
+ * 民政帮扶数据
+ * @author so-well
+ *
+ */
+@Repository(value = "XFJDE1691")
+public class MinZSalvationFG implements FunctionalGroup, IdentityQuery, ThreeRoundImprovement, IFusitionCallBack {
 	
 	@Override
 	public List<Criteria> getCriteriaList(String recordCode, RecordComplexus complexus) {
 		return KIEHelper.getBizCriteriaListFromKIE(recordCode, complexus,
-				SessionFactory.findScannerSession("ks-worktask-idt-query"));
-	
+				SessionFactory.findScannerSession("ks-minzsalvation-idt-query"));
 	}
 
 	@Override
 	public ImproveResult preImprove(FGFusionContext context, String recordCode, OpsComplexus opsComplexus,
 			RecordComplexus recordComplexus) {
-		return KIEHelper.getImproveResultFromKIE(context, recordCode, opsComplexus, recordComplexus,
-				SessionFactory.findScannerSession("ks-worktask-preipm"));
+		return null;
 	}
 
 	@Override
 	public ImproveResult improve(FGFusionContext context, String recordCode, RecordComplexus recordComplexus) {
-		return KIEHelper.getImproveResultFromKIE(context, recordCode, recordComplexus,
-				SessionFactory.findScannerSession("ks-worktask-ipm"));
+		return null;
 	} 
 
 	@Override
@@ -47,20 +48,16 @@ public class WorkTaskBNB implements FunctionalGroup, IdentityQuery, ThreeRoundIm
 
 	@Override
 	public ImproveResult postImprove(FGFusionContext context, String recordCode, RecordComplexus recordComplexus) {
-		return KIEHelper.getImproveResultFromKIE(context, recordCode, recordComplexus,
-				SessionFactory.findScannerSession("ks-worktask-postipm"));
-	}
-
-	@Override
-	public ImproveResult secondImprove(FGFusionContext arg0, String arg1, RecordComplexus arg2) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ImproveResult thirdImprove(FGFusionContext arg0, String arg1, RecordComplexus arg2) {
-		// TODO Auto-generated method stub
+	public ImproveResult secondImprove(FGFusionContext context, String recordCode, RecordComplexus recordComplexus) {
 		return null;
 	}
 
+	@Override
+	public ImproveResult thirdImprove(FGFusionContext context, String recordCode, RecordComplexus recordComplexus) {
+		return null;
+	}
 }

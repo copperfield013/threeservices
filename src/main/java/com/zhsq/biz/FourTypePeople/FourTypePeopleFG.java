@@ -1,4 +1,4 @@
-package com.zhsq.biz.lackfamilytable;
+package com.zhsq.biz.FourTypePeople;
 
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -15,18 +15,13 @@ import com.abc.ops.complexus.OpsComplexus;
 import com.abc.rrc.query.queryrecord.criteria.Criteria;
 import com.zhsq.biz.common.KIEHelper;
 import com.zhsq.biz.common.SessionFactory;
-/**
- * 低边家庭各类补贴发放表
- * @author so-well
- *
- */
-@Repository(value = "XFJDE1590")
-public class LackFamilyTableBNB implements FunctionalGroup, IdentityQuery, ThreeRoundImprovement, IFusitionCallBack {
+
+@Repository(value = "XFJDE1015")
+public class FourTypePeopleFG implements FunctionalGroup, IdentityQuery, ThreeRoundImprovement, IFusitionCallBack {
 
 	@Override
 	public List<Criteria> getCriteriaList(String recordCode, RecordComplexus complexus) {
-		return KIEHelper.getBizCriteriaListFromKIE(recordCode, complexus,
-				SessionFactory.findScannerSession("ks-lackfamilytable-idt-query"));
+		return null;
 	}
 
 	@Override
@@ -38,7 +33,7 @@ public class LackFamilyTableBNB implements FunctionalGroup, IdentityQuery, Three
 	@Override
 	public ImproveResult improve(FGFusionContext context, String recordCode, RecordComplexus recordComplexus) {
 		return KIEHelper.getImproveResultFromKIE(context, recordCode, recordComplexus,
-				SessionFactory.findScannerSession("ks-lackfamilytable-ipm"));
+				SessionFactory.findScannerSession("ks-FourTypePeople-ipm"));
 	} 
 
 	@Override
@@ -54,13 +49,15 @@ public class LackFamilyTableBNB implements FunctionalGroup, IdentityQuery, Three
 
 	@Override
 	public ImproveResult secondImprove(FGFusionContext context, String recordCode, RecordComplexus recordComplexus) {
-		return KIEHelper.getImproveResultFromKIE(context, recordCode, recordComplexus,
-				SessionFactory.findScannerSession("ks-lackfamilytable-secondipm"));
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ImproveResult thirdImprove(FGFusionContext arg0, String arg1, RecordComplexus arg2) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
-	@Override
-	public ImproveResult thirdImprove(FGFusionContext context, String recordCode, RecordComplexus recordComplexus) {
-		return KIEHelper.getImproveResultFromKIE(context, recordCode, recordComplexus,
-				SessionFactory.findScannerSession("ks-lackfamilytable-thirdIPM"));
-	}
+
 }

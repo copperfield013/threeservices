@@ -7,7 +7,7 @@ import com.abc.ops.complexus.OpsComplexus;
 import com.zhsq.biz.common.KIEHelper;
 import com.zhsq.biz.common.SessionFactory;
 
-public class WorkTaskBNBTimer extends WorkTaskBNB {
+public class WorkTaskFGTimer extends WorkTaskFG {
 
 	@Override
 	public ImproveResult preImprove(FGFusionContext context, String recordCode, OpsComplexus opsComplexus,

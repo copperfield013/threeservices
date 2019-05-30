@@ -17,7 +17,7 @@ import com.abc.rrc.query.queryrecord.criteria.Criteria;
 import com.zhsq.biz.constant.BaseConstant;
 import com.zhsq.biz.constant.worktask.WorkTaskItem;
 import com.zhsq.biz.timertask.LoadEntityToWorkMemory;
-import com.zhsq.biz.worktask.WorkTaskBNBTimer;
+import com.zhsq.biz.worktask.WorkTaskFGTimer;
 
 @Component
 @Lazy(value=false)
@@ -29,7 +29,7 @@ public class WorkTaskTime {
 	public void doSomething() {
 		 
 		 Collection<String> codes = getCodes();
-		 LoadEntityToWorkMemory.loadEntity(BaseConstant.TYPE_工作任务, codes, new WorkTaskBNBTimer());
+		 LoadEntityToWorkMemory.loadEntity(BaseConstant.TYPE_工作任务, codes, new WorkTaskFGTimer());
 	}
 	
 	private Collection<String> getCodes() {
