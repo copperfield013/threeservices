@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.abc.hc.FusionContext;
 import com.abc.hc.HCFusionContext;
 import com.abc.mapping.entity.Entity;
+import com.abc.mapping.entity.LeafEntity;
 import com.abc.panel.Discoverer;
 import com.abc.panel.Integration;
 import com.abc.panel.IntegrationMsg;
@@ -53,11 +54,12 @@ public class PeopleTest {
 	private Entity createEntity(String mappingName) {
 		
 		Entity entity = new Entity(mappingName);
-//		entity.putValue("唯一编码", "a5cc04023d2f43878a9f2c6921466fc0");
-		entity.putValue("姓名", "天空的"); 
+		entity.putValue("唯一编码", "83d7d2eeeba6489882bd7138a7186b8b");
+		entity.putValue("姓名", "成功111"); 
 		entity.putValue("人口类型", "户籍人口");
 		entity.putValue("所属社区", EnumKeyValue.ENUM_祥符街道社区_祥符桥社区);
 		entity.putValue("身份证号码", "234232");
+		entity.putValue("救助圈等级", EnumKeyValue.ENUM_救助圈等级_1级);
 		//entity.putValue("身份证号码", "23231112");
 		//entity.putValue("身份证号码", "23231112");
 		/*entity.putValue("户籍所在地", "杭州ef1");
@@ -134,10 +136,10 @@ public class PeopleTest {
 		sentity3.putValue("描述", "身份错误4444");
 		entity.putMultiAttrEntity(sentity3);*/
 		
-		/*SimpleEntity sentity2 = new SimpleEntity("残疾信息");
-		sentity2.putValue("残疾类别", null);
+		LeafEntity sentity2 = new LeafEntity("残疾信息");
+		sentity2.putValue("残疾类别", EnumKeyValue.ENUM_残疾类别_视力);
 		sentity2.putValue("残疾等级", EnumKeyValue.ENUM_残疾等级_一级);
-		entity.putMultiAttrEntity(sentity2);*/
+		entity.putMultiAttrEntity(sentity2);
 		
 		/*SimpleEntity sentity1 = new SimpleEntity("户籍变更");
 		sentity1.putValue("申报人姓名", "李好帅");

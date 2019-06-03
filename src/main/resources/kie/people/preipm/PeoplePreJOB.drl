@@ -66,7 +66,7 @@ rule "记录之前就业形式2"
 	when
 		not FuseAttribute( name== PeopleItem.就业形式)
 	then
-		kcontext.getKnowledgeRuntime().getAgenda().getAgendaGroup( "新增人员分类" ).setFocus();
+		kcontext.getKnowledgeRuntime().getAgenda().getAgendaGroup("新增人员分类").setFocus();
 end
 
 /*
@@ -98,10 +98,6 @@ when
 	OpsAttribute( name==PeopleItem.就业形式, $jobType:getValue(ValueType.INT))
 	FuseAttribute( name== PeopleItem.就业形式,$fuseValue:getValue(ValueType.INT)) 
 then 
-
-
-
-
 	Integer oldfouTypePeo = CommIntrospection.get4TypePeople(new Integer($fuseValue.toString()));
 	Integer fouTypePeo = CommIntrospection.get4TypePeople(new Integer($jobType.toString()));
 	

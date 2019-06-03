@@ -1,0 +1,100 @@
+package com.abc.rule.people.ipm
+
+import com.abc.rrc.record.Attribute;
+import com.zhsq.biz.constant.CommonAlgorithm;
+import com.zhsq.biz.constant.family.FamilyItem;
+import com.abc.fuse.improve.attribute.FuseAttribute;
+import com.abc.model.enun.ValueType;
+import com.zhsq.biz.constant.EnumKeyValue;
+import com.abc.fuse.improve.attribute.label.FuseLabelAttribute;
+import com.zhsq.biz.people.algorithm.BirthdayIntrospection;
+import com.zhsq.biz.common.CommonCalculation;
+import java.util.Date;
+import com.abc.rrc.factory.DBAttributeFactory;
+import com.zhsq.biz.constant.people.PeopleItem;
+import com.zhsq.biz.constant.DateUtils;
+import com.abc.fuse.improve.attribute.leaf.FuseLeafAttribute;
+import com.zhsq.biz.constant.BaseConstant;
+import com.abc.ops.builder.RecordRelationOpsBuilder;
+import com.zhsq.biz.constant.RelationType;
+import com.zhsq.biz.constant.worktask.WorkTaskItem;
+import com.abc.transfer.builder.IRootRecordBuilder;
+import com.abc.transfer.builder.RootRecordBuilderFactory;
+import com.abc.rrc.record.RootRecord;
+import com.abc.sysdate.SystemDateTimeManager;
+import com.abc.fuse.improve.attribute.FuseLeafAttrFactory;
+import com.zhsq.biz.people.algorithm.IDIntrospection;
+import com.abc.util.CodeManager;
+import com.zhsq.biz.people.algorithm.CommIntrospection;
+
+
+global java.lang.String hostCode; 
+global java.lang.String hostType;
+
+global java.lang.String userCode;
+global java.lang.String recordCode;
+global java.lang.String recordName;
+
+global java.util.List recordRelationOpsBuilderNew;
+global java.util.List rootRecordList;
+global java.util.List attributeList;
+global java.util.List addedLabelList;
+global java.util.List removedLabelList;
+global java.util.List addedLabelList;
+global java.util.List addedLeafAttrList;
+global java.util.Map removedLeafAttrMap;
+global com.abc.rrc.record.RootRecord rootRecord;
+global  com.abc.ops.builder.RecordRelationOpsBuilder recordRelationOpsBuilder;
+global com.abc.complexus.RecordComplexus recordComplexus;
+
+rule "不存在助视器补贴激活加"
+	when
+		not FuseLeafAttribute( name==PeopleItem.已享受的补贴项目_补贴项目 , getValue(ValueType.INT) == EnumKeyValue.ENUM_补贴项目_助视器) 
+	then
+		kcontext.getKnowledgeRuntime().getAgenda().getAgendaGroup( "助视器补贴" ).setFocus();
+end
+
+rule "助视器补贴存在但超过三年激活加"
+	when
+		FuseLeafAttribute( name==PeopleItem.已享受的补贴项目_补贴项目 , getValue(ValueType.INT) == EnumKeyValue.ENUM_补贴项目_助视器, $leafCode:leafCode) 
+		FuseLeafAttribute($leafCode==leafCode,name==PeopleItem.已享受的补贴项目_补贴开始时间 , $starTime:getValue(ValueType.INT)) 
+		eval(DateUtils.getShortYeartoCurr((Date)$starTime)>=3)
+	then
+		kcontext.getKnowledgeRuntime().getAgenda().getAgendaGroup( "助视器补贴" ).setFocus();
+end
+
+// 补贴项目
+rule "加助视器补贴"
+	agenda-group "助视器补贴"
+	when
+		not FuseLeafAttribute( name==PeopleItem.可享受的补贴项目_补贴项目, getValue(ValueType.INT) == EnumKeyValue.ENUM_补贴项目_助视器 )
+		FuseLeafAttribute( name==PeopleItem.残疾信息_残疾类别, getValue(ValueType.INT)==EnumKeyValue.ENUM_残疾类别_视力 )
+		FuseAttribute( name==PeopleItem.救助圈等级,$grade:getValue(ValueType.INT))
+	then 
+	String code = CodeManager.newCode32();
+	//补贴项目
+	FuseLeafAttribute subPro = FuseLeafAttrFactory.newInstance(recordCode, PeopleItem.可享受的补贴项目,code, PeopleItem.可享受的补贴项目_补贴项目, EnumKeyValue.ENUM_补贴项目_助视器);
+	addedLeafAttrList.add(subPro);
+	
+	//预估金额
+	FuseLeafAttribute estimateMoney = FuseLeafAttrFactory.newInstance(recordCode, PeopleItem.可享受的补贴项目,subPro.getLeafCode(), PeopleItem.可享受的补贴项目_预估补贴金额,   CommIntrospection.getEstimateMoney((Integer)$grade));
+	addedLeafAttrList.add(estimateMoney);
+	
+	//所需材料
+	FuseLeafAttribute  material = FuseLeafAttrFactory.newInstance(recordCode, PeopleItem.可享受的补贴项目,subPro.getLeafCode(), PeopleItem.可享受的补贴项目_所需材料,  "申请表、残疾证、户口本、购买助视器发票。属于四级救助圈的提供相关证明。");
+	addedLeafAttrList.add(material);
+	
+	//享受标准
+	FuseLeafAttribute enjoyStandard = FuseLeafAttrFactory.newInstance(recordCode, PeopleItem.可享受的补贴项目,subPro.getLeafCode(), PeopleItem.可享受的补贴项目_享受标准,  "四级救助圈内的， 给予一次性1000元补助， 救助圈外的减半。");
+	addedLeafAttrList.add(enjoyStandard);
+end
+
+// 删除补贴项目
+rule "del助视器补贴"
+	when
+		$fa: FuseLeafAttribute( name==PeopleItem.可享受的补贴项目_补贴项目, getValue(ValueType.INT) == EnumKeyValue.ENUM_补贴项目_助视器 )
+		not FuseLeafAttribute( name==PeopleItem.残疾信息_残疾类别, getValue(ValueType.INT)==EnumKeyValue.ENUM_残疾类别_视力 )
+	then 
+		removedLeafAttrMap.put($fa.getLeafCode(), $fa.getName());
+end
+

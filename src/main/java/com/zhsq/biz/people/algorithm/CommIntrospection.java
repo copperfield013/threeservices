@@ -5,6 +5,25 @@ import com.zhsq.biz.constant.EnumKeyValue;
 public class CommIntrospection {
 	
 	/**
+	 * 根据救助圈等级获取金额
+	 * @param grade
+	 * @return
+	 */
+	public static String getEstimateMoney(Integer grade) {
+		switch (grade) {
+			case 30629:
+			case 30630:
+			case 30631:
+			case 30632:
+				return "1000元";
+			case 30633:	// 救助圈外
+				return "500元";
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * 根据就业形式返回四类人员
 	 * @return
 	 * 	A类=1单位招用人数							

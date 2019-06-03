@@ -2,8 +2,11 @@ package com.zhsq.biz.constant;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
@@ -13,6 +16,25 @@ public class DateUtils {
 	private static String date = "yyyy-MM-dd";
 	private static String dateTime = "yyyy-MM-dd HH:mm:ss";
 	private static SimpleDateFormat sdf = null;
+	
+	/**
+	 *	 当前时间与给定时间差几年
+	 * @return 返回时间差
+	 * @param time  格式必须为YYYY-MM-dd
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static Integer getShortYeartoCurr(Date date) {
+		 LocalDate today = LocalDate.now();
+		try {
+			LocalDate targetDate =getLocalDate(date);
+			long between = ChronoUnit.YEARS.between(targetDate, today);
+		  return  (int) Math.abs(between);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	/**
 	 *	 当前时间与给定时间差几天

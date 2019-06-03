@@ -11,16 +11,31 @@ import com.zhsq.biz.constant.people.PeopleItem;
 global java.lang.String recordName;
 global com.abc.rrc.query.criteria.BizzCriteriaFactory bizzCriteriaFactory;
 
+/*
+//多值属性书写
 rule "姓名 and 身份证号 criteria" 
 	activation-group "people查询条件"
 	salience 9  
 when
     $nameFB:FuseAttribute(name==PeopleItem.姓名,CommonCalculation.isBasicLawful((String)getValue(ValueType.STRING)));
-    FuseLeafAttribute(name==PeopleItem.证件信息_证件类型,CommonCalculation.isBasicLawful((String)getValue(ValueType.STRING)), getValue(ValueType.INT) == EnumKeyValue.ENUM_证件类型_身份证, $leafCode:leafCode);
+	$f:FuseLeafAttribute(name==PeopleItem.证件信息_证件类型,CommonCalculation.isBasicLawful((String)getValue(ValueType.STRING)), getValue(ValueType.INT) == EnumKeyValue.ENUM_证件类型_身份证, $leafCode:leafCode);
 	$IdFB: FuseLeafAttribute(name==PeopleItem.证件信息_证件号码,CommonCalculation.isBasicLawful((String)getValue(ValueType.STRING)), $leafCode==leafCode);
 then 
 	bizzCriteriaFactory.addCriteria($nameFB.getAttribute(), CommonSymbol.EQUAL);
 	bizzCriteriaFactory.addCriteria($IdFB.getAttribute(), CommonSymbol.EQUAL);
+end
+*/
+
+rule "姓名 and 身份证号 criteria" 
+	activation-group "people查询条件"
+	salience 9  
+when
+    $nameFB:FuseAttribute(name==PeopleItem.姓名,CommonCalculation.isBasicLawful((String)getValue(ValueType.STRING)));
+	$IdFB: FuseAttribute( name==PeopleItem.身份证号码, CommonCalculation.isBasicLawful((String)getValue(ValueType.STRING)))
+then 
+	bizzCriteriaFactory.addCriteria($nameFB.getAttribute(), CommonSymbol.EQUAL);
+	bizzCriteriaFactory.addCriteria($IdFB.getAttribute(), CommonSymbol.EQUAL);
+	com.zhsq.biz.common.OutputDisplay.showText(bizzCriteriaFactory.getCriterias());
 end
 
 rule "姓名 and 户籍地址 criteria" 

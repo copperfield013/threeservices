@@ -15,17 +15,11 @@ import org.apache.poi.util.SystemOutLogger;
 import com.abc.complexus.RecordComplexus;
 import com.abc.relation.RecordRelation;
 import com.abc.relation.RelationCorrelation;
-import com.abc.relation.RelationQueryPanel;
-import com.abc.rrc.record.RootRecord;
 import com.zhsq.biz.constant.CommonAlgorithm;
 import com.zhsq.biz.constant.DateUtils;
 import com.zhsq.biz.constant.EnumKeyValue;
-import com.zhsq.biz.constant.RelationType;
-import com.zhsq.biz.constant.interview.InterviewItem;
-import com.zhsq.biz.constant.people.PeopleItem;
 
 public class IDIntrospection {
-	
 	
 	//获取最新一条关系的指定属性的值， 最新判断-》属性应该为日期型
 	/**

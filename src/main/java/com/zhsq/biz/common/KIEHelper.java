@@ -45,7 +45,11 @@ public class KIEHelper {
 			e.printStackTrace();
 		}
 
-		kSession.fireAllRules();
+		// 触发规则
+		logger.debug("开始执行规则===================== ");
+		int fireAllRules = kSession.fireAllRules();
+		logger.debug("本次触发规则数量 =  " + fireAllRules);
+		logger.debug("规则执行完毕===================== ");
 		List<Criteria> criteriaList = bizzCriteriaFactory.getCriterias();
 		
 		/*QueryResults results = kSession.getQueryResults("query criteria");

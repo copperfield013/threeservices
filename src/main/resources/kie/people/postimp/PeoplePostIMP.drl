@@ -44,7 +44,6 @@ global com.abc.rrc.record.RootRecord rootRecord;
 global  com.abc.ops.builder.RecordRelationOpsBuilder recordRelationOpsBuilder;
 global com.abc.complexus.RecordComplexus recordComplexus;
 
-
 //下面识别身份证号错误信息
 rule "清空人口错误"
 	salience 7

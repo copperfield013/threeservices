@@ -476,4 +476,11 @@ public class EnumKeyValue {
 	
 	public static final Integer ENUM_人口标签_精准扶贫人员=30619;
 	public static final Integer ENUM_家庭标签_精准扶贫家庭=30618;
+	
+	public static final Integer ENUM_救助圈等级_1级=30629;
+	public static final Integer ENUM_救助圈等级_2级=30630;
+	public static final Integer ENUM_救助圈等级_3级=30631;
+	public static final Integer ENUM_救助圈等级_4级=30632;
+	public static final Integer ENUM_救助圈等级_救助圈外=30633;
+	public static final Integer ENUM_补贴项目_助视器=30635;
 }
