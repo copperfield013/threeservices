@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kmodule xmlns="http://www.drools.org/xsd/kmodule">
 	
-	<!-- family -->
+	<!-- family start-->
 	<kbase name="familyidtquery" packages="kie.family.identity.query">
 		<ksession name="ks-family-idt-query" />
 	</kbase>
@@ -17,8 +17,8 @@
 	<kbase name="familysecondipm" packages="kie.family.secondipm">
 		<ksession name="ks-family-secondipm" />
 	</kbase>
-	
-	<!-- people -->
+	<!-- family end-->
+	<!-- people start-->
 	<kbase name="peopleidtquery" packages="kie.people.identity.query">
 		<ksession name="ks-people-idt-query" />
 	</kbase>
@@ -42,7 +42,12 @@
 		<ksession name="ks-people-secondipm-secondipmTimer" />
 	</kbase>
 	
-	<!-- worktask -->
+	<kbase name="peoplethirdIPM" packages="kie.people.thirdIPM">
+		<ksession name="ks-people-thirdIPM" />
+	</kbase>
+	
+	<!-- people end-->
+	<!-- worktask start-->
 	<kbase name="worktaskidtquery" packages="kie.worktask.identity.query">
 		<ksession name="ks-worktask-idt-query" />
 	</kbase>
@@ -59,12 +64,15 @@
 	<kbase name="worktaskpostipm" packages="kie.worktask.postipm">
 		<ksession name="ks-worktask-postipm" />
 	</kbase>
-	<!-- 四类人员 -->
+	
+	<!-- worktask end-->
+	<!-- 四类人员 start -->
 	<kbase name="FourTypePeopleipm" packages="kie.FourTypePeople.ipm">
 		<ksession name="ks-FourTypePeople-ipm" />
 	</kbase>
 	
-	<!-- 用户 -->
+	<!-- 四类人员 end -->
+	<!-- 用户   start-->
 	<kbase name="userquery" packages="kie.user.identity.query">
 		<ksession name="ks-user-idt-query" />
 	</kbase>
@@ -75,12 +83,14 @@
 		<ksession name="ks-user-twoipm" />
 	</kbase>
 	
-	<!-- 案件调解登记 -->
+	<!-- 用户  end-->
+	<!-- 案件调解登记  start-->
 	<kbase name="caseMedRegipm" packages="kie.casemedreg.ipm">
 		<ksession name="ks-caseMedRegipm-ipm" />
 	</kbase>
 	
-	<!-- 家庭各类补贴 -->
+	<!-- 案件调解登记  end-->
+	<!-- 家庭各类补贴  start-->
 	<kbase name="lackfamilytablequery" packages="kie.lackfamilytable.identity.query">
 		<ksession name="ks-lackfamilytable-idt-query" />
 	</kbase>
@@ -93,9 +103,12 @@
 	<kbase name="lackfamilytablethirdIPM" packages="kie.lackfamilytable.thirdIPM">
 		<ksession name="ks-lackfamilytable-thirdIPM" />
 	</kbase>
-	<!-- 民政帮扶数据 -->
+	
+	<!-- 家庭各类补贴  end-->
+	<!-- 民政帮扶数据  start-->
 	<kbase name="minzsalvationquery" packages="kie.minzsalvation.identity.query">
 		<ksession name="ks-minzsalvation-idt-query" />
 	</kbase>
 	
+	<!-- 民政帮扶数据 end-->
 </kmodule>

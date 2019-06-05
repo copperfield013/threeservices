@@ -61,7 +61,8 @@ public class PeopleFG implements FuseCheck,FunctionalGroup, IdentityQuery,OneRou
 
 	@Override
 	public ImproveResult thirdImprove(FGFusionContext context, String recordCode, RecordComplexus recordComplexus) {
-		return null;
+		return KIEHelper.getImproveResultFromKIE(context, recordCode, recordComplexus,
+				SessionFactory.findScannerSession("ks-people-thirdIPM"));
 	}
 
 	@Override

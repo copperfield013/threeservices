@@ -483,4 +483,5 @@ public class EnumKeyValue {
 	public static final Integer ENUM_救助圈等级_4级=30632;
 	public static final Integer ENUM_救助圈等级_救助圈外=30633;
 	public static final Integer ENUM_补贴项目_助视器=30635;
+	public static final Integer ENUM_补贴项目_残障补贴=30636;
 }

@@ -6,7 +6,7 @@ import com.abc.auth.UserComplexus;
 import com.abc.auth.constant.UserItem;
 import com.abc.auth.service.ServiceFactory;
 import com.abc.auth.service.UserInfoService;
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 import com.abc.rrc.record.RootRecord;
 
 public class AuthUtil {
@@ -21,7 +21,7 @@ public class AuthUtil {
 	public static String getUserName(String userCode) {
 
 		UserComplexus userComplexus = instance.getUserComplexus(userCode);
-		return (String) userComplexus.getUserRecord().findAttribute(UserItem.昵称).getValue(ValueType.STRING);
+		return (String) userComplexus.getUserRecord().findAttribute(UserItem.昵称).getValue(AttributeValueType.STRING);
 	}
 
 	public static Collection<String> getUserAuth(String userCode, Integer label) {

@@ -49,10 +49,10 @@ global com.abc.complexus.RecordComplexus recordComplexus;
 
 rule "不存在助视器补贴激活加"
 	when
-		not FuseLeafAttribute( name==PeopleItem.已享受的补贴项目_补贴项目 , getValue(ValueType.INT) == EnumKeyValue.ENUM_补贴项目_助视器) 
-	then
+		not FuseLeafAttribute( name==PeopleItem.已享受的补贴项目_补贴项目,CommonCalculation.isBasicLawful(getValue(ValueType.STRING)), getValue(ValueType.INT) == EnumKeyValue.ENUM_补贴项目_助视器) 
+	then   
 		kcontext.getKnowledgeRuntime().getAgenda().getAgendaGroup( "助视器补贴" ).setFocus();
-end
+end  
 
 rule "助视器补贴存在但超过三年激活加"
 	when

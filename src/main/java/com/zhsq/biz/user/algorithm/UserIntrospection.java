@@ -3,7 +3,7 @@ package com.zhsq.biz.user.algorithm;
 import java.util.Collection;
 
 import com.abc.complexus.RecordComplexus;
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 import com.abc.relation.RecordRelation;
 import com.abc.relation.RelationCorrelation;
 import com.abc.rrc.record.Attribute;
@@ -33,7 +33,7 @@ public class UserIntrospection {
 						if (rootRecord != null) {
 							Attribute findAttribute = rootRecord.findAttribute(OrgItem.名称);
 							if (findAttribute != null) {
-								sb.append(findAttribute.getValue(ValueType.STRING) + " ");
+								sb.append(findAttribute.getValue(AttributeValueType.STRING) + " ");
 							}
 						}
 					}

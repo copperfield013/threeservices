@@ -35,7 +35,6 @@ when
 then 
 	bizzCriteriaFactory.addCriteria($nameFB.getAttribute(), CommonSymbol.EQUAL);
 	bizzCriteriaFactory.addCriteria($IdFB.getAttribute(), CommonSymbol.EQUAL);
-	com.zhsq.biz.common.OutputDisplay.showText(bizzCriteriaFactory.getCriterias());
 end
 
 rule "姓名 and 户籍地址 criteria" 

@@ -171,7 +171,7 @@ public class KIEHelper {
 		}
 
 		// 触发规则
-		logger.debug("开始执行规则===================== ");
+		logger.debug(  "开始执行规则===================== ");
 		
 		int fireAllRules = kSession.fireAllRules();
 		logger.debug("本次触发规则数量 =  " + fireAllRules);

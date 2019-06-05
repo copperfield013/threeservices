@@ -4,7 +4,7 @@ import java.util.Collection;
 
 
 import com.abc.complexus.RecordComplexus;
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 import com.abc.rrc.record.Attribute;
 import com.abc.rrc.record.LeafRecord;
 import com.zhsq.biz.constant.DateUtils;
@@ -26,11 +26,11 @@ public class CaseMedIntrospection {
 		Collection<LeafRecord> leafs = recordComplexus.getRootRecord(recordCode).findLeafs(CaseMedRegItem.调解记录);
 		for (LeafRecord leafRecord : leafs) {
 			 Attribute findAttribute = leafRecord.findAttribute(CaseMedRegItem.调解记录_调解日期);
-			 String value =(String) findAttribute.getValue(ValueType.STRING);
+			 String value =(String) findAttribute.getValue(AttributeValueType.STRING);
 			Long longTime = DateUtils.toLongTime(null, value);
 			if (longTime > beforeTime) {
 				beforeTime = longTime;
-				result = leafRecord.findAttribute(CaseMedRegItem.调解记录_本次调解结果).getValue(ValueType.INT);
+				result = leafRecord.findAttribute(CaseMedRegItem.调解记录_本次调解结果).getValue(AttributeValueType.INT);
 			}
 		}
 		
@@ -47,7 +47,7 @@ public class CaseMedIntrospection {
 		Integer sum = 0;
 		Collection<LeafRecord> leafs = recordComplexus.getRootRecord(recordCode).findLeafs(CaseMedRegItem.履行记录);
 		for (LeafRecord leafRecord : leafs) {
-			 Object sqlValue  = leafRecord.findAttribute(CaseMedRegItem.履行记录_履行金额).getValue(ValueType.INT);
+			 Object sqlValue  = leafRecord.findAttribute(CaseMedRegItem.履行记录_履行金额).getValue(AttributeValueType.INT);
 			 sum += Integer.parseInt(sqlValue.toString());
 		}
 		return sum;

@@ -1,4 +1,4 @@
-package com.zhsq.test.biz;
+package com.zhsq.test.people;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -18,6 +18,7 @@ import com.abc.panel.IntegrationMsg;
 import com.abc.panel.PanelFactory;
 import com.abc.rrc.query.criteria.BizzCriteriaFactory;
 import com.zhsq.biz.constant.EnumKeyValue;
+import com.zhsq.biz.timertask.people.PeopleTimeTask;
 
 import antlr.collections.List;
 
@@ -167,35 +168,7 @@ public class PeopleTest {
 //		entity.putRelationEntity("关系名称", "关系标签（具体关系）", relationentity);
 		return entity;
 	}
+
 	
-	/*@Test
-	public void fun() {
-	new PeopleTimeTask().doSomething();
-	}*/
-	
-/*	
-	@Test 
-	public void fun1() {
-		
-		String convertIdTo18 = IDIntrospection.convertIdTo18("330105270101135");
-	
-		System.out.println(convertIdTo18);
-	
-	}
-	
-	@Test
-	public void fun2() {
-		LocalDate localDate = LocalDate.now();
-		
-		LocalDate oldDate = localDate.plusYears(-59);
-		LocalDate newDate = localDate.plusYears(-5);
-		
-		
-		System.out.println(localDate);
-		System.out.println(oldDate);
-		System.out.println(newDate);
-	}
-	
-	*/
 	
 }

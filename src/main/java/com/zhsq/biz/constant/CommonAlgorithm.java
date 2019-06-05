@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 
 import com.abc.complexus.RecordComplexus;
-import com.abc.model.enun.ValueType;
+import com.abc.model.enun.AttributeValueType;
 import com.abc.relation.RecordRelation;
 import com.abc.relation.RelationCorrelation;
 import com.abc.relation.RelationQueryPanel;
@@ -66,7 +66,7 @@ public class CommonAlgorithm {
 		Collection<LeafRecord> findLeafs = CommonAlgorithm.getLeaFecords(recordComplexus, recordCode, leaf);
 		if (findLeafs != null) {
 			for (LeafRecord leafRecord : findLeafs) {
-				String sqlValue = (String) leafRecord.findAttribute(item).getValue(ValueType.INT);
+				String sqlValue = (String) leafRecord.findAttribute(item).getValue(AttributeValueType.INT);
 				money += dynamicAmountCalculation(sqlValue);
 			}
 		}
@@ -175,7 +175,7 @@ public class CommonAlgorithm {
 		if (rootRecord != null) {
 			Attribute findAttribute = rootRecord.findAttribute(itemValue);
 			if (findAttribute != null) {
-				name = findAttribute.getValue(ValueType.STRING);
+				name = findAttribute.getValue(AttributeValueType.STRING);
 			}
 		}
 		return name;
