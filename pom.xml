@@ -4,7 +4,7 @@
 
 	<groupId>com.zhsq.biz</groupId>
 	<artifactId>threeservices</artifactId>
-	<version>0.1.95</version>
+	<version>0.2.1</version>
 	<packaging>jar</packaging>
 	
 	<url>http://maven.apache.org</url>
@@ -18,7 +18,7 @@
 		<version.proxool>0.9.1</version.proxool>
 		<version.kie>7.10.0.Final</version.kie>
 		<version.kie.ci>7.10.0.Final</version.kie.ci>
-		<version.item>4.2.61.alphal</version.item>
+		<version.item>4.2.68.alphal</version.item>
 		<version.kieutil>0.0.8</version.kieutil>
 		
 		<project.builder.sourcesEncoding>UTF-8</project.builder.sourcesEncoding>
